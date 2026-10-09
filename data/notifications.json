@@ -1,0 +1,1417 @@
+[
+  {
+    "id": "mv0mdl3th8hdz",
+    "title": "مرحباً",
+    "message": "أهلاً عبدالرحمن (مدير)",
+    "type": "info",
+    "time": "09/10/2026 10:04 AM",
+    "ts": 1791529447961,
+    "createdBy": "عبدالرحمن",
+    "deletedBy": [],
+    "readBy": [
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "mv0e4f4fdx8ki",
+    "title": "مرحباً",
+    "message": "أهلاً عبدالرحمن (مدير)",
+    "type": "info",
+    "time": "09/10/2026 06:13 AM",
+    "ts": 1791515583375,
+    "createdBy": "عبدالرحمن",
+    "deletedBy": [],
+    "readBy": [
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzsljedkudus",
+    "title": "تنبيه",
+    "message": "ستنتهي جلستك قريباً",
+    "type": "warning",
+    "time": "08/10/2026 08:10 PM",
+    "ts": 1791479430517,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzp56rca0icf",
+    "title": "تأكيد استلام",
+    "message": "424 — ام جود الشحر هاله حفيظ خميس باسواد",
+    "type": "success",
+    "time": "08/10/2026 06:33 PM",
+    "ts": 1791473628792,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzp519k9udgx",
+    "title": "ترحيل",
+    "message": "1 طلب إلى السجل",
+    "type": "success",
+    "time": "08/10/2026 06:33 PM",
+    "ts": 1791473621672,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzp4imllzwpo",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 06:33 PM",
+    "ts": 1791473597517,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzp4ima38k2b",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 06:33 PM",
+    "ts": 1791473597506,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzp4iag3imzq",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 06:33 PM",
+    "ts": 1791473597080,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzl9e3e4jbgd",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 425",
+    "type": "success",
+    "time": "08/10/2026 04:45 PM",
+    "ts": 1791467106458,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzl78rubsztn",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 04:43 PM",
+    "ts": 1791467006250,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzl78ohibncd",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 04:43 PM",
+    "ts": 1791467006129,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzl78cf2oq5q",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 04:43 PM",
+    "ts": 1791467005695,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzbc7y56ia7m",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 12:07 PM",
+    "ts": 1791450442301,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzbc7rslq5j4",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 12:07 PM",
+    "ts": 1791450442072,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzbc7rgs3iwl",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 12:07 PM",
+    "ts": 1791450442060,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzbc7r7ccjkl",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 12:07 PM",
+    "ts": 1791450442051,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzbc7q673vcl",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 12:07 PM",
+    "ts": 1791450442014,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzbc7byqks32",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 12:07 PM",
+    "ts": 1791450441502,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzb4j73nm13s",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 424",
+    "type": "success",
+    "time": "08/10/2026 12:01 PM",
+    "ts": 1791450083631,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzb26a40aj3p",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 423",
+    "type": "success",
+    "time": "08/10/2026 11:59 AM",
+    "ts": 1791449973580,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzb223txgq59",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 422",
+    "type": "success",
+    "time": "08/10/2026 11:59 AM",
+    "ts": 1791449968169,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzawmqnnkd2w",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 11:55 AM",
+    "ts": 1791449714975,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzawmqaspcud",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 11:55 AM",
+    "ts": 1791449714962,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzawmpn09p1o",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 11:55 AM",
+    "ts": 1791449714939,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muzawmhj0hzx2",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 11:55 AM",
+    "ts": 1791449714647,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz9dzaqj9ktg",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 421",
+    "type": "success",
+    "time": "08/10/2026 11:12 AM",
+    "ts": 1791447165170,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz9be15j3p08",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 420",
+    "type": "success",
+    "time": "08/10/2026 11:10 AM",
+    "ts": 1791447044297,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz9b39j69xcc",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 418",
+    "type": "success",
+    "time": "08/10/2026 11:10 AM",
+    "ts": 1791447030343,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz9999egvjfk",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 11:09 AM",
+    "ts": 1791446944802,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz99991qu1mo",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 11:09 AM",
+    "ts": 1791446944789,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz9998ostf4q",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 11:09 AM",
+    "ts": 1791446944776,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz998wmsvgrl",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 11:09 AM",
+    "ts": 1791446944342,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz7zooknqcl9",
+    "title": "إرجاع طلب",
+    "message": "تم إرجاع 418 إلى الإدخال",
+    "type": "warning",
+    "time": "08/10/2026 10:33 AM",
+    "ts": 1791444818612,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz7zawjj75ws",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 419",
+    "type": "success",
+    "time": "08/10/2026 10:33 AM",
+    "ts": 1791444800755,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz7pp5iol7wp",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 418",
+    "type": "success",
+    "time": "08/10/2026 10:25 AM",
+    "ts": 1791444352662,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz7gdxzcyn50",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 417",
+    "type": "success",
+    "time": "08/10/2026 10:18 AM",
+    "ts": 1791443918231,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz6y6k38zkxm",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 415",
+    "type": "success",
+    "time": "08/10/2026 10:04 AM",
+    "ts": 1791443068851,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz6xxfevgsyk",
+    "title": "إرجاع طلب",
+    "message": "تم إرجاع 415 إلى الإدخال",
+    "type": "warning",
+    "time": "08/10/2026 10:04 AM",
+    "ts": 1791443057018,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz6xq87m3q4u",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 416",
+    "type": "success",
+    "time": "08/10/2026 10:04 AM",
+    "ts": 1791443047688,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz6fv1j8rpdl",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 09:50 AM",
+    "ts": 1791442214119,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz67ulw6cy2j",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 415",
+    "type": "success",
+    "time": "08/10/2026 09:44 AM",
+    "ts": 1791441840308,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz5q4u97y6ue",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 414",
+    "type": "success",
+    "time": "08/10/2026 09:30 AM",
+    "ts": 1791441013761,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz5m15mur98o",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 413",
+    "type": "success",
+    "time": "08/10/2026 09:27 AM",
+    "ts": 1791440822362,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz4u65ht355l",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 09:05 AM",
+    "ts": 1791439522469,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muz4u5syocf72",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "08/10/2026 09:05 AM",
+    "ts": 1791439522018,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyfewp3wmiss",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 09:13 PM",
+    "ts": 1791396819975,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyfewb77c1eu",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 09:13 PM",
+    "ts": 1791396819475,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyf9jfpbu9yv",
+    "title": "تأكيد استلام",
+    "message": "412 — منياء سالم",
+    "type": "success",
+    "time": "07/10/2026 09:09 PM",
+    "ts": 1791396569509,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyf9el9o5mq8",
+    "title": "ترحيل",
+    "message": "1 طلب إلى السجل",
+    "type": "success",
+    "time": "07/10/2026 09:09 PM",
+    "ts": 1791396563229,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyf9av55h456",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 412",
+    "type": "success",
+    "time": "07/10/2026 09:09 PM",
+    "ts": 1791396558401,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyezqb9xd8es",
+    "title": "تأكيد استلام",
+    "message": "411 — متجر تفاصيل اشرف سالم احمد باحكم",
+    "type": "success",
+    "time": "07/10/2026 09:01 PM",
+    "ts": 1791396111861,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyezf81smean",
+    "title": "تأكيد استلام",
+    "message": "410 — ام جابر جابر زايد هادي",
+    "type": "success",
+    "time": "07/10/2026 09:01 PM",
+    "ts": 1791396097489,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyez54jejnfh",
+    "title": "تأكيد استلام",
+    "message": "409 — اماني سالم طالب باعشن",
+    "type": "success",
+    "time": "07/10/2026 09:01 PM",
+    "ts": 1791396084403,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyeyuk3eo2fz",
+    "title": "تأكيد استلام",
+    "message": "408 — ام محمد الكثيري",
+    "type": "success",
+    "time": "07/10/2026 09:01 PM",
+    "ts": 1791396070707,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyeymsvdxm47",
+    "title": "تأكيد استلام",
+    "message": "406 — ام عبداللطيف باقحوم",
+    "type": "success",
+    "time": "07/10/2026 09:01 PM",
+    "ts": 1791396060655,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyeyd4t499zi",
+    "title": "تأكيد استلام",
+    "message": "405 — سعيد صالح عبود باموسي - 771425685",
+    "type": "success",
+    "time": "07/10/2026 09:00 PM",
+    "ts": 1791396048125,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyey6jfdao87",
+    "title": "ترحيل",
+    "message": "6 طلب إلى السجل",
+    "type": "success",
+    "time": "07/10/2026 09:00 PM",
+    "ts": 1791396039579,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyexz9kgh6ws",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 411",
+    "type": "success",
+    "time": "07/10/2026 09:00 PM",
+    "ts": 1791396030152,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyemn7qa973b",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 410",
+    "type": "success",
+    "time": "07/10/2026 08:51 PM",
+    "ts": 1791395501318,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyefgf6usmeu",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 409",
+    "type": "success",
+    "time": "07/10/2026 08:46 PM",
+    "ts": 1791395165922,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyedbmrmpcln",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 08:44 PM",
+    "ts": 1791395066403,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyedbmemd4fd",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 08:44 PM",
+    "ts": 1791395066390,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyedbm320xab",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 08:44 PM",
+    "ts": 1791395066379,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muyedb6dae85m",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 08:44 PM",
+    "ts": 1791395065813,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muybi2dbo4nhf",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 408",
+    "type": "success",
+    "time": "07/10/2026 07:24 PM",
+    "ts": 1791390248831,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muya41g782fwk",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 406",
+    "type": "success",
+    "time": "07/10/2026 06:45 PM",
+    "ts": 1791387914839,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy9jxgbqndww",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 405",
+    "type": "success",
+    "time": "07/10/2026 06:29 PM",
+    "ts": 1791386976539,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8hb400oiwq",
+    "title": "تأكيد استلام",
+    "message": "396 — ام خالد-770452841",
+    "type": "success",
+    "time": "07/10/2026 05:59 PM",
+    "ts": 1791385174656,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8h12amnngc",
+    "title": "تأكيد استلام",
+    "message": "395 — ام الهنوف باوزير",
+    "type": "success",
+    "time": "07/10/2026 05:59 PM",
+    "ts": 1791385161634,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8fyartkqgd",
+    "title": "تأكيد استلام",
+    "message": "393 — ام احمد علي بن ماضي حلة",
+    "type": "success",
+    "time": "07/10/2026 05:58 PM",
+    "ts": 1791385111395,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8fnh6b8965",
+    "title": "تأكيد استلام",
+    "message": "390 — هناء محمد عبدالله عوض الجمحي",
+    "type": "success",
+    "time": "07/10/2026 05:58 PM",
+    "ts": 1791385097370,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8fd0bpv4w5",
+    "title": "تأكيد استلام",
+    "message": "388 — أم قصي محمد  باكثير",
+    "type": "success",
+    "time": "07/10/2026 05:58 PM",
+    "ts": 1791385083803,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8f3wa77ote",
+    "title": "تأكيد استلام",
+    "message": "384 — ام بركة العكبري",
+    "type": "success",
+    "time": "07/10/2026 05:57 PM",
+    "ts": 1791385071994,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8euarjq29t",
+    "title": "تأكيد استلام",
+    "message": "398 — محمد عبدالله عاطف الكلدي - 775073555",
+    "type": "success",
+    "time": "07/10/2026 05:57 PM",
+    "ts": 1791385059555,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8elv8hdxgr",
+    "title": "تأكيد استلام",
+    "message": "399 — ام عبيد عمر باموسى - الغليلة -774588012",
+    "type": "success",
+    "time": "07/10/2026 05:57 PM",
+    "ts": 1791385048628,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8e9xzxpgi2",
+    "title": "تأكيد استلام",
+    "message": "400 — متجر نور الكثيري",
+    "type": "success",
+    "time": "07/10/2026 05:57 PM",
+    "ts": 1791385033175,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8dzqxmhl14",
+    "title": "تأكيد استلام",
+    "message": "397 — متجر ام محمد اناقة بيتك /771173302",
+    "type": "success",
+    "time": "07/10/2026 05:56 PM",
+    "ts": 1791385019961,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8dqwtuu6qp",
+    "title": "تأكيد استلام",
+    "message": "402 — ابراهيم سالم القثمي",
+    "type": "success",
+    "time": "07/10/2026 05:56 PM",
+    "ts": 1791385008509,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8dgnmxda3c",
+    "title": "تأكيد استلام",
+    "message": "403 — ام زايد الشافعي",
+    "type": "success",
+    "time": "07/10/2026 05:56 PM",
+    "ts": 1791384995218,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8d75thl9au",
+    "title": "تأكيد استلام",
+    "message": "401 — ام شداد حمزة عمر عبدالله بارشيد",
+    "type": "success",
+    "time": "07/10/2026 05:56 PM",
+    "ts": 1791384982913,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8cxeos4bq7",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 05:56 PM",
+    "ts": 1791384970272,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy8cx625ehhw",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 05:56 PM",
+    "ts": 1791384969962,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy5guiyq0xsc",
+    "title": "تأكيد استلام",
+    "message": "404 — عمر ابراهيم سبيت صحاليل",
+    "type": "success",
+    "time": "07/10/2026 04:35 PM",
+    "ts": 1791380114314,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy5gieyas2hg",
+    "title": "ترحيل",
+    "message": "13 طلب إلى السجل",
+    "type": "success",
+    "time": "07/10/2026 04:34 PM",
+    "ts": 1791380098618,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy5g9owy7puw",
+    "title": "ترحيل",
+    "message": "1 طلب إلى السجل",
+    "type": "success",
+    "time": "07/10/2026 04:34 PM",
+    "ts": 1791380087312,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy5g38oaa9z5",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 404",
+    "type": "success",
+    "time": "07/10/2026 04:34 PM",
+    "ts": 1791380078952,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy5cz62ieiri",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 04:32 PM",
+    "ts": 1791379933706,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy5cz5ujv186",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 04:32 PM",
+    "ts": 1791379933698,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy5cz501jpv8",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 04:32 PM",
+    "ts": 1791379933668,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy5cz4s2efzp",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 04:32 PM",
+    "ts": 1791379933660,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy5cyyrslt4d",
+    "title": "مرحباً",
+    "message": "أهلاً اشرف (عامل)",
+    "type": "info",
+    "time": "07/10/2026 04:32 PM",
+    "ts": 1791379933443,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy1wlvmoxhna",
+    "title": "مرحباً",
+    "message": "أهلاً المحل (عامل)",
+    "type": "info",
+    "time": "07/10/2026 02:55 PM",
+    "ts": 1791374131139,
+    "createdBy": "المحل",
+    "deletedBy": [],
+    "readBy": [
+      "المحل",
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muy1mxd7hd0i9",
+    "title": "مرحباً",
+    "message": "أهلاً 1 (مالك)",
+    "type": "info",
+    "time": "07/10/2026 02:47 PM",
+    "ts": 1791373679467,
+    "createdBy": "1",
+    "deletedBy": [],
+    "readBy": [
+      "1",
+      "المحل",
+      "اشرف",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muxy93r0kvje3",
+    "title": "تنبيه",
+    "message": "ستنتهي جلستك قريباً",
+    "type": "warning",
+    "time": "07/10/2026 01:13 PM",
+    "ts": 1791367995708,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "1",
+      "المحل",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muxw7xphhomw5",
+    "title": "تأكيد استلام",
+    "message": "386 — مجدي ابوبكر بن قاسم باعشن",
+    "type": "success",
+    "time": "07/10/2026 12:16 PM",
+    "ts": 1791364581989,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "1",
+      "المحل",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muxw7iu5a0iz8",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 401",
+    "type": "success",
+    "time": "07/10/2026 12:16 PM",
+    "ts": 1791364562717,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "1",
+      "المحل",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muxw7bwilbiq2",
+    "title": "إرجاع طلب",
+    "message": "تم إرجاع 401 إلى الإدخال",
+    "type": "warning",
+    "time": "07/10/2026 12:15 PM",
+    "ts": 1791364553730,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "1",
+      "المحل",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muxw4m8t6tnn4",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 403",
+    "type": "success",
+    "time": "07/10/2026 12:13 PM",
+    "ts": 1791364427165,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "1",
+      "المحل",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muxw073292rqb",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 402",
+    "type": "success",
+    "time": "07/10/2026 12:10 PM",
+    "ts": 1791364220894,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "1",
+      "المحل",
+      "عبدالرحمن"
+    ]
+  },
+  {
+    "id": "muxvwupr39v07",
+    "title": "تحويل طلب",
+    "message": "تم تحويل 401",
+    "type": "success",
+    "time": "07/10/2026 12:07 PM",
+    "ts": 1791364064895,
+    "createdBy": "اشرف",
+    "deletedBy": [],
+    "readBy": [
+      "اشرف",
+      "1",
+      "المحل",
+      "عبدالرحمن"
+    ]
+  }
+]

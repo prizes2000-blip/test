@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
-<title>نظام إدارة الطلبات</title>
+<title>نظام إدارة الطلبات v3.5</title>
 <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22%D9%86%D8%B8%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%D8%A7%D8%AA%22%2C%22short_name%22%3A%22%D8%A7%D9%84%D8%B7%D9%84%D8%A8%D8%A7%D8%AA%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%233654d4%22%2C%22theme_color%22%3A%22%233654d4%22%7D">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -707,7 +707,7 @@ tbody tr.status-progress{background:linear-gradient(90deg,rgba(245,163,24,.08),t
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo" id="loginLogo"></div>
-    <h1>نظام إدارة الطلبات</h1>
+    <h1>نظام إدارة الطلبات v3.5</h1>
     <p class="subtitle">منصة احترافية لإدارة الطلبات</p>
     <div id="keyStatus"></div>
     <div id="keyField" style="display:none;">
@@ -747,7 +747,7 @@ tbody tr.status-progress{background:linear-gradient(90deg,rgba(245,163,24,.08),t
   <header>
     <div class="brand">
       <span class="brand-logo" id="brandLogo"></span>
-      <h1>نظام إدارة الطلبات</h1>
+      <h1>نظام إدارة الطلبات v3.5</h1>
     </div>
     <div class="user-info">
       <span id="saveQueueIndicator"></span>
@@ -4065,101 +4065,311 @@ function buildPrintHTML(items, template, extra = {}) {
     .replace(/{user}/g, esc(currentUser.username))
     .replace(/{from}/g, extra.from || 'البداية')
     .replace(/{to}/g, extra.to || 'اليوم');
+
+  // ─── تعريف الأعمدة ───
   const cols = [];
-  if (tpl.showInvoice !== false)        cols.push({ key:'invoice',        header:'الفاتورة',      cls:'col-code',  weight: PRINT_COL_WEIGHTS.invoice,        cell:o => esc(o.invoice) });
-  if (tpl.showBranch !== false)         cols.push({ key:'branch',         header:'الفرع',         cls:'',          weight: PRINT_COL_WEIGHTS.branch,         cell:o => esc(o.branch || DEFAULT_BRANCH_NAME) });
-  if (tpl.showCustomer !== false)       cols.push({ key:'customer',       header:'العميل',        cls:'col-name',  weight: PRINT_COL_WEIGHTS.customer,       cell:o => esc(o.customer) });
-  if (tpl.showCustomerPhone !== false)  cols.push({ key:'customerPhone',  header:'هاتف العميل',   cls:'col-code',  weight: PRINT_COL_WEIGHTS.customerPhone,  cell:o => esc(o.customerPhone || '—') });
-  if (tpl.showLocation !== false)       cols.push({ key:'location',       header:'الموقع',        cls:'',          weight: PRINT_COL_WEIGHTS.location,       cell:o => esc(o.location) });
-  if (tpl.showStatus !== false)         cols.push({ key:'status',         header:'الحالة',        cls:'',          weight: PRINT_COL_WEIGHTS.status,         cell:o => esc(o.status) });
-  if (tpl.showApprovalDate !== false)   cols.push({ key:'approvalDate',   header:'الاعتماد',      cls:'col-code',  weight: PRINT_COL_WEIGHTS.approvalDate,   cell:o => esc(o.approvalDate || '—') });
-  if (tpl.showPay !== false)            cols.push({ key:'pay',            header:'الدفع',         cls:'',          weight: PRINT_COL_WEIGHTS.pay,            cell:o => esc(o.pay || '—') });
-  if (tpl.showDriver !== false)         cols.push({ key:'driver',         header:'الموصل',        cls:'col-name',  weight: PRINT_COL_WEIGHTS.driver,         cell:o => esc(o.driver || '—') });
-  if (tpl.showDriverPhone !== false)    cols.push({ key:'driverPhone',    header:'هاتف الموصل',   cls:'col-code',  weight: PRINT_COL_WEIGHTS.driverPhone,    cell:o => esc(o.driverPhone || '—') });
-  if (tpl.showNotes !== false)          cols.push({ key:'notes',          header:'ملاحظات',       cls:'col-notes', weight: PRINT_COL_WEIGHTS.notes,          cell:o => esc(o.notes || '—') });
-  if (tpl.showArchivedAt)               cols.push({ key:'archivedAt',     header:'تاريخ الترحيل', cls:'col-code',  weight: PRINT_COL_WEIGHTS.archivedAt,     cell:o => esc(o.archivedAt || '—') });
-  if (tpl.showReceiptStatus)            cols.push({ key:'receiptStatus',  header:'حالة الاستلام', cls:'',          weight: PRINT_COL_WEIGHTS.receiptStatus,  cell:o => esc(o.receiptStatus || RECEIPT_NOT_RECEIVED) });
-  const allCols = [{ key:'index', header:'#', cls:'col-num', weight: PRINT_COL_WEIGHTS.index, cell:null }].concat(cols);
+  if (tpl.showInvoice !== false)        cols.push({ key:'invoice',        header:'رقم الفاتورة',  cls:'col-code',  weight: 70, cell:o => esc(o.invoice) });
+  if (tpl.showBranch !== false)         cols.push({ key:'branch',         header:'الفرع',         cls:'',          weight: 75, cell:o => esc(o.branch || DEFAULT_BRANCH_NAME) });
+  if (tpl.showCustomer !== false)       cols.push({ key:'customer',       header:'العميل',        cls:'col-name',  weight: 105, cell:o => esc(o.customer) });
+  if (tpl.showCustomerPhone !== false)  cols.push({ key:'customerPhone',  header:'هاتف العميل',   cls:'col-code',  weight: 105, cell:o => esc(o.customerPhone || '—') });
+  if (tpl.showLocation !== false)       cols.push({ key:'location',       header:'الموقع',        cls:'col-name',  weight: 95, cell:o => esc(o.location) });
+  if (tpl.showStatus !== false)         cols.push({ key:'status',         header:'حالة الطلب',    cls:'',          weight: 70, cell:o => esc(o.status) });
+  if (tpl.showApprovalDate !== false)   cols.push({ key:'approvalDate',   header:'تاريخ الاعتماد', cls:'col-code', weight: 90, cell:o => esc(o.approvalDate || '—') });
+  if (tpl.showPay !== false)            cols.push({ key:'pay',            header:'الدفع',         cls:'',          weight: 55, cell:o => esc(o.pay || '—') });
+  if (tpl.showDriver !== false)         cols.push({ key:'driver',         header:'الموصل',        cls:'col-name',  weight: 95, cell:o => esc(o.driver || '—') });
+  if (tpl.showDriverPhone !== false)    cols.push({ key:'driverPhone',    header:'هاتف الموصل',   cls:'col-code',  weight: 105, cell:o => esc(o.driverPhone || '—') });
+  if (tpl.showNotes !== false)          cols.push({ key:'notes',          header:'ملاحظات',       cls:'col-notes', weight: 110, cell:o => esc(o.notes || '—') });
+  if (tpl.showArchivedAt)               cols.push({ key:'archivedAt',     header:'تاريخ الترحيل', cls:'col-code',  weight: 90, cell:o => esc(o.archivedAt || '—') });
+  if (tpl.showReceiptStatus)            cols.push({ key:'receiptStatus',  header:'حالة الاستلام', cls:'',          weight: 70, cell:o => esc(o.receiptStatus || RECEIPT_NOT_RECEIVED) });
+
+  const allCols = [{ key:'index', header:'#', cls:'col-num', weight: 25, cell:null }].concat(cols);
   const totalWeight = allCols.reduce((s, c) => s + c.weight, 0);
-  const colgroup = allCols.map(c => `<col style="width:${((c.weight / totalWeight) * 100).toFixed(3)}%">`).join('');
-  const headersHTML = allCols.map(c => `<th class="${c.cls}"><span class="fit-text">${esc(c.header)}</span></th>`).join('');
+
+  // ─── colgroup ───
+  const colgroup = allCols.map(c =>
+    `<col style="width:${((c.weight / totalWeight) * 100).toFixed(3)}%">`
+  ).join('');
+
+  // ─── headers ───
+  const headersHTML = allCols.map(c =>
+    `<th class="${c.cls}">${esc(c.header)}</th>`
+  ).join('');
+
+  // ─── rows ───
   const rowsHTML = items.map((o, i) => {
     const cells = allCols.map(c => {
       const content = c.cell ? c.cell(o) : String(i + 1);
-      if (c.cls === 'col-notes') return `<td class="${c.cls}">${content}</td>`;
-      return `<td class="${c.cls}"><span class="fit-text">${content}</span></td>`;
+      return `<td class="${c.cls}">${content}</td>`;
     }).join('');
     return `<tr>${cells}</tr>`;
   }).join('');
+
+  // ─── الأبعاد ───
   const paperKey = tpl.paperSize || 'A4';
   const paper = PAPER_SIZES[paperKey] || PAPER_SIZES.A4;
-  const baseFont = tpl.fontSize || 10;
-  const titleSize = baseFont + 5;
-  const metaSize = baseFont;
-  const footSize = baseFont;
-  const smallFont = +(baseFont * 0.92).toFixed(2);
-  const printableW = paper.w - 16;
-  const logoW = Math.min(templates.logoWidth || 180, printableW);
-  const logoH = templates.logoHeight || 40;
+  const baseFont = Math.max(9, Math.min(14, tpl.fontSize || 10));
+
+  // ═══ الخطوط والأحجام المحسوبة ═══
+  const titleSize   = baseFont + 6;      // عنوان بارز
+  const subtitleSize = baseFont + 1;     // السطر الفرعي
+  const headerSize  = baseFont;          // رأس الجدول
+  const bodySize    = baseFont;          // خلايا الجدول
+  const footerSize  = baseFont + 1;      // التذييل
+
+  // ─── الشعار ───
   const logoHTML = templates.logo
-    ? `<div class="print-logo"><img src="${templates.logo}" alt="" style="width:${logoW}mm;max-width:100%;height:auto;max-height:${logoH}mm;object-fit:contain;display:block;margin:0 auto;"></div>`
+    ? `<div class="print-logo"><img src="${templates.logo}" alt="" style="width:${templates.logoWidth || 180}mm;max-width:100%;height:auto;max-height:${templates.logoHeight || 40}mm;object-fit:contain;display:block;margin:0 auto;"></div>`
     : '';
-  return `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>${esc(replaceVars(tpl.title))}</title>
-    <style>
-      @page { size: ${paper.w}mm ${paper.h}mm portrait; margin: 8mm; }
-      * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
-      html, body { margin: 0; padding: 0; background: #fff; color: #000; font-family: Tahoma, Arial, sans-serif; }
-      .print-logo { text-align: center; margin: 0 0 4mm 0; }
-      h1 { font-size: ${titleSize}pt; color: #1d3193; margin: 0 0 2mm 0; text-align: center; font-weight: 700; line-height: 1.3; }
-      .meta { text-align: center; font-size: ${metaSize}pt; color: #475569; margin: 0 0 3mm 0; line-height: 1.4; }
-      table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: ${baseFont}pt; }
-      th, td { border: 1px solid #334155; padding: 3px 5px; vertical-align: middle; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: clip; }
-      thead { display: table-header-group; }
-      tfoot { display: table-footer-group; }
-      th { background: #1d3193; color: #fff; font-weight: 700; text-align: center; font-size: ${smallFont}pt; }
-      td { text-align: right; background: #fff; }
-      tbody tr:nth-child(even) td { background: #eef4ff; }
-      tbody tr { page-break-inside: avoid; break-inside: avoid; }
-      .fit-text { display: inline-block; white-space: nowrap; vertical-align: middle; transform-origin: right center; }
-      th .fit-text { transform-origin: center center; }
-      .col-num { text-align: center !important; font-weight: 600; color: #1d3193; }
-      .col-code { direction: ltr; text-align: center !important; font-family: 'Courier New', Consolas, monospace; }
-      .col-notes { text-align: right !important; white-space: normal !important; overflow-wrap: anywhere; line-height: 1.4; overflow: visible; }
-      .col-name { text-align: right !important; white-space: nowrap !important; }
-      tfoot td { border: none; padding-top: 6mm; text-align: center; font-size: ${footSize}pt; color: #334155; background: #fff !important; white-space: normal; overflow: visible; }
-    </style>
-    </head><body>
-    ${logoHTML}
-    <h1>${esc(replaceVars(tpl.title))}</h1>
-    <div class="meta">${esc(replaceVars(tpl.subtitle))}</div>
-    <table>
-      <colgroup>${colgroup}</colgroup>
-      <thead><tr>${headersHTML}</tr></thead>
-      <tbody>${rowsHTML}</tbody>
-      ${tpl.footer ? `<tfoot><tr><td colspan="${allCols.length}">${esc(replaceVars(tpl.footer))}</td></tr></tfoot>` : ''}
-    </table>
-    <script>
-      function fitPrintText() {
-        const table = document.querySelector('table'); if (!table) return;
-        const cells = table.querySelectorAll('thead th, tbody td:not(.col-notes)');
-        cells.forEach(cell => {
-          const text = cell.querySelector('.fit-text'); if (!text) return;
-          text.style.transform = 'none'; text.style.fontSize = '';
-          const base = parseFloat(getComputedStyle(text).fontSize) || ${baseFont} * 1.333;
-          const min = 5 * 1.333;
-          const available = Math.max(1, cell.clientWidth - 8);
-          let size = base; text.style.fontSize = size + 'px';
-          let guard = 120;
-          while (text.scrollWidth > available && size > min && guard-- > 0) { size -= 0.2; text.style.fontSize = size + 'px'; }
-          if (text.scrollWidth > available) {
-            const scale = available / Math.max(1, text.scrollWidth);
-            text.style.transform = 'scaleX(' + Math.max(0.08, scale).toFixed(4) + ')';
-          }
-        });
-      }
-      window.onload = () => setTimeout(() => { fitPrintText(); setTimeout(() => window.print(), 180); }, 350);
-    <\/script>
-    </body></html>`;
+
+  return `<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8">
+<title>${esc(replaceVars(tpl.title))}</title>
+<style>
+  /* ════════════════════════════════════════════
+     إعدادات الورقة
+     ════════════════════════════════════════════ */
+  @page {
+    size: ${paper.w}mm ${paper.h}mm portrait;
+    margin: 8mm 8mm 10mm 8mm;
+  }
+
+  /* ════════════════════════════════════════════
+     إعدادات عامة
+     ════════════════════════════════════════════ */
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    direction: rtl;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    font-size: ${bodySize}pt;
+    line-height: 1.4;
+  }
+
+  /* ════════════════════════════════════════════
+     الشعار
+     ════════════════════════════════════════════ */
+  .print-logo {
+    text-align: center;
+    margin: 0 0 5mm 0;
+    page-break-inside: avoid;
+  }
+  .print-logo img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* ════════════════════════════════════════════
+     العنوان والسطر الفرعي
+     ════════════════════════════════════════════ */
+  h1.print-title {
+    font-size: ${titleSize}pt;
+    color: #1d3193;
+    margin: 0 0 3mm 0;
+    text-align: center;
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.2px;
+    page-break-inside: avoid;
+  }
+  .print-subtitle {
+    text-align: center;
+    font-size: ${subtitleSize}pt;
+    color: #475569;
+    margin: 0 0 5mm 0;
+    line-height: 1.5;
+    font-weight: 500;
+    page-break-inside: avoid;
+  }
+
+  /* ════════════════════════════════════════════
+     الجدول الرئيسي
+     ════════════════════════════════════════════ */
+  table.print-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: ${bodySize}pt;
+    page-break-inside: auto;
+  }
+
+  table.print-table thead {
+    display: table-header-group;
+  }
+  table.print-table tfoot {
+    display: table-footer-group;
+  }
+  table.print-table tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  table.print-table th {
+    background: #1d3193;
+    color: #fff;
+    font-weight: 700;
+    font-size: ${headerSize}pt;
+    text-align: center;
+    padding: 4mm 1.5mm;
+    border: 0.6px solid #1a2870;
+    line-height: 1.25;
+    vertical-align: middle;
+    overflow: hidden;
+    word-break: keep-all;
+    white-space: nowrap;
+  }
+
+  table.print-table td {
+    padding: 3mm 1.5mm;
+    border: 0.6px solid #64748b;
+    line-height: 1.4;
+    vertical-align: middle;
+    background: #fff;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  table.print-table tbody tr:nth-child(even) td {
+    background: #eef4ff;
+  }
+
+  /* ════════════════════════════════════════════
+     فئات الخلايا الخاصة
+     ════════════════════════════════════════════ */
+  .col-num {
+    text-align: center !important;
+    font-weight: 700;
+    color: #1d3193;
+    white-space: nowrap;
+  }
+  .col-code {
+    direction: ltr;
+    text-align: center !important;
+    font-family: 'Courier New', Consolas, monospace;
+    font-size: ${bodySize - 0.5}pt;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+  }
+  .col-name {
+    text-align: right !important;
+    white-space: normal;
+  }
+  .col-notes {
+    text-align: right !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.35;
+    font-size: ${bodySize - 0.3}pt;
+    color: #334155;
+  }
+
+  /* ════════════════════════════════════════════
+     التذييل (توقيعات)
+     ════════════════════════════════════════════ */
+  .print-footer {
+    margin-top: 8mm;
+    padding-top: 4mm;
+    text-align: center;
+    font-size: ${footerSize}pt;
+    color: #334155;
+    line-height: 1.7;
+    page-break-inside: avoid;
+    border-top: 0.8px dashed #94a3b8;
+  }
+
+  /* ════════════════════════════════════════════
+     منع كسر الصفوف
+     ════════════════════════════════════════════ */
+  .no-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* ════════════════════════════════════════════
+     شاشة المعاينة
+     ════════════════════════════════════════════ */
+  @media screen {
+    body {
+      background: #e5e7eb;
+      padding: 15mm 10mm;
+    }
+    .print-container {
+      background: #fff;
+      width: ${paper.w}mm;
+      max-width: 100%;
+      min-height: ${paper.h}mm;
+      margin: 0 auto;
+      padding: 8mm 8mm 10mm 8mm;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+  }
+  @media print {
+    .print-container {
+      width: 100%;
+      padding: 0;
+      box-shadow: none;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="print-container">
+
+  ${logoHTML}
+
+  <h1 class="print-title">${esc(replaceVars(tpl.title))}</h1>
+
+  <div class="print-subtitle">${esc(replaceVars(tpl.subtitle))}</div>
+
+  <table class="print-table">
+    <colgroup>${colgroup}</colgroup>
+    <thead>
+      <tr>${headersHTML}</tr>
+    </thead>
+    <tbody>
+      ${rowsHTML}
+    </tbody>
+  </table>
+
+  ${tpl.footer ? `<div class="print-footer">${esc(replaceVars(tpl.footer))}</div>` : ''}
+
+</div>
+
+<script>
+  // إزالة الجدول الفارغ إذا لم توجد بيانات
+  window.addEventListener('DOMContentLoaded', function() {
+    var tbody = document.querySelector('table.print-table tbody');
+    if (tbody && tbody.children.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="99" style="text-align:center;padding:20mm 5mm;color:#94a3b8;font-size:12pt;">لا توجد بيانات للطباعة</td></tr>';
+    }
+  });
+  // طباعة تلقائية بعد تحميل الصور
+  window.addEventListener('load', function() {
+    setTimeout(function() { window.print(); }, 400);
+  });
+<\/script>
+
+</body>
+</html>`;
 }
 
 window.printReady = function () {
@@ -4663,7 +4873,7 @@ window.exportBackup = async function () {
       byMonth[m].push(a);
     });
     Object.keys(byMonth).forEach(m => { activityFolder.file(`${m}.json`, JSON.stringify(byMonth[m], null, 2)); });
-    const info = { name: 'نظام إدارة الطلبات', createdAt: stamp.toISOString(), createdAtLocal: stamp.toLocaleString('ar-SA'), createdBy: currentUser?.username || 'unknown', structure: 'v5-professional' };
+    const info = { name: 'نظام إدارة الطلبات v3.5', createdAt: stamp.toISOString(), createdAtLocal: stamp.toLocaleString('ar-SA'), createdBy: currentUser?.username || 'unknown', structure: 'v5-professional' };
     zip.file('backup-info.json', JSON.stringify(info, null, 2));
     const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 9 } });
     downloadBlob(blob, `backup_${dateStr}.zip`);

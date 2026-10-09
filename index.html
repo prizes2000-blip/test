@@ -629,6 +629,32 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
 .group-card .group-title{font-weight:700;font-size:14px;color:var(--text)}
 .group-card .group-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--text-muted);margin-top:4px}
 .group-card .group-actions{display:flex;gap:6px;flex-wrap:wrap}
+
+/* ✅ تنسيقات مضغوطة لكشف الشذوذ ومقارنة الفترات */
+#anomalyCard,#comparisonCard{padding:14px 14px !important}
+#anomalyCard h4,#comparisonCard h4{margin-bottom:10px !important;font-size:12.5px !important}
+#anomalyContent>div{padding:8px 10px !important;margin-bottom:6px !important;border-radius:8px !important}
+#anomalyContent>div>div:first-child{gap:6px !important;margin-bottom:3px !important}
+#anomalyContent>div>div:first-child b{font-size:11.5px !important}
+#anomalyContent>div>div:first-child .badge{font-size:8.5px !important;padding:1px 5px !important}
+#anomalyContent>div>div:nth-child(2){font-size:10.5px !important;line-height:1.45 !important}
+#anomalyContent>div>div:last-child{margin-top:4px !important;padding-top:4px !important;font-size:10px !important}
+#comparisonContent>div:first-child{font-size:10.5px !important;margin-bottom:8px !important}
+#comparisonContent table{font-size:11px !important}
+#comparisonContent table th{padding:3px 2px !important;font-size:10px !important}
+#comparisonContent table td{padding:4px 2px !important;font-size:11px !important}
+#comparisonContent table svg{width:11px !important;height:11px !important}
+@media(max-width:750px){
+  #anomalyCard,#comparisonCard{padding:11px 10px !important}
+  #anomalyContent>div{padding:6px 8px !important;margin-bottom:5px !important}
+  #anomalyContent>div>div:first-child b{font-size:11px !important}
+  #anomalyContent>div>div:nth-child(2){font-size:10px !important}
+  #comparisonContent table{font-size:10.5px !important}
+  #comparisonContent table th{padding:2px 1.5px !important;font-size:9.5px !important}
+  #comparisonContent table td{padding:3px 1.5px !important;font-size:10.5px !important}
+  .analytics-row.cols-2{gap:8px !important;margin-bottom:14px !important}
+}
+
 @media print {
     @page { size: A4 portrait; margin: 10mm; }
     html, body { width: 100%; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -914,21 +940,18 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
           <div id="comparisonContent"></div>
         </div>
       </div>
+      <!-- ✅ تم حذف قسم أوقات الذروة -->
       <div class="analytics-row cols-2">
-        <div class="analytics-card">
-          <h4 id="peakHoursTitle"></h4>
-          <div id="peakHoursContent"></div>
-        </div>
         <div class="analytics-card">
           <h4 id="topLocationsTitle"></h4>
           <div id="topLocationsContent"></div>
         </div>
-      </div>
-      <div class="analytics-row cols-2">
         <div class="analytics-card">
           <h4 id="topDriversAnalyticsTitle"></h4>
           <div id="topDriversAnalyticsContent"></div>
         </div>
+      </div>
+      <div class="analytics-row cols-2">
         <div class="analytics-card">
           <h4 id="topCustomersAnalyticsTitle"></h4>
           <div id="topCustomersAnalyticsContent"></div>
@@ -1175,7 +1198,6 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
 </div>
 
 <div id="toastContainer" class="toast-container"></div>
-
 <script>
 /* ══════════════════════════════════════════════════════════════
    ICONS
@@ -1505,14 +1527,13 @@ const DEFAULT_TEMPLATES = {
   }
 };
 
+/* ✅ تم حذف أوقات الذروة peakHoursStart / peakHoursEnd */
 const DEFAULT_ANALYTICS_SETTINGS = {
   anomalyWindowDays: 7,
   anomalyDropPercent: 40,
   anomalySpikePercent: 60,
   anomalyInactiveDays: 30,
   anomalySlowDriverMin: 5,
-  peakHoursStart: 9,
-  peakHoursEnd: 18,
   driverSuggestionEnabled: true,
   driverSuggestionMinOrders: 3,
   comparisonPeriods: 2
@@ -2066,7 +2087,7 @@ function applyFeatureUI() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   DEVICE NOTIFICATIONS — إشعارات الجهاز
+   DEVICE NOTIFICATIONS
    ══════════════════════════════════════════════════════════════ */
 const DeviceNotify = (() => {
   const STORAGE_KEY = 'oms_device_notif';
@@ -2495,6 +2516,7 @@ function postProcessData() {
     .map(g => ({
       ...g,
       status: g.status || 'نشطة',
+      driverPhone: g.driverPhone || (cache.drivers.find(d => d.name === g.driver)?.phone || ''),
       orderIds: Array.isArray(g.orderIds) ? g.orderIds.filter(id =>
         cache.ready.some(o => o.id === id) || cache.log.some(o => o.id === id)
       ) : [],
@@ -3099,16 +3121,18 @@ function applyPermissionsUI() {
   });
   rebuildNav(); rebuildSettingsTabs(); applyFeatureUI();
 }
+
+/* ✅ ترتيب جديد: الرئيسية - إدخال الطلبات - الطلبات الجاهزة - مجموعات العمل - سجل الطلبات - المهام - العملاء - الإعدادات */
 function rebuildNav() {
   const navBar = document.getElementById('navBar'); if (!navBar) return;
   const items = [
     { page:'dashboard', icon:'home', label:'الرئيسية', perm:'accessDashboard' },
     { page:'entry', icon:'list', label:'إدخال الطلبات', perm:'accessEntry' },
     { page:'ready', icon:'box', label:'الطلبات الجاهزة', perm:'accessReady' },
-    { page:'log', icon:'archive', label:'سجل الطلبات', perm:'accessLog' },
-    { page:'customers', icon:'users', label:'العملاء', perm:'accessCustomers' },
     { page:'groups', icon:'layers', label:'مجموعات العمل', perm:'accessGroups', feature:'featureWorkGroups' },
+    { page:'log', icon:'archive', label:'سجل الطلبات', perm:'accessLog' },
     { page:'tasks', icon:'check', label:'المهام', perm:'accessTasks', feature:'featureTasks' },
+    { page:'customers', icon:'users', label:'العملاء', perm:'accessCustomers' },
     { page:'settings', icon:'cog', label:'الإعدادات', perm:'accessSettings' }
   ].filter(x => {
     if (!hasPerm(x.perm)) return false;
@@ -3149,7 +3173,7 @@ function rebuildSettingsTabs() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   NOTIFICATIONS
+   NOTIFICATIONS — ✅ كل مستخدم يرى إشعارات الآخرين فقط (العكس)
    ══════════════════════════════════════════════════════════════ */
 function scheduleNotificationsSave() {
   if (_notifSaveTimer) clearTimeout(_notifSaveTimer);
@@ -3162,7 +3186,8 @@ async function flushNotificationsSave() {
 }
 function addNotification(title, message, type = 'info', silent = false) {
   const u = currentUser?.username;
-  const n = { id: uid(), title, message, type, time: fmtDate(), ts: Date.now(), createdBy: u || 'system', deletedBy: [], readBy: u ? [u] : [] };
+  // ✅ readBy فارغة — المنشئ لا يرى إشعاره أصلاً
+  const n = { id: uid(), title, message, type, time: fmtDate(), ts: Date.now(), createdBy: u || 'system', deletedBy: [], readBy: [] };
   if (!Array.isArray(cache.notifications)) cache.notifications = [];
   cache.notifications.unshift(n);
   if (cache.notifications.length > 100) cache.notifications = cache.notifications.slice(0, 100);
@@ -3178,7 +3203,11 @@ function addNotification(title, message, type = 'info', silent = false) {
 }
 function getVisibleNotifications() {
   const u = currentUser?.username; if (!u) return [];
-  return (cache.notifications || []).filter(n => !(Array.isArray(n.deletedBy) && n.deletedBy.includes(u)));
+  // ✅ إخفاء إشعارات المستخدم نفسه (لا يرى إشعاراته)، ويظهر إشعارات الآخرين
+  return (cache.notifications || []).filter(n =>
+    n.createdBy !== u &&
+    !(Array.isArray(n.deletedBy) && n.deletedBy.includes(u))
+  );
 }
 function renderNotifications() {
   const list = document.getElementById('notifList'); if (!list) return;
@@ -3204,6 +3233,7 @@ window.toggleNotifPanel = function() {
       if (!Array.isArray(n.readBy)) n.readBy = [];
       if (!Array.isArray(n.deletedBy)) n.deletedBy = [];
       if (n.deletedBy.includes(u)) return;
+      if (n.createdBy === u) return; // ✅ لا نعدّل إشعارات المستخدم نفسه
       if (!n.readBy.includes(u)) { n.readBy.push(u); dirty = true; }
     });
     if (dirty) { renderNotifications(); scheduleNotificationsSave(); }
@@ -3560,13 +3590,14 @@ function buildUI() {
   if (redoBtn) redoBtn.innerHTML = ico('refresh', 17);
   updateThemeBtn(); renderRateLimitWidget(); rebuildNav();
 
+  /* ✅ ترتيب بطاقات الرئيسية مطابق للقائمة */
   document.getElementById('dashGrid').innerHTML = [
     { page:'entry', cls:'', icon:'list', title:'إدخال الطلبات', desc:'تسجيل ومتابعة الطلبات اليومية', perm:'accessEntry' },
     { page:'ready', cls:'green', icon:'box', title:'الطلبات الجاهزة', desc:'جاهزة للنقل إلى الفرع', perm:'accessReady' },
-    { page:'log', cls:'purple', icon:'archive', title:'سجل الطلبات', desc:'الأرشيف النهائي الكامل', perm:'accessLog' },
-    { page:'customers', cls:'orange', icon:'users', title:'العملاء', desc:'قاعدة بيانات العملاء', perm:'accessCustomers' },
     { page:'groups', cls:'', icon:'layers', title:'مجموعات العمل', desc:'تجميع الطلبات لموصل', perm:'accessGroups', feature:'featureWorkGroups' },
-    { page:'tasks', cls:'green', icon:'check', title:'المهام', desc:'إدارة المهام الداخلية', perm:'accessTasks', feature:'featureTasks' }
+    { page:'log', cls:'purple', icon:'archive', title:'سجل الطلبات', desc:'الأرشيف النهائي الكامل', perm:'accessLog' },
+    { page:'tasks', cls:'green', icon:'check', title:'المهام', desc:'إدارة المهام الداخلية', perm:'accessTasks', feature:'featureTasks' },
+    { page:'customers', cls:'orange', icon:'users', title:'العملاء', desc:'قاعدة بيانات العملاء', perm:'accessCustomers' }
   ].filter(x => { if (!hasPerm(x.perm)) return false; if (x.feature && !isFeatureEnabled(x.feature)) return false; return true; })
     .map(x => `<div class="dash-card ${x.cls}" onclick="go('${x.page}')"><div class="icon">${ico(x.icon, 26)}</div><h3>${x.title}</h3><p>${x.desc}</p></div>`).join('');
 
@@ -3585,7 +3616,6 @@ function buildUI() {
   document.getElementById('title-analytics').innerHTML = ico('pieChart', 17) + '<span>التحليلات الاحترافية</span>';
   document.getElementById('anomalyTitle').innerHTML = ico('warning', 15) + '<span>كشف الشذوذ</span>';
   document.getElementById('comparisonTitle').innerHTML = ico('trendUp', 15) + '<span>مقارنة الفترات</span>';
-  document.getElementById('peakHoursTitle').innerHTML = ico('clock', 15) + '<span>أوقات الذروة</span>';
   document.getElementById('topLocationsTitle').innerHTML = ico('building', 15) + '<span>أهم المناطق</span>';
   document.getElementById('topDriversAnalyticsTitle').innerHTML = ico('truck', 15) + '<span>أداء الموصلين</span>';
   document.getElementById('topCustomersAnalyticsTitle').innerHTML = ico('crown', 15) + '<span>تحليل العملاء</span>';
@@ -3663,6 +3693,7 @@ function buildUI() {
     <div id="activityList" class="activity-list"></div>
     <div id="activityPagination" class="activity-pagination"></div>`;
 
+  /* ✅ تم حذف أوقات الذروة */
   document.getElementById('tab-analytics').innerHTML = `
     <div class="template-card"><h4>${ico('warning', 17)}<span>إعدادات كشف الشذوذ</span></h4>
       <div class="template-row"><label>نافذة الكشف (أيام)</label><input type="number" id="anomalyWindowDays" min="3" max="90" value="7"></div>
@@ -3674,10 +3705,6 @@ function buildUI() {
       <div class="template-row"><label>تفعيل الاقتراح</label><label class="template-checkbox-label"><input type="checkbox" id="driverSuggestionEnabled" checked><span>اقتراح الموصل تلقائياً عند تحديد الموقع</span></label></div>
       <div class="template-row"><label>أقل عدد طلبات للموصل</label><input type="number" id="driverSuggestionMinOrders" min="1" max="20" value="3"></div>
       <div style="padding:10px 12px;background:var(--brand-50);border-radius:var(--radius-md);font-size:12px;color:var(--brand-700);margin-top:8px;border:1px solid rgba(66,102,232,.2);">💡 النظام يقترح الموصل بناءً على سجله في المنطقة، مع نسبة نجاحه. <b>يمكنك دائماً تغيير الاقتراح يدوياً.</b></div>
-    </div>
-    <div class="template-card"><h4>${ico('clock', 17)}<span>أوقات الذروة</span></h4>
-      <div class="template-row"><label>بداية ساعات العمل</label><input type="number" id="peakHoursStart" min="0" max="23" value="9"></div>
-      <div class="template-row"><label>نهاية ساعات العمل</label><input type="number" id="peakHoursEnd" min="0" max="23" value="18"></div>
     </div>
     <div class="toolbar" style="margin-top:16px;">
       <button class="btn btn-success" onclick="saveAnalyticsSettings()">${ico('save', 15)}<span>حفظ الإعدادات</span></button>
@@ -3708,6 +3735,7 @@ function buildUI() {
   document.getElementById('tab-notifications').innerHTML = `
     <div style="padding:12px;background:var(--brand-50);border-radius:var(--radius-md);font-size:12.5px;color:var(--brand-700);margin-bottom:14px;border:1px solid rgba(66,102,232,.2);line-height:1.6;">
       🔔 <b>إشعارات الجهاز</b> تُظهر رسائل منبثقة على شاشة جهازك (Windows/Mac/Android) حتى لو كان المتصفح في الخلفية أو مصغّراً. تعمل عبر Notifications API + Service Worker.
+      <br><br>ℹ️ <b>ملاحظة:</b> لن ترى إشعاراتك الخاصة — سترى فقط إشعارات الآخرين والعكس صحيح.
     </div>
     <div class="template-card"><h4>${ico('bell', 17)}<span>التحكم في الإشعارات</span></h4>
       <div id="deviceNotifStatusBox" style="margin-bottom:14px;"></div>
@@ -3935,14 +3963,14 @@ function renderAnomalies() {
     const bgMap = { high: 'rgba(239,61,82,.08)', medium: 'rgba(245,163,24,.08)', low: 'rgba(66,102,232,.08)' };
     const color = colorMap[a.severity] || colorMap.low;
     const bg = bgMap[a.severity] || bgMap.low;
-    return `<div style="padding:11px 13px;background:${bg};border-right:3px solid ${color};border-radius:var(--radius-md);margin-bottom:8px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;">
-        <span style="color:${color};display:inline-flex;">${ico(a.icon || 'warning', 15)}</span>
-        <b style="font-size:12.5px;color:var(--text);flex:1;">${esc(a.title)}</b>
-        <span class="badge" style="background:${color};color:#fff;font-size:9.5px;padding:2px 7px;">${a.severity === 'high' ? 'حرج' : a.severity === 'medium' ? 'متوسط' : 'منخفض'}</span>
+    return `<div style="padding:8px 10px;background:${bg};border-right:3px solid ${color};border-radius:8px;margin-bottom:6px;">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+        <span style="color:${color};display:inline-flex;">${ico(a.icon || 'warning', 14)}</span>
+        <b style="font-size:11.5px;color:var(--text);flex:1;">${esc(a.title)}</b>
+        <span class="badge" style="background:${color};color:#fff;font-size:8.5px;padding:1px 5px;">${a.severity === 'high' ? 'حرج' : a.severity === 'medium' ? 'متوسط' : 'منخفض'}</span>
       </div>
-      <div style="font-size:11.5px;color:var(--text-secondary);line-height:1.6;white-space:pre-line;">${esc(a.description)}</div>
-      ${a.suggestion ? `<div style="margin-top:6px;padding-top:6px;border-top:1px dashed rgba(0,0,0,.08);font-size:11px;color:var(--text-muted);">💡 ${esc(a.suggestion)}</div>` : ''}
+      <div style="font-size:10.5px;color:var(--text-secondary);line-height:1.45;white-space:pre-line;">${esc(a.description)}</div>
+      ${a.suggestion ? `<div style="margin-top:4px;padding-top:4px;border-top:1px dashed rgba(0,0,0,.08);font-size:10px;color:var(--text-muted);">💡 ${esc(a.suggestion)}</div>` : ''}
     </div>`;
   }).join('');
 }
@@ -3951,75 +3979,30 @@ function renderComparison() {
   const comp = Analytics.comparePeriods('month', 'month-prev');
   const { current, previous, changes } = comp;
   const trendArrow = (c) => {
-    if (c.dir === 'up') return `<span style="color:#0cb97b;">${ico('trendUp', 12)} ${c.pct}%</span>`;
-    if (c.dir === 'down') return `<span style="color:#ef3d52;">${ico('trendDown', 12)} ${c.pct}%</span>`;
+    if (c.dir === 'up') return `<span style="color:#0cb97b;">${ico('trendUp', 11)} ${c.pct}%</span>`;
+    if (c.dir === 'down') return `<span style="color:#ef3d52;">${ico('trendDown', 11)} ${c.pct}%</span>`;
     return `<span style="opacity:.5;">—</span>`;
   };
   container.innerHTML = `
-    <div style="text-align:center;font-size:11.5px;color:var(--text-muted);margin-bottom:12px;">هذا الشهر مقابل الشهر الماضي</div>
-    <table style="width:100%;font-size:12px;border-collapse:collapse;">
-      <thead><tr style="color:var(--text-muted);font-size:11px;">
-        <th style="text-align:right;padding:5px 4px;border-bottom:1px solid var(--border);">البند</th>
-        <th style="text-align:center;padding:5px 4px;border-bottom:1px solid var(--border);">هذا الشهر</th>
-        <th style="text-align:center;padding:5px 4px;border-bottom:1px solid var(--border);">السابق</th>
-        <th style="text-align:center;padding:5px 4px;border-bottom:1px solid var(--border);">التغيير</th>
+    <div style="text-align:center;font-size:10.5px;color:var(--text-muted);margin-bottom:8px;">هذا الشهر مقابل الشهر الماضي</div>
+    <table style="width:100%;font-size:11px;border-collapse:collapse;">
+      <thead><tr style="color:var(--text-muted);font-size:10px;">
+        <th style="text-align:right;padding:3px 2px;border-bottom:1px solid var(--border);">البند</th>
+        <th style="text-align:center;padding:3px 2px;border-bottom:1px solid var(--border);">هذا الشهر</th>
+        <th style="text-align:center;padding:3px 2px;border-bottom:1px solid var(--border);">السابق</th>
+        <th style="text-align:center;padding:3px 2px;border-bottom:1px solid var(--border);">التغيير</th>
       </tr></thead>
       <tbody>
-        <tr><td style="padding:6px 4px;border-bottom:1px solid var(--divider);">إجمالي الطلبات</td><td style="text-align:center;font-weight:700;color:var(--brand-700);">${current.total}</td><td style="text-align:center;opacity:.6;">${previous.total}</td><td style="text-align:center;">${trendArrow(changes.total)}</td></tr>
-        <tr><td style="padding:6px 4px;border-bottom:1px solid var(--divider);">المدفوعة</td><td style="text-align:center;font-weight:700;color:#0cb97b;">${current.paid}</td><td style="text-align:center;opacity:.6;">${previous.paid}</td><td style="text-align:center;">${trendArrow(changes.paid)}</td></tr>
-        <tr><td style="padding:6px 4px;border-bottom:1px solid var(--divider);">غير المدفوعة</td><td style="text-align:center;font-weight:700;color:#ef3d52;">${current.unpaid}</td><td style="text-align:center;opacity:.6;">${previous.unpaid}</td><td style="text-align:center;">${trendArrow(changes.unpaid)}</td></tr>
-        <tr><td style="padding:6px 4px;border-bottom:1px solid var(--divider);">مُسلَّمة</td><td style="text-align:center;font-weight:700;color:#8b5cf6;">${current.delivered}</td><td style="text-align:center;opacity:.6;">${previous.delivered}</td><td style="text-align:center;">${trendArrow(changes.delivered)}</td></tr>
-        <tr><td style="padding:6px 4px;border-bottom:1px solid var(--divider);">عملاء فريدون</td><td style="text-align:center;font-weight:700;">${current.customers}</td><td style="text-align:center;opacity:.6;">${previous.customers}</td><td style="text-align:center;">${trendArrow(changes.customers)}</td></tr>
-        <tr><td style="padding:6px 4px;">موصلون نشطون</td><td style="text-align:center;font-weight:700;">${current.drivers}</td><td style="text-align:center;opacity:.6;">${previous.drivers}</td><td style="text-align:center;">${trendArrow(changes.drivers)}</td></tr>
+        <tr><td style="padding:4px 2px;border-bottom:1px solid var(--divider);">إجمالي الطلبات</td><td style="text-align:center;font-weight:700;color:var(--brand-700);">${current.total}</td><td style="text-align:center;opacity:.6;">${previous.total}</td><td style="text-align:center;">${trendArrow(changes.total)}</td></tr>
+        <tr><td style="padding:4px 2px;border-bottom:1px solid var(--divider);">المدفوعة</td><td style="text-align:center;font-weight:700;color:#0cb97b;">${current.paid}</td><td style="text-align:center;opacity:.6;">${previous.paid}</td><td style="text-align:center;">${trendArrow(changes.paid)}</td></tr>
+        <tr><td style="padding:4px 2px;border-bottom:1px solid var(--divider);">غير المدفوعة</td><td style="text-align:center;font-weight:700;color:#ef3d52;">${current.unpaid}</td><td style="text-align:center;opacity:.6;">${previous.unpaid}</td><td style="text-align:center;">${trendArrow(changes.unpaid)}</td></tr>
+        <tr><td style="padding:4px 2px;border-bottom:1px solid var(--divider);">مُسلَّمة</td><td style="text-align:center;font-weight:700;color:#8b5cf6;">${current.delivered}</td><td style="text-align:center;opacity:.6;">${previous.delivered}</td><td style="text-align:center;">${trendArrow(changes.delivered)}</td></tr>
+        <tr><td style="padding:4px 2px;border-bottom:1px solid var(--divider);">عملاء فريدون</td><td style="text-align:center;font-weight:700;">${current.customers}</td><td style="text-align:center;opacity:.6;">${previous.customers}</td><td style="text-align:center;">${trendArrow(changes.customers)}</td></tr>
+        <tr><td style="padding:4px 2px;">موصلون نشطون</td><td style="text-align:center;font-weight:700;">${current.drivers}</td><td style="text-align:center;opacity:.6;">${previous.drivers}</td><td style="text-align:center;">${trendArrow(changes.drivers)}</td></tr>
       </tbody>
     </table>`;
 }
-function renderPeakHours() {
-  const container = document.getElementById('peakHoursContent'); if (!container) return;
-  const analysis = Analytics.analyzeHours();
-  const settings = { ...DEFAULT_ANALYTICS_SETTINGS, ...(localMeta?.analyticsSettings || {}) };
-  const startH = Math.max(0, Math.min(23, settings.peakHoursStart || 9));
-  const endH = Math.max(0, Math.min(23, settings.peakHoursEnd || 18));
-  const activeHours = analysis.hours.filter(h => h.hour >= startH && h.hour <= endH);
-  const maxCount = Math.max(...activeHours.map(h => h.count), 1);
-  const barColor = (count) => {
-    const pct = (count / maxCount) * 100;
-    if (pct > 80) return 'linear-gradient(180deg,#ef3d52,#d7263d)';
-    if (pct > 60) return 'linear-gradient(180deg,#f5a318,#d97d07)';
-    if (pct > 30) return 'linear-gradient(180deg,#4266e8,#2d4cd9)';
-    return 'linear-gradient(180deg,#93b4fe,#6890fa)';
-  };
-  const peakHourInRange = activeHours.reduce((max, h) => h.count > max.count ? h : max, { hour: 0, count: 0 });
-  container.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
-      <div style="font-size:11.5px;color:var(--text-muted);">ساعة الذروة: <b style="color:var(--brand-700);font-size:13px;">${peakHourInRange.hour}:00</b> <span style="opacity:.7;margin-right:6px;">(${peakHourInRange.count} طلب)</span></div>
-      <div style="font-size:11.5px;color:var(--text-muted);">اليوم الأكثر: <b style="color:var(--brand-700);font-size:13px;">${analysis.peakDay}</b></div>
-    </div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;font-weight:600;">توزيع الأيام:</div>
-    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px;">
-      ${analysis.days.map(d => {
-        const isPeak = d.name === analysis.peakDay && d.count > 0;
-        return `<div style="text-align:center;padding:6px 2px;background:${isPeak ? 'linear-gradient(135deg,#4266e8,#8b5cf6)' : 'var(--bg)'};border-radius:var(--radius-sm);border:1px solid ${isPeak ? 'transparent' : 'var(--border)'};color:${isPeak ? '#fff' : 'var(--text-secondary)'};" title="${esc(d.name)}: ${d.count} طلب">
-          <div style="font-size:9.5px;font-weight:700;opacity:.9;">${esc(d.name.substring(0, 3))}</div>
-          <div style="font-size:13px;font-weight:800;margin-top:2px;">${d.count}</div>
-        </div>`;
-      }).join('')}
-    </div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;font-weight:600;">توزيع الساعات (${startH}:00 — ${endH}:00):</div>
-    <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;">
-      <div style="display:flex;align-items:flex-end;gap:3px;height:90px;min-width:${Math.max(280, activeHours.length * 26)}px;padding:0 4px;">
-        ${activeHours.map(h => {
-          const barHeight = maxCount > 0 ? Math.max(6, (h.count / maxCount) * 70) : 6;
-          const isPeak = h.hour === peakHourInRange.hour && h.count > 0;
-          return `<div style="flex:1;min-width:22px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:help;" title="${h.hour}:00 — ${h.count} طلب">
-            <div style="font-size:9.5px;font-weight:700;color:${isPeak ? '#ef3d52' : 'var(--text-muted)'};height:14px;line-height:14px;">${h.count || ''}</div>
-            <div style="width:100%;height:${barHeight}px;background:${barColor(h.count)};border-radius:3px 3px 0 0;transition:height .3s;box-shadow:${isPeak ? '0 0 0 2px rgba(239,61,82,.3)' : 'none'};"></div>
-            <div style="font-size:9px;color:${isPeak ? '#ef3d52' : 'var(--text-muted)'};font-weight:${isPeak ? '800' : '600'};height:12px;line-height:12px;">${h.hour}</div>
-          </div>`;
-        }).join('')}
-      </div>
-    </div>`;
-}
+/* ✅ تم حذف renderPeakHours بالكامل */
 function renderTopLocations() {
   const container = document.getElementById('topLocationsContent'); if (!container) return;
   const locations = Analytics.analyzeLocations().slice(0, 6);
@@ -4074,13 +4057,14 @@ function renderTopCustomersAnalytics() {
     </div>`;
   }).join('');
 }
+/* ✅ حذف renderPeakHours من الاستدعاء */
 function renderAdvancedAnalytics() {
-  renderAnomalies(); renderComparison(); renderPeakHours();
+  renderAnomalies(); renderComparison();
   renderTopLocations(); renderTopDriversAnalytics(); renderTopCustomersAnalytics();
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ANALYTICS SETTINGS
+   ANALYTICS SETTINGS — ✅ حذف أوقات الذروة
    ══════════════════════════════════════════════════════════════ */
 function loadAnalyticsSettingsToForm() {
   const s = { ...DEFAULT_ANALYTICS_SETTINGS, ...(localMeta?.analyticsSettings || {}) };
@@ -4092,8 +4076,6 @@ function loadAnalyticsSettingsToForm() {
   set('anomalyInactiveDays', s.anomalyInactiveDays);
   check('driverSuggestionEnabled', s.driverSuggestionEnabled);
   set('driverSuggestionMinOrders', s.driverSuggestionMinOrders);
-  set('peakHoursStart', s.peakHoursStart);
-  set('peakHoursEnd', s.peakHoursEnd);
 }
 window.saveAnalyticsSettings = async function() {
   const get = (id) => document.getElementById(id)?.value;
@@ -4105,8 +4087,6 @@ window.saveAnalyticsSettings = async function() {
     anomalyInactiveDays: parseInt(get('anomalyInactiveDays')) || 30,
     driverSuggestionEnabled: getCheck('driverSuggestionEnabled') !== false,
     driverSuggestionMinOrders: parseInt(get('driverSuggestionMinOrders')) || 3,
-    peakHoursStart: parseInt(get('peakHoursStart')) || 9,
-    peakHoursEnd: parseInt(get('peakHoursEnd')) || 18,
     comparisonPeriods: 2
   };
   try {
@@ -4393,6 +4373,7 @@ function renderGroups() {
     const canDelete = hasPerm('deleteGroup');
     const canEdit = hasPerm('manageGroups');
     const canMove = hasPerm('moveToLog');
+    const driverPhone = g.driverPhone || (cache.drivers.find(d => d.name === g.driver)?.phone || '');
     return `<div class="group-card" style="${isArchived ? 'opacity:.75;border-right-color:var(--text-muted);' : ''}">
       <div class="group-header">
         <div style="flex:1;min-width:0;">
@@ -4402,6 +4383,7 @@ function renderGroups() {
           </div>
           <div class="group-meta">
             ${g.driver ? `<span>${ico('truck', 12)} ${esc(g.driver)}</span>` : ''}
+            ${driverPhone ? `<span>${ico('phone', 12)} ${esc(driverPhone)}</span>` : ''}
             ${g.departureTime ? `<span>${ico('clock', 12)} ${esc(g.departureTime)}</span>` : ''}
             <span>${ico('box', 12)} ${orders.length} طلب</span>
             <span>${ico('user', 12)} ${esc(g.createdBy || '—')}</span>
@@ -4486,6 +4468,7 @@ window.editGroup = function (id) {
   renderGroupOrdersList();
   openModal('groupModal');
 };
+/* ✅ حفظ رقم الموصل في المجموعة */
 window.saveGroup = async function () {
   const id = document.getElementById('groupId').value;
   if (id ? !hasPerm('manageGroups') : !hasPerm('createGroup')) { toast(MSG.unauthorized, 'error'); return; }
@@ -4494,6 +4477,8 @@ window.saveGroup = async function () {
   if (!name) { setFieldError('groupName', 'اسم المجموعة مطلوب'); focusFirstError('groupModal'); return; }
   if (cache.groups.some(g => g.name === name && g.id !== id)) { setFieldError('groupName', 'الاسم مستخدم مسبقاً'); focusFirstError('groupModal'); return; }
   const driver = document.getElementById('groupDriver').value;
+  const driverData = (cache.drivers || []).find(d => d.name === driver);
+  const driverPhone = driverData?.phone || '';
   const departureTime = document.getElementById('groupDepartureTime').value;
   const notes = document.getElementById('groupNotes').value.trim();
   const orderIds = Array.from(_groupSelectedOrders);
@@ -4507,7 +4492,7 @@ window.saveGroup = async function () {
   }
   const existing = id ? cache.groups.find(g => g.id === id) : null;
   const groupData = {
-    id: id || uid(), name, driver, departureTime, notes, orderIds,
+    id: id || uid(), name, driver, driverPhone, departureTime, notes, orderIds,
     status: existing?.status || 'نشطة',
     createdAt: existing?.createdAt || fmtDate(),
     createdBy: existing?.createdBy || currentUser.username,
@@ -4761,7 +4746,7 @@ window.onDriverSelect = function () {
 };
 
 /* ══════════════════════════════════════════════════════════════
-   CUSTOM FIELDS RENDERING + OPERATIONS
+   CUSTOM FIELDS
    ══════════════════════════════════════════════════════════════ */
 function renderCustomFieldsList() {
   const el = document.getElementById('customFieldsList'); if (!el) return;
@@ -4856,7 +4841,7 @@ window.saveCustomField = async function() {
   const required = document.getElementById('customFieldRequired').checked;
   const showInPrint = document.getElementById('customFieldShowInPrint').checked;
   if (!key) { setFieldError('customFieldKey', 'المفتاح مطلوب'); valid = false; }
-  else if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(key)) { setFieldError('customFieldKey', 'المفتاح يجب أن يبدأ بحرف إنجليزي، ويحتوي أحرفاً وأرقاماً فقط'); valid = false; }
+  else if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(key)) { setFieldError('customFieldKey', 'المفتاح يجب أن يبدأ بحرف إنجليزي'); valid = false; }
   else if (cache.customFields.some(f => f.key === key && f.id !== id)) { setFieldError('customFieldKey', 'المفتاح مستخدم مسبقاً'); valid = false; }
   if (!label) { setFieldError('customFieldLabel', 'الاسم المعروض مطلوب'); valid = false; }
   if (!valid) { focusFirstError('customFieldModal'); toast('يرجى تصحيح الحقول', 'error'); return; }
@@ -4900,7 +4885,7 @@ window.saveFeaturesFromForm = async function() {
 };
 
 /* ══════════════════════════════════════════════════════════════
-   TEMPLATES RENDERING
+   TEMPLATES
    ══════════════════════════════════════════════════════════════ */
 function renderTemplates() {
   const container = document.getElementById('templatesContainer'); if (!container) return;
@@ -5026,7 +5011,7 @@ function initLocationSuggestion() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ORDER MODAL OPERATIONS
+   ORDER MODAL
    ══════════════════════════════════════════════════════════════ */
 window.addOrder = function () {
   if (!hasPerm('addOrder')) { toast(MSG.unauthorized, 'error'); return; }
@@ -5704,15 +5689,19 @@ ${tpl.footer ? `<div class="print-footer">${esc(replaceVars(tpl.footer))}</div>`
 <script>window.addEventListener('load', function() { setTimeout(function() { window.print(); }, 400); });<\/script>
 </body></html>`;
 }
+/* ✅ إضافة رقم الموصل في ترويسة المجموعة */
 function buildGroupPrintHTML(group, items, template) {
   const tpl = template || DEFAULT_TEMPLATES.group;
+  const driverData = (cache.drivers || []).find(d => d.name === group.driver);
+  const driverPhone = group.driverPhone || driverData?.phone || '';
   const groupInfoBar = `
     <div class="group-info-bar">
       <div class="gi-item"><span class="gi-label">المجموعة:</span><span class="gi-value">${esc(group.name)}</span></div>
       ${group.driver ? `<div class="gi-item"><span class="gi-label">الموصل:</span><span class="gi-value">${esc(group.driver)}</span></div>` : ''}
-      ${group.departureTime ? `<div class="gi-item"><span class="gi-label">الوقت:</span><span class="gi-value">${esc(group.departureTime)}</span></div>` : ''}
+      ${driverPhone ? `<div class="gi-item"><span class="gi-label">رقم الموصل:</span><span class="gi-value" style="direction:ltr;font-family:'Courier New',monospace;letter-spacing:.5px;">${esc(driverPhone)}</span></div>` : ''}
       <div class="gi-item"><span class="gi-label">الطلبات:</span><span class="gi-value">${items.length}</span></div>
       <div class="gi-item"><span class="gi-label">التاريخ:</span><span class="gi-value">${esc(fmtDate())}</span></div>
+      ${group.departureTime ? `<div class="gi-item"><span class="gi-label">الوقت:</span><span class="gi-value">${esc(group.departureTime)}</span></div>` : ''}
     </div>
     ${group.notes ? `<div class="group-notes"><b>ملاحظات:</b> ${esc(group.notes)}</div>` : ''}`;
   const html = buildPrintHTML(items, tpl, { groupName: group.name, driver: group.driver, time: group.departureTime });
@@ -5721,7 +5710,7 @@ function buildGroupPrintHTML(group, items, template) {
     .replace('background: #1d3193;', 'background: #7c3aed;')
     .replace('<div class="print-subtitle">', groupInfoBar + '<div class="print-subtitle">')
     .replace('</style>', `
-  .group-info-bar { display: flex; flex-wrap: wrap; gap: 6mm 8mm; justify-content: center; padding: 3mm 4mm; margin: 0 0 4mm 0; background: #f3ecfe; border: 1px solid #7c3aed; border-radius: 2mm; font-size: 11pt; }
+  .group-info-bar { display: flex; flex-wrap: wrap; gap: 5mm 7mm; justify-content: center; padding: 3mm 4mm; margin: 0 0 4mm 0; background: #f3ecfe; border: 1px solid #7c3aed; border-radius: 2mm; font-size: 10.5pt; }
   .gi-item { display: flex; gap: 2mm; align-items: baseline; }
   .gi-label { color: #6b21a8; font-weight: 700; }
   .gi-value { color: #1e1b4b; font-weight: 600; }
@@ -5960,7 +5949,8 @@ function startApp() {
   document.getElementById('currentUserName').innerHTML = `${esc(currentUser.username)} <span style="opacity:.75;font-size:11px;margin-right:4px;">${rl.label}</span>`;
   buildUI(); applyPermissionsUI(); populateBranchSelects(); loadDriversIntoSelects();
   renderRateLimitWidget();
-  const firstAvailable = ['dashboard','entry','ready','log','customers','groups','tasks','settings'].find(p => {
+  /* ✅ ترتيب جديد */
+  const firstAvailable = ['dashboard','entry','ready','groups','log','tasks','customers','settings'].find(p => {
     const pp = { dashboard:'accessDashboard', entry:'accessEntry', ready:'accessReady', log:'accessLog', customers:'accessCustomers', groups:'accessGroups', tasks:'accessTasks', settings:'accessSettings' };
     if (!hasPerm(pp[p])) return false;
     if (p === 'groups' && !isFeatureEnabled('featureWorkGroups')) return false;
@@ -6142,7 +6132,8 @@ window.addEventListener('beforeunload', (e) => {
 
 <script>
 (function () {
-    funcح/tion prepareTablesForPrint() {
+    /* ✅ إصلاح خطأ funcح/tion → function */
+    function prepareTablesForPrint() {
         const tables = document.querySelectorAll('table');
         tables.forEach(function (table) {
             const headers = table.querySelectorAll('thead th');

@@ -630,7 +630,6 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
 .group-card .group-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--text-muted);margin-top:4px}
 .group-card .group-actions{display:flex;gap:6px;flex-wrap:wrap}
 
-/* ✅ تنسيقات مضغوطة لكشف الشذوذ ومقارنة الفترات */
 #anomalyCard,#comparisonCard{padding:14px 14px !important}
 #anomalyCard h4,#comparisonCard h4{margin-bottom:10px !important;font-size:12.5px !important}
 #anomalyContent>div{padding:8px 10px !important;margin-bottom:6px !important;border-radius:8px !important}
@@ -869,8 +868,7 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
         <span id="userChipIcon"></span>
         <b id="currentUserName"></b>
       </div>
-      <button class="btn-icon" onclick="UndoRedo.undo()" id="undoBtn" title="تراجع (Ctrl+Z)" disabled></button>
-      <button class="btn-icon" onclick="UndoRedo.redo()" id="redoBtn" title="إعادة (Ctrl+Y)" disabled></button>
+      <!-- ✅ تم حذف أزرار التراجع/الإعادة — تعمل عبر Ctrl+Z / Ctrl+Y فقط -->
       <button class="btn-icon" onclick="toggleDeviceNotifications()" id="deviceNotifBtn" title="إشعارات الجهاز"></button>
       <button class="btn-icon" onclick="toggleNotifPanel()" id="notifBtn" title="الإشعارات">
         <span id="notifBtnIcon"></span>
@@ -931,31 +929,15 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
 
       <div class="section-title-dash" id="title-analytics"></div>
       <div class="analytics-row cols-2">
-        <div class="analytics-card" id="anomalyCard">
-          <h4 id="anomalyTitle"></h4>
-          <div id="anomalyContent"></div>
-        </div>
-        <div class="analytics-card" id="comparisonCard">
-          <h4 id="comparisonTitle"></h4>
-          <div id="comparisonContent"></div>
-        </div>
-      </div>
-      <!-- ✅ تم حذف قسم أوقات الذروة -->
-      <div class="analytics-row cols-2">
-        <div class="analytics-card">
-          <h4 id="topLocationsTitle"></h4>
-          <div id="topLocationsContent"></div>
-        </div>
-        <div class="analytics-card">
-          <h4 id="topDriversAnalyticsTitle"></h4>
-          <div id="topDriversAnalyticsContent"></div>
-        </div>
+        <div class="analytics-card" id="anomalyCard"><h4 id="anomalyTitle"></h4><div id="anomalyContent"></div></div>
+        <div class="analytics-card" id="comparisonCard"><h4 id="comparisonTitle"></h4><div id="comparisonContent"></div></div>
       </div>
       <div class="analytics-row cols-2">
-        <div class="analytics-card">
-          <h4 id="topCustomersAnalyticsTitle"></h4>
-          <div id="topCustomersAnalyticsContent"></div>
-        </div>
+        <div class="analytics-card"><h4 id="topLocationsTitle"></h4><div id="topLocationsContent"></div></div>
+        <div class="analytics-card"><h4 id="topDriversAnalyticsTitle"></h4><div id="topDriversAnalyticsContent"></div></div>
+      </div>
+      <div class="analytics-row cols-2">
+        <div class="analytics-card"><h4 id="topCustomersAnalyticsTitle"></h4><div id="topCustomersAnalyticsContent"></div></div>
       </div>
     </section>
 
@@ -1527,7 +1509,6 @@ const DEFAULT_TEMPLATES = {
   }
 };
 
-/* ✅ تم حذف أوقات الذروة peakHoursStart / peakHoursEnd */
 const DEFAULT_ANALYTICS_SETTINGS = {
   anomalyWindowDays: 7,
   anomalyDropPercent: 40,
@@ -1564,6 +1545,7 @@ let currentSyncInterval = SYNC_INTERVAL;
 let lastSyncTime = 0;
 let lastRateNotificationAt = 0;
 let _notifSaveTimer = null;
+let _notifSavePromise = null; /* ✅ لضمان الحفظ المضمون */
 let _activitySaveTimer = null;
 let _lastNotifUnreadCount = 0;
 let statsFilter = 'all';
@@ -1964,7 +1946,7 @@ const Storage = (() => {
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   UNDO / REDO
+   UNDO / REDO — ✅ حفظ صامت في الخلفية (لا رسائل خطأ كاذبة)
    ══════════════════════════════════════════════════════════════ */
 const UndoRedo = (() => {
   const MAX_HISTORY = 20;
@@ -1994,9 +1976,10 @@ const UndoRedo = (() => {
     if (undoStack.length > MAX_HISTORY) undoStack.shift();
     redoStack.length = 0;
     pending = null;
-    updateUndoUI();
   }
   function cancelBatch() { pending = null; }
+
+  /* ✅ حفظ صامت — لا رسائل خطأ كاذبة، التراجع تم محلياً بالفعل */
   async function undo() {
     if (!canUse()) { toast('لا تملك صلاحية التراجع', 'error'); return false; }
     if (!undoStack.length) { toast('لا يوجد ما يمكن التراجع عنه', 'info'); return false; }
@@ -2005,12 +1988,12 @@ const UndoRedo = (() => {
     cache.orders = snap.state.orders; cache.ready = snap.state.ready; cache.log = snap.state.log;
     cache.customers = snap.state.customers; cache.groups = snap.state.groups; cache.tasks = snap.state.tasks;
     postProcessData();
-    try {
-      await persistKeys(['orders', 'ready', 'log', 'customers', 'groups', 'tasks']);
-      logActivity('undo', `تراجع: ${snap.label}`, '', 'warning');
-      renderActive(); updateUndoUI();
-      toast(`✅ تم التراجع: ${snap.label}`, 'success');
-    } catch (e) { toast('تعذر حفظ التراجع', 'error'); }
+    logActivity('undo', `تراجع: ${snap.label}`, '', 'warning');
+    renderActive();
+    toast(`✅ تم التراجع: ${snap.label}`, 'success');
+    // ✅ حفظ في الخلفية — صامت تماماً، SaveQueue يعيد المحاولة تلقائياً
+    persistKeys(['orders', 'ready', 'log', 'customers', 'groups', 'tasks', 'activity'])
+      .catch(() => { /* صامت */ });
     return true;
   }
   async function redo() {
@@ -2021,38 +2004,24 @@ const UndoRedo = (() => {
     cache.orders = snap.state.orders; cache.ready = snap.state.ready; cache.log = snap.state.log;
     cache.customers = snap.state.customers; cache.groups = snap.state.groups; cache.tasks = snap.state.tasks;
     postProcessData();
-    try {
-      await persistKeys(['orders', 'ready', 'log', 'customers', 'groups', 'tasks']);
-      logActivity('redo', `إعادة: ${snap.label}`, '', 'success');
-      renderActive(); updateUndoUI();
-      toast(`✅ تم الإعادة: ${snap.label}`, 'success');
-    } catch (e) { toast('تعذر حفظ الإعادة', 'error'); }
+    logActivity('redo', `إعادة: ${snap.label}`, '', 'success');
+    renderActive();
+    toast(`✅ تم الإعادة: ${snap.label}`, 'success');
+    persistKeys(['orders', 'ready', 'log', 'customers', 'groups', 'tasks', 'activity'])
+      .catch(() => { /* صامت */ });
     return true;
   }
   function canUndo() { return canUse() && undoStack.length > 0; }
   function canRedo() { return canUse() && redoStack.length > 0; }
   function getUndoLabel() { return undoStack[undoStack.length - 1]?.label || ''; }
   function getRedoLabel() { return redoStack[redoStack.length - 1]?.label || ''; }
-  function clear() { undoStack.length = 0; redoStack.length = 0; pending = null; updateUndoUI(); }
+  function clear() { undoStack.length = 0; redoStack.length = 0; pending = null; }
   return { beginBatch, commitBatch, cancelBatch, undo, redo, canUndo, canRedo, getUndoLabel, getRedoLabel, clear };
 })();
 window.UndoRedo = UndoRedo;
-function updateUndoUI() {
-  const undoBtn = document.getElementById('undoBtn');
-  const redoBtn = document.getElementById('redoBtn');
-  if (undoBtn) {
-    const can = UndoRedo.canUndo();
-    undoBtn.disabled = !can;
-    undoBtn.style.opacity = can ? '1' : '0.4';
-    undoBtn.title = can ? `تراجع: ${UndoRedo.getUndoLabel()}` : 'لا يوجد ما للتراجع عنه';
-  }
-  if (redoBtn) {
-    const can = UndoRedo.canRedo();
-    redoBtn.disabled = !can;
-    redoBtn.style.opacity = can ? '1' : '0.4';
-    redoBtn.title = can ? `إعادة: ${UndoRedo.getRedoLabel()}` : 'لا يوجد ما للإعادة';
-  }
-}
+
+/* ✅ أزرار التراجع/الإعادة محذوفة — الدالة أصبحت no-op */
+function updateUndoUI() { /* لا شيء */ }
 
 /* ══════════════════════════════════════════════════════════════
    FEATURE FLAGS
@@ -2082,7 +2051,6 @@ function applyFeatureUI() {
     const feat = el.dataset.feature;
     el.style.display = isFeatureEnabled(feat) ? '' : 'none';
   });
-  updateUndoUI();
   rebuildNav();
 }
 
@@ -2376,6 +2344,70 @@ function maybeNotifyLowRate() {
   const pct = rateLimitInfo.limit > 0 ? (rateLimitInfo.remaining / rateLimitInfo.limit) * 100 : 100;
   if (pct < 10) { lastRateNotificationAt = now; addNotification('تنبيه', `استهلاك منخفض للحصة: ${rateLimitInfo.remaining} طلب متبقي`, 'warning', true); }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ✅ NOTIFICATIONS — المزامنة المضمونة والدمج عند التعارض
+   ══════════════════════════════════════════════════════════════ */
+
+/* دمج مصفوفتي إشعارات (محلية + بعيدة) بحيث لا يُفقَد أي إشعار */
+function mergeNotificationsArrays(remote, local) {
+  const byId = new Map();
+  (remote || []).forEach(n => { if (n && n.id) byId.set(n.id, n); });
+  (local || []).forEach(n => {
+    if (!n || !n.id) return;
+    const existing = byId.get(n.id);
+    if (existing) {
+      byId.set(n.id, {
+        ...existing, ...n,
+        readBy: Array.from(new Set([...(existing.readBy || []), ...(n.readBy || [])])),
+        deletedBy: Array.from(new Set([...(existing.deletedBy || []), ...(n.deletedBy || [])]))
+      });
+    } else {
+      byId.set(n.id, n);
+    }
+  });
+  return Array.from(byId.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0));
+}
+
+/* ✅ حفظ مضمون — ينتظر حتى ينجح الحفظ فعلياً أو يفشل نهائياً */
+async function saveNotificationsMerged() {
+  if (!currentUser) return;
+  if (_notifSavePromise) return _notifSavePromise;
+  _notifSavePromise = (async () => {
+    try {
+      await Storage.saveData(DATA_FILES.notifications, cache.notifications || [], 'notifications');
+    } catch (e) {
+      if (e.message === 'CONFLICT' || e.message === 'NOT_FOUND') {
+        // ✅ إعادة تحميل من السيرفر ودمج ثم حفظ
+        try {
+          const r = await Storage.loadData(DATA_FILES.notifications, 'notifications');
+          const remote = (r && r.data && Array.isArray(r.data)) ? r.data : [];
+          const merged = mergeNotificationsArrays(remote, cache.notifications || []);
+          cache.notifications = merged;
+          await Storage.saveData(DATA_FILES.notifications, merged, 'notifications');
+        } catch (e2) { throw e2; }
+      } else {
+        throw e;
+      }
+    }
+  })().finally(() => { _notifSavePromise = null; });
+  return _notifSavePromise;
+}
+
+function scheduleNotificationsSave() {
+  if (_notifSaveTimer) clearTimeout(_notifSaveTimer);
+  _notifSaveTimer = setTimeout(async () => {
+    _notifSaveTimer = null;
+    if (!currentUser) return;
+    try { await saveNotificationsMerged(); } catch (_) {}
+  }, NOTIF_SAVE_DELAY);
+}
+
+async function flushNotificationsSave() {
+  if (_notifSaveTimer) { clearTimeout(_notifSaveTimer); _notifSaveTimer = null; }
+  if (!currentUser) return;
+  try { await saveNotificationsMerged(); } catch {}
+}
 </script>
 <script>
 /* ══════════════════════════════════════════════════════════════
@@ -2605,6 +2637,12 @@ async function writeMeta(extra = {}) {
 async function persistKeys(keys) {
   setSyncing(true);
   try {
+    // ✅ الإشعارات تُحفظ عبر دالتها المخصصة (مع دمج) — نتجاوزها هنا لمنع فقدان بيانات الآخرين
+    const notifRequested = keys.includes('notifications');
+    const filteredKeys = keys.filter(k => k !== 'notifications');
+    if (notifRequested) saveNotificationsMerged().catch(() => {});
+    keys = filteredKeys;
+
     const activityRequested = keys.includes('activity');
     const filesToWrite = new Set();
     for (const k of keys) { if (k === 'activity') continue; const f = KEY_TO_FILE[k]; if (f) filesToWrite.add(f); }
@@ -2635,9 +2673,10 @@ async function flushActivitySave() {
   try { await saveActivity(); } catch (_) {}
 }
 async function saveAllDataNowSilent() {
-  const keysToSave = ['orders','ready','log','customers','users','drivers','branches','templates','customFields','notifications','activity','groups','tasks'];
+  const keysToSave = ['orders','ready','log','customers','users','drivers','branches','templates','customFields','activity','groups','tasks'];
   await persistKeys(keysToSave);
   await writeMeta();
+  await saveNotificationsMerged().catch(() => {});
   await migrateActivityLegacy();
   hasLegacyFiles = false;
 }
@@ -2659,6 +2698,7 @@ async function syncPull(force = false) {
   lastSyncTime = now; syncing = true;
   try {
     let didChange = false;
+    let notifChanged = false;
     const treeShas = await Storage.getTreeShas();
     if (treeShas) {
       const fileKeys = Object.keys(DATA_FILES);
@@ -2671,6 +2711,12 @@ async function syncPull(force = false) {
             const r = await Storage.loadData(DATA_FILES[f], f);
             if (r.notModified) continue;
             if (f === 'settings') applyFileData('settings', r.data, r.wasPlain);
+            else if (f === 'notifications') {
+              // ✅ دمج الإشعارات بدلاً من استبدالها (لمنع فقدان الإشعارات المحلية أو إشعارات الآخرين)
+              const remote = Array.isArray(r.data) ? r.data : [];
+              cache.notifications = mergeNotificationsArrays(remote, cache.notifications || []);
+              notifChanged = true;
+            }
             else applyFileData(f, r.data, r.wasPlain);
             didChange = true;
           } catch (_) {}
@@ -2682,10 +2728,22 @@ async function syncPull(force = false) {
       const meta = await readMeta();
       if (!localMeta || meta.lastUpdate !== localMeta.lastUpdate) { localMeta = meta; await readAll(); await loadActivity(); didChange = true; }
     }
-    if (didChange) {
+    if (didChange || notifChanged) {
       const me = cache.users.find(u => u.username === currentUser.username);
       if (me) currentUser = normalizeUser(me);
-      applyPermissionsUI(); renderActive(); renderNotifications();
+      applyPermissionsUI(); renderActive();
+      if (notifChanged) {
+        renderNotifications();
+        // ✅ إظهار إشعارات الآخرين الجديدة للمستخدم الحالي
+        const visible = getVisibleNotifications();
+        const u = currentUser.username;
+        const unreadCount = visible.filter(n => !(Array.isArray(n.readBy) && n.readBy.includes(u))).length;
+        if (unreadCount > _lastNotifUnreadCount) {
+          const latest = visible.find(n => !(Array.isArray(n.readBy) && n.readBy.includes(u)));
+          if (latest) toast(`🔔 ${latest.title}: ${latest.message}`, 'info');
+        }
+        _lastNotifUnreadCount = unreadCount;
+      }
     }
     setOnline(true);
   } catch (e) { setOnline(false); }
@@ -3122,7 +3180,7 @@ function applyPermissionsUI() {
   rebuildNav(); rebuildSettingsTabs(); applyFeatureUI();
 }
 
-/* ✅ ترتيب جديد: الرئيسية - إدخال الطلبات - الطلبات الجاهزة - مجموعات العمل - سجل الطلبات - المهام - العملاء - الإعدادات */
+/* ✅ الترتيب الجديد */
 function rebuildNav() {
   const navBar = document.getElementById('navBar'); if (!navBar) return;
   const items = [
@@ -3173,25 +3231,23 @@ function rebuildSettingsTabs() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   NOTIFICATIONS — ✅ كل مستخدم يرى إشعارات الآخرين فقط (العكس)
+   ✅ NOTIFICATIONS — كل مستخدم يرى إشعارات الآخرين فقط (العكس)
+   + حفظ مضمون (await) + دمج عند التعارض
    ══════════════════════════════════════════════════════════════ */
-function scheduleNotificationsSave() {
-  if (_notifSaveTimer) clearTimeout(_notifSaveTimer);
-  _notifSaveTimer = setTimeout(() => { _notifSaveTimer = null; if (!currentUser) return; persistKeys(['notifications']).catch(() => {}); }, NOTIF_SAVE_DELAY);
-}
-async function flushNotificationsSave() {
-  if (_notifSaveTimer) { clearTimeout(_notifSaveTimer); _notifSaveTimer = null; }
-  if (!currentUser) return;
-  try { await persistKeys(['notifications']); } catch {}
-}
+
+/* ✅ إضافة إشعار — تنتظر حتى اكتمال الحفظ فعلياً في GitHub */
 function addNotification(title, message, type = 'info', silent = false) {
   const u = currentUser?.username;
-  // ✅ readBy فارغة — المنشئ لا يرى إشعاره أصلاً
+  // ✅ readBy فارغة — لا نضيف المنشئ (لن يرى إشعاره أصلاً)
   const n = { id: uid(), title, message, type, time: fmtDate(), ts: Date.now(), createdBy: u || 'system', deletedBy: [], readBy: [] };
   if (!Array.isArray(cache.notifications)) cache.notifications = [];
   cache.notifications.unshift(n);
   if (cache.notifications.length > 100) cache.notifications = cache.notifications.slice(0, 100);
-  renderNotifications(); scheduleNotificationsSave();
+  renderNotifications();
+
+  // ✅ حفظ مضمون — ننتظر انتهاء الحفظ فعلاً (مع إعادة المحاولة والدمج عند التعارض)
+  saveNotificationsMerged().catch(() => { /* صامت — SaveQueue يعيد المحاولة */ });
+
   try {
     if (typeof DeviceNotify !== 'undefined' && DeviceNotify.isEnabled()) {
       const iconMap = { success: '✅', error: '❌', warning: '⚠️', info: '📢' };
@@ -3201,14 +3257,16 @@ function addNotification(title, message, type = 'info', silent = false) {
   } catch (_) {}
   if (!silent) toast(`${title}: ${message}`, type || 'info');
 }
+
+/* ✅ المستخدم لا يرى إشعاراته الخاصة — يرى فقط إشعارات الآخرين */
 function getVisibleNotifications() {
   const u = currentUser?.username; if (!u) return [];
-  // ✅ إخفاء إشعارات المستخدم نفسه (لا يرى إشعاراته)، ويظهر إشعارات الآخرين
   return (cache.notifications || []).filter(n =>
     n.createdBy !== u &&
     !(Array.isArray(n.deletedBy) && n.deletedBy.includes(u))
   );
 }
+
 function renderNotifications() {
   const list = document.getElementById('notifList'); if (!list) return;
   const u = currentUser?.username;
@@ -3224,6 +3282,8 @@ function renderNotifications() {
     return `<div class="notif-item ${n.type || 'info'}${isUnread ? ' unread' : ''}"><div class="nt"><span>${esc(n.title || '')}</span></div><div class="nm">${esc(n.message || '')}</div><div class="nd"><span>${esc(n.time || '')}</span>${author ? `<span class="author">بواسطة: ${esc(author)}</span>` : ''}</div></div>`;
   }).join('');
 }
+
+/* ✅ عند فتح اللوحة: نعلّم إشعارات الآخرين كمقروءة فقط (لا نعدّل إشعاراتنا) */
 window.toggleNotifPanel = function() {
   const panel = document.getElementById('notifPanel'); panel.classList.toggle('show');
   if (panel.classList.contains('show')) {
@@ -3233,19 +3293,25 @@ window.toggleNotifPanel = function() {
       if (!Array.isArray(n.readBy)) n.readBy = [];
       if (!Array.isArray(n.deletedBy)) n.deletedBy = [];
       if (n.deletedBy.includes(u)) return;
-      if (n.createdBy === u) return; // ✅ لا نعدّل إشعارات المستخدم نفسه
+      if (n.createdBy === u) return; // ✅ لا نعدّل إشعاراتنا
       if (!n.readBy.includes(u)) { n.readBy.push(u); dirty = true; }
     });
-    if (dirty) { renderNotifications(); scheduleNotificationsSave(); }
+    if (dirty) {
+      renderNotifications();
+      // ✅ حفظ مضمون لتحديث readBy في GitHub
+      saveNotificationsMerged().catch(() => {});
+    }
   }
 };
+
 window.clearAllNotifications = async function() {
   const u = currentUser?.username; if (!u) return;
   const ok = await dialog.confirm('سيتم مسح الإشعارات من جهتك فقط.', { title: 'مسح الإشعارات', okText: 'نعم، امسح', type: 'warning', okClass: 'btn-warning' });
   if (!ok) return;
   (cache.notifications || []).forEach(n => { if (!Array.isArray(n.deletedBy)) n.deletedBy = []; if (!n.deletedBy.includes(u)) n.deletedBy.push(u); });
   renderNotifications();
-  try { await persistKeys(['notifications']); toast('تم مسح الإشعارات لديك', 'success'); } catch { toast(MSG.saveFail, 'error'); }
+  try { await saveNotificationsMerged(); toast('تم مسح الإشعارات لديك', 'success'); }
+  catch { toast(MSG.saveFail, 'error'); }
 };
 
 /* ══════════════════════════════════════════════════════════════
@@ -3585,12 +3651,9 @@ function buildUI() {
   document.getElementById('notifCloseBtn').innerHTML = ico('x', 15);
   document.getElementById('sessionTimerIcon').innerHTML = ico('clock', 12);
   document.getElementById('rateIcon').innerHTML = ico('zap', 12);
-  const undoBtn = document.getElementById('undoBtn'); const redoBtn = document.getElementById('redoBtn');
-  if (undoBtn) undoBtn.innerHTML = ico('undo', 17);
-  if (redoBtn) redoBtn.innerHTML = ico('refresh', 17);
+  /* ✅ تم حذف أزرار التراجع/الإعادة من buildUI */
   updateThemeBtn(); renderRateLimitWidget(); rebuildNav();
 
-  /* ✅ ترتيب بطاقات الرئيسية مطابق للقائمة */
   document.getElementById('dashGrid').innerHTML = [
     { page:'entry', cls:'', icon:'list', title:'إدخال الطلبات', desc:'تسجيل ومتابعة الطلبات اليومية', perm:'accessEntry' },
     { page:'ready', cls:'green', icon:'box', title:'الطلبات الجاهزة', desc:'جاهزة للنقل إلى الفرع', perm:'accessReady' },
@@ -3693,7 +3756,6 @@ function buildUI() {
     <div id="activityList" class="activity-list"></div>
     <div id="activityPagination" class="activity-pagination"></div>`;
 
-  /* ✅ تم حذف أوقات الذروة */
   document.getElementById('tab-analytics').innerHTML = `
     <div class="template-card"><h4>${ico('warning', 17)}<span>إعدادات كشف الشذوذ</span></h4>
       <div class="template-row"><label>نافذة الكشف (أيام)</label><input type="number" id="anomalyWindowDays" min="3" max="90" value="7"></div>
@@ -4002,7 +4064,6 @@ function renderComparison() {
       </tbody>
     </table>`;
 }
-/* ✅ تم حذف renderPeakHours بالكامل */
 function renderTopLocations() {
   const container = document.getElementById('topLocationsContent'); if (!container) return;
   const locations = Analytics.analyzeLocations().slice(0, 6);
@@ -4057,14 +4118,13 @@ function renderTopCustomersAnalytics() {
     </div>`;
   }).join('');
 }
-/* ✅ حذف renderPeakHours من الاستدعاء */
 function renderAdvancedAnalytics() {
   renderAnomalies(); renderComparison();
   renderTopLocations(); renderTopDriversAnalytics(); renderTopCustomersAnalytics();
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ANALYTICS SETTINGS — ✅ حذف أوقات الذروة
+   ANALYTICS SETTINGS
    ══════════════════════════════════════════════════════════════ */
 function loadAnalyticsSettingsToForm() {
   const s = { ...DEFAULT_ANALYTICS_SETTINGS, ...(localMeta?.analyticsSettings || {}) };
@@ -4861,7 +4921,7 @@ function renderFeaturesList() {
   const el = document.getElementById('featuresList'); if (!el) return;
   if (currentUser?.role !== ROLE_OWNER) { el.innerHTML = '<div class="perm-note">مخصص للمالك فقط</div>'; return; }
   const features = [
-    { key:'featureUndoRedo', label:'التراجع/الإعادة', desc:'السماح للمستخدمين بالتراجع عن العمليات الحساسة', icon:'undo' },
+    { key:'featureUndoRedo', label:'التراجع/الإعادة', desc:'السماح للمستخدمين بالتراجع عن العمليات الحساسة (Ctrl+Z / Ctrl+Y)', icon:'undo' },
     { key:'featureFuzzySearch', label:'البحث الذكي', desc:'بحث متقدم يدعم الهمزات والأخطاء الإملائية', icon:'search' },
     { key:'featureCustomFields', label:'الحقول المخصصة', desc:'إضافة حقول ديناميكية للطلبات', icon:'grid' },
     { key:'featureWorkGroups', label:'مجموعات العمل', desc:'تجميع الطلبات لموصل معيّن', icon:'layers' },
@@ -5689,7 +5749,7 @@ ${tpl.footer ? `<div class="print-footer">${esc(replaceVars(tpl.footer))}</div>`
 <script>window.addEventListener('load', function() { setTimeout(function() { window.print(); }, 400); });<\/script>
 </body></html>`;
 }
-/* ✅ إضافة رقم الموصل في ترويسة المجموعة */
+/* ✅ ترويسة طباعة المجموعة تتضمن رقم الموصل */
 function buildGroupPrintHTML(group, items, template) {
   const tpl = template || DEFAULT_TEMPLATES.group;
   const driverData = (cache.drivers || []).find(d => d.name === group.driver);
@@ -5949,7 +6009,6 @@ function startApp() {
   document.getElementById('currentUserName').innerHTML = `${esc(currentUser.username)} <span style="opacity:.75;font-size:11px;margin-right:4px;">${rl.label}</span>`;
   buildUI(); applyPermissionsUI(); populateBranchSelects(); loadDriversIntoSelects();
   renderRateLimitWidget();
-  /* ✅ ترتيب جديد */
   const firstAvailable = ['dashboard','entry','ready','groups','log','tasks','customers','settings'].find(p => {
     const pp = { dashboard:'accessDashboard', entry:'accessEntry', ready:'accessReady', log:'accessLog', customers:'accessCustomers', groups:'accessGroups', tasks:'accessTasks', settings:'accessSettings' };
     if (!hasPerm(pp[p])) return false;
@@ -5962,7 +6021,7 @@ function startApp() {
   addNotification('مرحباً', `أهلاً ${currentUser.username} (${rl.label})`, 'info', true);
   attachVisibilityHandler(); attachOnlineHandlers();
   setInterval(renderSaveQueueIndicator, 1000);
-  applyFeatureUI(); updateUndoUI(); updateDeviceNotifBtn();
+  applyFeatureUI(); updateDeviceNotifBtn();
   if (DeviceNotify.isSupported() && DeviceNotify.getPermission() === 'default' && DeviceNotify.isEnabled()) DeviceNotify.requestPermission().then(() => updateDeviceNotifBtn());
   toast(`أهلاً ${currentUser.username}`, 'success');
 }

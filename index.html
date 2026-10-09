@@ -1545,7 +1545,6 @@ let currentSyncInterval = SYNC_INTERVAL;
 let lastSyncTime = 0;
 let lastRateNotificationAt = 0;
 let _notifSaveTimer = null;
-let _notifSavePromise = null; /* ✅ لضمان الحفظ المضمون */
 let _activitySaveTimer = null;
 let _lastNotifUnreadCount = 0;
 let statsFilter = 'all';
@@ -2369,29 +2368,72 @@ function mergeNotificationsArrays(remote, local) {
   return Array.from(byId.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0));
 }
 
-/* ✅ حفظ مضمون — ينتظر حتى ينجح الحفظ فعلياً أو يفشل نهائياً */
+/* ✅ حفظ مباشر بدون dedup — لا يفقد أي إشعار */
 async function saveNotificationsMerged() {
   if (!currentUser) return;
-  if (_notifSavePromise) return _notifSavePromise;
-  _notifSavePromise = (async () => {
-    try {
-      await Storage.saveData(DATA_FILES.notifications, cache.notifications || [], 'notifications');
-    } catch (e) {
-      if (e.message === 'CONFLICT' || e.message === 'NOT_FOUND') {
-        // ✅ إعادة تحميل من السيرفر ودمج ثم حفظ
-        try {
-          const r = await Storage.loadData(DATA_FILES.notifications, 'notifications');
-          const remote = (r && r.data && Array.isArray(r.data)) ? r.data : [];
-          const merged = mergeNotificationsArrays(remote, cache.notifications || []);
-          cache.notifications = merged;
-          await Storage.saveData(DATA_FILES.notifications, merged, 'notifications');
-        } catch (e2) { throw e2; }
-      } else {
-        throw e;
+  try {
+    await Storage.saveData(DATA_FILES.notifications, cache.notifications || [], 'notifications');
+  } catch (e) {
+    if (e.message === 'CONFLICT' || e.message === 'NOT_FOUND') {
+      // إعادة تحميل + دمج + حفظ مرة أخرى
+      try {
+        const r = await Storage.loadData(DATA_FILES.notifications, 'notifications');
+        const remote = (r && r.data && Array.isArray(r.data)) ? r.data : [];
+        const merged = mergeNotificationsArrays(remote, cache.notifications || []);
+        cache.notifications = merged;
+        await Storage.saveData(DATA_FILES.notifications, merged, 'notifications');
+      } catch (e2) { throw e2; }
+    } else {
+      throw e;
+    }
+  }
+}
+
+/* ✅ سحب الإشعارات فقط — مستقل وسريع (يعمل عبر polling كل 15 ثانية) */
+async function pullNotificationsOnly() {
+  if (!currentUser || syncing) return;
+  try {
+    const r = await Storage.loadData(DATA_FILES.notifications, 'notifications');
+    if (r.notModified) return;
+    const remote = Array.isArray(r.data) ? r.data : [];
+    const beforeIds = new Set((cache.notifications || []).map(n => n.id));
+
+    cache.notifications = mergeNotificationsArrays(remote, cache.notifications || []);
+    cache.notifications = cache.notifications
+      .filter(n => n && n.id)
+      .map(n => ({
+        ...n,
+        deletedBy: Array.isArray(n.deletedBy) ? n.deletedBy : [],
+        readBy: Array.isArray(n.readBy) ? n.readBy : [],
+        createdBy: n.createdBy || 'system'
+      }))
+      .slice(0, 100);
+
+    const newOnes = cache.notifications.filter(n => !beforeIds.has(n.id));
+    renderNotifications();
+
+    // إظهار toast إذا وصلت إشعارات جديدة
+    if (newOnes.length > 0) {
+      const u = currentUser.username;
+      const unreadNew = newOnes.filter(n => !(Array.isArray(n.readBy) && n.readBy.includes(u)));
+      if (unreadNew.length > 0) {
+        const latest = unreadNew[0];
+        toast(`🔔 ${latest.title}${latest.createdBy ? ' — من: ' + latest.createdBy : ''}`, 'info');
       }
     }
-  })().finally(() => { _notifSavePromise = null; });
-  return _notifSavePromise;
+  } catch (e) { /* صامت */ }
+}
+
+/* ✅ Polling مخصص للإشعارات فقط — كل 15 ثانية */
+let _notifPollTimer = null;
+function startNotifPoll() {
+  stopNotifPoll();
+  _notifPollTimer = setInterval(() => {
+    if (currentUser && !document.hidden) pullNotificationsOnly();
+  }, 15000);
+}
+function stopNotifPoll() {
+  if (_notifPollTimer) { clearInterval(_notifPollTimer); _notifPollTimer = null; }
 }
 
 function scheduleNotificationsSave() {
@@ -2712,11 +2754,10 @@ async function syncPull(force = false) {
             if (r.notModified) continue;
             if (f === 'settings') applyFileData('settings', r.data, r.wasPlain);
             else if (f === 'notifications') {
-              // ✅ دمج الإشعارات بدلاً من استبدالها (لمنع فقدان الإشعارات المحلية أو إشعارات الآخرين)
-              const remote = Array.isArray(r.data) ? r.data : [];
-              cache.notifications = mergeNotificationsArrays(remote, cache.notifications || []);
-              notifChanged = true;
-            }
+  const remote = Array.isArray(r.data) ? r.data : [];
+  cache.notifications = mergeNotificationsArrays(remote, cache.notifications || []);
+  notifChanged = true;
+}
             else applyFileData(f, r.data, r.wasPlain);
             didChange = true;
           } catch (_) {}
@@ -3235,51 +3276,88 @@ function rebuildSettingsTabs() {
    + حفظ مضمون (await) + دمج عند التعارض
    ══════════════════════════════════════════════════════════════ */
 
-/* ✅ إضافة إشعار — تنتظر حتى اكتمال الحفظ فعلياً في GitHub */
+/* ✅ إضافة إشعار + حفظ فوري + إشعار جهاز + toast */
 function addNotification(title, message, type = 'info', silent = false) {
   const u = currentUser?.username;
-  // ✅ readBy فارغة — لا نضيف المنشئ (لن يرى إشعاره أصلاً)
-  const n = { id: uid(), title, message, type, time: fmtDate(), ts: Date.now(), createdBy: u || 'system', deletedBy: [], readBy: [] };
+  const n = {
+    id: uid(),
+    title,
+    message,
+    type,
+    time: fmtDate(),
+    ts: Date.now(),
+    createdBy: u || 'system',
+    deletedBy: [],
+    readBy: []
+  };
   if (!Array.isArray(cache.notifications)) cache.notifications = [];
   cache.notifications.unshift(n);
   if (cache.notifications.length > 100) cache.notifications = cache.notifications.slice(0, 100);
   renderNotifications();
 
-  // ✅ حفظ مضمون — ننتظر انتهاء الحفظ فعلاً (مع إعادة المحاولة والدمج عند التعارض)
-  saveNotificationsMerged().catch(() => { /* صامت — SaveQueue يعيد المحاولة */ });
+  // ✅ حفظ فوري — ننتظر اكتماله فعلياً
+  saveNotificationsMerged()
+    .then(() => {
+      console.log('[Notification] ✅ Saved to GitHub:', n.id);
+    })
+    .catch(err => {
+      console.warn('[Notification] ❌ Save failed:', err);
+    });
 
+  // إشعار الجهاز
   try {
     if (typeof DeviceNotify !== 'undefined' && DeviceNotify.isEnabled()) {
       const iconMap = { success: '✅', error: '❌', warning: '⚠️', info: '📢' };
       const emoji = iconMap[type] || '📢';
-      DeviceNotify.show(`${emoji} ${title}`, { body: message, tag: 'oms-' + n.id, silent: false, data: { notificationId: n.id } });
+      DeviceNotify.show(`${emoji} ${title}`, {
+        body: message,
+        tag: 'oms-' + n.id,
+        silent: false,
+        data: { notificationId: n.id }
+      });
     }
   } catch (_) {}
+
   if (!silent) toast(`${title}: ${message}`, type || 'info');
 }
 
-/* ✅ المستخدم لا يرى إشعاراته الخاصة — يرى فقط إشعارات الآخرين */
+/* ✅ كل المستخدمين يرون كل الإشعارات (بما فيها إشعاراتهم) */
 function getVisibleNotifications() {
-  const u = currentUser?.username; if (!u) return [];
+  const u = currentUser?.username;
+  if (!u) return [];
   return (cache.notifications || []).filter(n =>
-    n.createdBy !== u &&
     !(Array.isArray(n.deletedBy) && n.deletedBy.includes(u))
   );
 }
 
 function renderNotifications() {
-  const list = document.getElementById('notifList'); if (!list) return;
+  const list = document.getElementById('notifList');
+  if (!list) return;
   const u = currentUser?.username;
   const visible = getVisibleNotifications();
   const unread = u ? visible.filter(n => !(Array.isArray(n.readBy) && n.readBy.includes(u))).length : 0;
   const badge = document.getElementById('notifBadge');
-  if (badge) { if (unread > 0) { badge.textContent = unread; badge.style.display = ''; } else badge.style.display = 'none'; }
+  if (badge) {
+    if (unread > 0) { badge.textContent = unread; badge.style.display = ''; }
+    else badge.style.display = 'none';
+  }
   _lastNotifUnreadCount = unread;
-  if (!visible.length) { list.innerHTML = `<div class="notif-empty">${ico('bell', 40)}<div style="margin-top:10px;">لا توجد إشعارات</div></div>`; return; }
-  list.innerHTML = visible.slice(0, 30).map(n => {
+
+  if (!visible.length) {
+    list.innerHTML = `<div class="notif-empty">${ico('bell', 40)}<div style="margin-top:10px;">لا توجد إشعارات</div></div>`;
+    return;
+  }
+  list.innerHTML = visible.slice(0, 50).map(n => {
     const isUnread = u && !(Array.isArray(n.readBy) && n.readBy.includes(u));
     const author = n.createdBy && n.createdBy !== 'system' ? n.createdBy : '';
-    return `<div class="notif-item ${n.type || 'info'}${isUnread ? ' unread' : ''}"><div class="nt"><span>${esc(n.title || '')}</span></div><div class="nm">${esc(n.message || '')}</div><div class="nd"><span>${esc(n.time || '')}</span>${author ? `<span class="author">بواسطة: ${esc(author)}</span>` : ''}</div></div>`;
+    return `<div class="notif-item ${n.type || 'info'}${isUnread ? ' unread' : ''}">
+      <div class="nt"><span>${esc(n.title || '')}</span></div>
+      <div class="nm">${esc(n.message || '')}</div>
+      <div class="nd">
+        <span>${esc(n.time || '')}</span>
+        ${author ? `<span class="author">بواسطة: ${esc(author)}</span>` : ''}
+      </div>
+    </div>`;
   }).join('');
 }
 
@@ -5986,7 +6064,7 @@ window.logout = async function (silent = false) {
   try { await flushNotificationsSave(); } catch {}
   try { await flushActivitySave(); } catch {}
   try { await SaveQueue.drain(); } catch (_) {}
-  stopPolling(); stopSessionTimer();
+  stopPolling(); stopNotifPoll(); stopSessionTimer();
   currentUser = null; selectedOrderId = null; selectedReadyIds.clear();
   Storage.resetCache(); localMeta = null;
   currentSyncInterval = SYNC_INTERVAL; lastSyncTime = 0;
@@ -6016,7 +6094,7 @@ function startApp() {
     if (p === 'tasks' && !isFeatureEnabled('featureTasks')) return false;
     return true;
   }) || 'dashboard';
-  go(firstAvailable); startPolling(); startSessionTimer();
+  go(firstAvailable); startPolling(); startNotifPoll(); startSessionTimer();
   renderNotifications();
   addNotification('مرحباً', `أهلاً ${currentUser.username} (${rl.label})`, 'info', true);
   attachVisibilityHandler(); attachOnlineHandlers();

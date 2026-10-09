@@ -546,24 +546,6 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
 .draft-badge{position:fixed;bottom:22px;right:22px;background:linear-gradient(180deg,#fbc23c,var(--warning-600));color:#4a2b00;padding:10px 15px;border-radius:24px;font-size:12px;font-weight:700;box-shadow:0 8px 24px rgba(217,125,7,.45),inset 0 1px 0 rgba(255,255,255,.4);display:none!important;align-items:center;gap:8px;cursor:pointer;z-index:2500;border:1px solid rgba(255,255,255,.25)}
 .draft-badge.show{display:inline-flex!important}
 .draft-badge .ico{width:14px;height:14px}
-.notif-panel{position:fixed;top:60px;left:22px;width:360px;max-width:92vw;max-height:70vh;background:var(--card-bg);border-radius:var(--radius-lg);box-shadow:var(--shadow-xl);z-index:500;overflow:hidden;display:none;flex-direction:column;border:1px solid var(--card-border)}
-.notif-panel.show{display:flex;animation:slideUp .25s ease}
-.notif-header{padding:14px 18px;background:linear-gradient(135deg,var(--brand-700),var(--brand-500));color:#fff;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}
-.notif-header button{background:rgba(255,255,255,.15);color:#fff;border:none;cursor:pointer;padding:5px;border-radius:6px;font-family:inherit;transition:var(--transition);display:inline-flex;align-items:center;justify-content:center}
-.notif-header button:hover{background:rgba(255,255,255,.3)}
-.notif-list{overflow-y:auto;flex:1;padding:8px}
-.notif-item{padding:12px 14px;border-radius:var(--radius-sm);background:var(--bg);margin-bottom:6px;transition:var(--transition);border-right:3px solid transparent;cursor:pointer}
-.notif-item:hover{background:var(--hover-bg)}
-.notif-item.info{border-right-color:var(--brand-500)}
-.notif-item.success{border-right-color:var(--success-500)}
-.notif-item.warning{border-right-color:var(--warning-500)}
-.notif-item.danger{border-right-color:var(--danger-500)}
-.notif-item .nt{font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:3px}
-.notif-item .nm{font-size:11.5px;color:var(--text-muted);line-height:1.5}
-.notif-item .nd{font-size:10px;color:var(--text-muted);opacity:.8;margin-top:5px;display:flex;justify-content:space-between;align-items:center;gap:6px}
-.notif-item .nd .author{opacity:.85}
-.notif-item.unread{background:linear-gradient(135deg,var(--brand-50),transparent);border-right-color:var(--brand-500)}
-.notif-empty{padding:40px 20px;text-align:center;color:var(--text-muted);font-size:13px}
 .activity-list{background:var(--card-bg);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:8px;border:1px solid var(--card-border)}
 .activity-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:var(--radius-sm);transition:var(--transition);border-bottom:1px solid var(--divider)}
 .activity-item:last-child{border-bottom:none}
@@ -657,7 +639,7 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
 @media print {
     @page { size: A4 portrait; margin: 10mm; }
     html, body { width: 100%; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    header, nav, .toolbar, .no-print, .section-header .hint, .filter-bar, .stats-filter-bar, .tabs, .draft-badge, .connection-banner, #loadingOverlay, .toast-container, .notif-panel, .activity-filters, .activity-pagination, .rate-widget, #saveQueueIndicator { display: none !important; }
+    header, nav, .toolbar, .no-print, .section-header .hint, .filter-bar, .stats-filter-bar, .tabs, .draft-badge, .connection-banner, #loadingOverlay, .toast-container, .activity-filters, .activity-pagination, .rate-widget, #saveQueueIndicator { display: none !important; }
     main { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
     .table-wrap { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; overflow: visible !important; }
     table { width: 100% !important; max-width: 100% !important; min-width: 0 !important; table-layout: fixed !important; border-collapse: collapse !important; border-spacing: 0 !important; margin: 0 !important; font-size: 9px !important; line-height: 1.25 !important; }
@@ -749,7 +731,6 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
   .dialog-message { font-size: 12.5px; }
   .dialog-actions { flex-direction: column-reverse; }
   .dialog-actions .btn { width: 100%; }
-  .notif-panel { left: 6px; right: 6px; width: auto; top: 8px; max-height: 85vh; }
   .toast-container { left: 8px; right: 8px; bottom: 8px; max-width: none; }
   .toast { padding: 10px 12px; font-size: 12px; }
   .empty-state { padding: 30px 15px; }
@@ -794,17 +775,6 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
   <div class="spinner"></div>
   <div class="loading-text" id="loadingText">جاري التحميل...</div>
   <div class="login-loading-progress"><div class="bar" id="loadingBar"></div></div>
-</div>
-
-<div id="notifPanel" class="notif-panel">
-  <div class="notif-header">
-    <span id="notifHeaderTitle"></span>
-    <div style="display:flex;gap:6px;">
-      <button onclick="clearAllNotifications()" id="notifClearBtn" title="مسح الكل"></button>
-      <button onclick="toggleNotifPanel()" id="notifCloseBtn" title="إغلاق"></button>
-    </div>
-  </div>
-  <div class="notif-list" id="notifList"></div>
 </div>
 
 <div id="loginScreen">
@@ -868,11 +838,7 @@ tbody tr.row-locked:hover{background:linear-gradient(90deg,rgba(139,92,246,.14),
         <span id="userChipIcon"></span>
         <b id="currentUserName"></b>
       </div>
-      <button class="btn-icon" onclick="toggleDeviceNotifications()" id="deviceNotifBtn" title="إشعارات الجهاز"></button>
-      <button class="btn-icon" onclick="toggleNotifPanel()" id="notifBtn" title="الإشعارات">
-        <span id="notifBtnIcon"></span>
-        <span class="badge-num" id="notifBadge" style="display:none;">0</span>
-      </button>
+      <button class="btn-icon" onclick="toggleDeviceNotifications()" id="deviceNotifBtn" title="الإشعارات"></button>
       <button class="btn-icon" onclick="toggleTheme()" id="themeBtn" title="تبديل الوضع"></button>
       <button class="btn-icon" onclick="manualSync()" id="syncBtn" title="مزامنة"></button>
       <button class="btn-icon" onclick="showShortcuts()" id="kbBtn" title="الاختصارات"></button>
@@ -1271,7 +1237,7 @@ const ACCESS_KEY = 'oms_access_key';
 const KEY_HIDDEN_FLAG = 'oms_key_hidden';
 const ACTIVITY_PER_PAGE = 30;
 const SYNC_THROTTLE_MS = 5000;
-const NOTIF_POLL_INTERVAL = 10000; /* ✅ 10 ثواني للإشعارات */
+const NOTIF_POLL_INTERVAL = 10000;
 const ACTIVITY_SAVE_DELAY = 2000;
 
 const RATE_LEVELS = [
@@ -1368,7 +1334,7 @@ const PERMISSIONS = {
   tabUsers:{label:'المستخدمون',cat:'settingsTabs',icon:'user'},
   tabTemplates:{label:'قوالب الطباعة',cat:'settingsTabs',icon:'printer'},
   tabCustomFields:{label:'الحقول المخصصة',cat:'settingsTabs',icon:'grid'},
-  tabNotifications:{label:'إشعارات الجهاز',cat:'settingsTabs',icon:'bell'},
+  tabNotifications:{label:'إشعارات النظام',cat:'settingsTabs',icon:'bell'},
   tabFeatures:{label:'إدارة الميزات',cat:'settingsTabs',icon:'zap'},
   tabBackup:{label:'نسخ احتياطي',cat:'settingsTabs',icon:'save'},
   manageCustomers:{label:'إدارة العملاء',cat:'manage',icon:'users'},
@@ -1505,8 +1471,7 @@ let currentSyncInterval = SYNC_INTERVAL;
 let lastSyncTime = 0;
 let lastRateNotificationAt = 0;
 let _activitySaveTimer = null;
-let _lastNotifUnreadCount = 0;
-let _notifPollTimer = null; /* ✅ للإشعارات الخارجية */
+let _notifPollTimer = null;
 let statsFilter = 'all';
 let statsFromDate = '';
 let statsToDate = '';
@@ -1902,7 +1867,7 @@ const Storage = (() => {
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   UNDO / REDO — حفظ صامت
+   UNDO / REDO
    ══════════════════════════════════════════════════════════════ */
 const UndoRedo = (() => {
   const MAX_HISTORY = 20;
@@ -2004,7 +1969,147 @@ function applyFeatureUI() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   DEVICE NOTIFICATIONS
+   ✅ SYSTEM NOTIFICATIONS — إشعارات النظام
+   (تظهر كإشعارات نظام على جهاز المستخدم من كل المستخدمين)
+   ══════════════════════════════════════════════════════════════ */
+
+/* ✅ تتبع الإشعارات التي عُرضت على هذا الجهاز */
+const SeenNotifs = {
+  KEY: 'oms_seen_notifs',
+  get() {
+    try { return new Set(JSON.parse(localStorage.getItem(this.KEY) || '[]')); }
+    catch { return new Set(); }
+  },
+  save(set) {
+    try { localStorage.setItem(this.KEY, JSON.stringify(Array.from(set).slice(-500))); }
+    catch {}
+  },
+  add(id) { const s = this.get(); s.add(id); this.save(s); },
+  has(id) { return this.get().has(id); }
+};
+
+/* ✅ عرض إشعار النظام على الجهاز */
+function showSystemNotification(n) {
+  try {
+    if (typeof DeviceNotify === 'undefined') return;
+    if (!DeviceNotify.isEnabled()) return;
+    if (DeviceNotify.getPermission() !== 'granted') return;
+    const iconMap = { success: '✅', error: '❌', warning: '⚠️', info: '🔔' };
+    const emoji = iconMap[n.type] || '🔔';
+    const author = n.createdBy && n.createdBy !== currentUser?.username ? ` — ${n.createdBy}` : '';
+    DeviceNotify.show(`${emoji} ${n.title}${author}`, {
+      body: n.message,
+      tag: 'oms-notif-' + n.id,
+      silent: false
+    });
+  } catch (_) {}
+}
+
+/* ✅ إضافة إشعار جديد → يُحفظ في قاعدة البيانات + يُنشر لكل المستخدمين */
+function addNotification(title, message, type = 'info', silent = false) {
+  const u = currentUser?.username;
+  const n = {
+    id: uid(),
+    title,
+    message,
+    type,
+    time: fmtDate(),
+    ts: Date.now(),
+    createdBy: u || 'system'
+  };
+  if (!Array.isArray(cache.notifications)) cache.notifications = [];
+  cache.notifications.unshift(n);
+  if (cache.notifications.length > 200) cache.notifications = cache.notifications.slice(0, 200);
+
+  // لا نُظهر إشعاراً لصاحب العملية نفسه (هو يعرف ماذا فعل)
+  SeenNotifs.add(n.id);
+
+  // حفظ في قاعدة البيانات — ليراه الآخرون على أجهزتهم
+  saveNotificationsExternal().catch(() => {});
+
+  if (!silent) toast(`${title}: ${message}`, type || 'info');
+}
+
+/* ✅ حفظ الإشعارات في قاعدة البيانات مباشرة */
+async function saveNotificationsExternal() {
+  if (!currentUser) return;
+  try {
+    let remoteData = [];
+    try {
+      const r = await Storage.loadData(DATA_FILES.notifications, 'notifications');
+      if (r && r.data && Array.isArray(r.data)) remoteData = r.data;
+    } catch (_) {}
+
+    const byId = new Map();
+    remoteData.forEach(n => { if (n && n.id) byId.set(n.id, n); });
+    (cache.notifications || []).forEach(n => { if (n && n.id) byId.set(n.id, n); });
+    const merged = Array.from(byId.values())
+      .sort((a, b) => (b.ts || 0) - (a.ts || 0))
+      .slice(0, 200);
+
+    cache.notifications = merged;
+    await Storage.saveData(DATA_FILES.notifications, merged, 'notifications');
+  } catch (e) {
+    console.warn('[Notifications] Save failed:', e);
+  }
+}
+
+/* ✅ مزامنة الإشعارات من قاعدة البيانات + عرض إشعارات النظام */
+async function pullNotificationsExternal() {
+  if (!currentUser || syncing) return;
+  try {
+    const r = await Storage.loadData(DATA_FILES.notifications, 'notifications');
+    if (r.notModified) return;
+    const remote = Array.isArray(r.data) ? r.data : [];
+
+    const byId = new Map();
+    remote.forEach(n => { if (n && n.id) byId.set(n.id, n); });
+    (cache.notifications || []).forEach(n => { if (n && n.id) byId.set(n.id, n); });
+    cache.notifications = Array.from(byId.values())
+      .sort((a, b) => (b.ts || 0) - (a.ts || 0))
+      .slice(0, 200);
+
+    const myName = currentUser.username;
+    for (const n of cache.notifications) {
+      if (SeenNotifs.has(n.id)) continue;
+      SeenNotifs.add(n.id);
+      if (n.createdBy === myName) continue;
+      showSystemNotification(n);
+    }
+  } catch (e) { /* صامت */ }
+}
+
+/* ✅ مزامنة الإشعارات دورياً */
+function startNotifPoll() {
+  stopNotifPoll();
+  _notifPollTimer = setInterval(() => {
+    if (currentUser && !document.hidden) pullNotificationsExternal();
+  }, NOTIF_POLL_INTERVAL);
+}
+function stopNotifPoll() {
+  if (_notifPollTimer) { clearInterval(_notifPollTimer); _notifPollTimer = null; }
+}
+
+/* ✅ دوال توافقية */
+function renderNotifications() { /* لا يوجد نظام داخلي */ }
+function getVisibleNotifications() { return cache.notifications || []; }
+function scheduleNotificationsSave() { saveNotificationsExternal().catch(() => {}); }
+async function flushNotificationsSave() {
+  try { await saveNotificationsExternal(); } catch {}
+}
+window.clearAllNotifications = async function () {
+  if (!currentUser) return;
+  const ok = await dialog.confirm('سيتم مسح جميع الإشعارات من النظام للجميع.', { type: 'warning', okText: 'نعم، امسح', okClass: 'btn-warning' });
+  if (!ok) return;
+  cache.notifications = [];
+  try {
+    await Storage.saveData(DATA_FILES.notifications, [], 'notifications');
+    toast('تم مسح جميع الإشعارات', 'success');
+  } catch { toast('تعذر المسح', 'error'); }
+};
+
+/* ══════════════════════════════════════════════════════════════
+   ✅ SYSTEM NOTIFICATIONS ENGINE — محرك إشعارات النظام
    ══════════════════════════════════════════════════════════════ */
 const DeviceNotify = (() => {
   const STORAGE_KEY = 'oms_device_notif';
@@ -2034,19 +2139,19 @@ const DeviceNotify = (() => {
     if (!isSupported()) { toast('جهازك لا يدعم إشعارات النظام', 'warning'); return false; }
     const perm = await requestPermission();
     if (perm !== 'granted') {
-      if (perm === 'denied') toast('تم رفض الإذن — افتح إعدادات المتصفح للسماح', 'error');
-      else toast('لم يتم منح الإذن', 'warning');
+      if (perm === 'denied') toast('يرجى تفعيل الإشعارات من إعدادات الجهاز', 'error');
+      else toast('لم يتم تفعيل الإشعارات', 'warning');
       return false;
     }
     setEnabled(true);
-    logActivity('device-notif', 'تفعيل إشعارات الجهاز', '', 'success');
-    toast('✅ تم تفعيل إشعارات الجهاز', 'success');
+    logActivity('device-notif', 'تفعيل إشعارات النظام', '', 'success');
+    toast('✅ تم تفعيل إشعارات النظام', 'success');
     return true;
   }
   function disable() {
     setEnabled(false);
-    logActivity('device-notif', 'تعطيل إشعارات الجهاز', '', 'info');
-    toast('تم تعطيل إشعارات الجهاز', 'info');
+    logActivity('device-notif', 'تعطيل إشعارات النظام', '', 'info');
+    toast('تم تعطيل إشعارات النظام', 'info');
   }
   async function show(title, options = {}) {
     if (!isEnabled()) return null;
@@ -2069,7 +2174,7 @@ const DeviceNotify = (() => {
   }
   async function test() {
     if (!isEnabled()) { const ok = await enable(); if (!ok) return; }
-    await show('🔔 إشعار تجريبي', { body: `يعمل بنجاح — ${new Date().toLocaleTimeString('ar-EG')}`, tag: 'oms-test' });
+    await show('🔔 إشعار تجريبي', { body: `نظام إدارة الطلبات — يعمل بنجاح — ${new Date().toLocaleTimeString('ar-EG')}`, tag: 'oms-test' });
     toast('تم إرسال إشعار تجريبي', 'success');
   }
   return { isSupported, getPermission, isEnabled, setEnabled, enable, disable, show, test, requestPermission };
@@ -2090,14 +2195,14 @@ function updateDeviceNotifBtn() {
     btn.innerHTML = ico('bell', 17); btn.style.opacity = '1';
     btn.style.background = 'linear-gradient(180deg,#22d693,#0cb97b)';
     btn.style.borderColor = 'rgba(12,185,123,.5)';
-    btn.title = '🔔 إشعارات الجهاز مُفعّلة — اضغط للإيقاف';
+    btn.title = '🔔 الإشعارات مُفعّلة — اضغط للإيقاف';
     btn.onclick = () => { DeviceNotify.disable(); updateDeviceNotifBtn(); };
   } else {
     btn.innerHTML = ico('bellOff', 17);
     btn.style.opacity = perm === 'denied' ? '0.5' : '0.85';
     btn.style.background = 'rgba(255,255,255,.14)';
     btn.style.borderColor = 'rgba(255,255,255,.1)';
-    btn.title = perm === 'denied' ? '⚠️ الإذن مرفوض' : '🔕 اضغط لتفعيل إشعارات الجهاز';
+    btn.title = perm === 'denied' ? '⚠️ الإشعارات معطّلة من إعدادات الجهاز' : '🔕 اضغط لتفعيل الإشعارات';
     btn.onclick = async () => {
       const ok = await DeviceNotify.enable();
       updateDeviceNotifBtn();
@@ -2119,13 +2224,13 @@ function updateDeviceNotifStatus() {
   const enabled = DeviceNotify.isEnabled();
   const perm = DeviceNotify.getPermission();
   if (!supported) {
-    el.innerHTML = '<div style="padding:12px;background:var(--danger-50);border-radius:var(--radius-md);border-right:3px solid var(--danger-500);font-size:12.5px;color:var(--danger-700);">❌ <b>غير مدعوم</b> — جهازك أو متصفحك لا يدعم إشعارات النظام.</div>';
+    el.innerHTML = '<div style="padding:12px;background:var(--danger-50);border-radius:var(--radius-md);border-right:3px solid var(--danger-500);font-size:12.5px;color:var(--danger-700);">❌ <b>غير مدعوم</b> — جهازك لا يدعم إشعارات النظام.</div>';
     return;
   }
   let status, color, bg;
   if (enabled && perm === 'granted') { status = '✅ مُفعّل ويعمل بنجاح'; color = 'var(--success-700)'; bg = 'var(--success-50)'; }
-  else if (perm === 'denied') { status = '⛔ الإذن مرفوض — افتح إعدادات المتصفح للسماح'; color = 'var(--danger-700)'; bg = 'var(--danger-50)'; }
-  else if (enabled && perm !== 'granted') { status = '⚠️ مُفعّل لكن الإذن لم يُمنح'; color = 'var(--warning-700)'; bg = 'var(--warning-50)'; }
+  else if (perm === 'denied') { status = '⛔ الإشعارات معطّلة من إعدادات الجهاز — يرجى تفعيلها'; color = 'var(--danger-700)'; bg = 'var(--danger-50)'; }
+  else if (enabled && perm !== 'granted') { status = '⚠️ مُفعّل لكن لم يتم تأكيد الإشعارات'; color = 'var(--warning-700)'; bg = 'var(--warning-50)'; }
   else { status = '🔕 غير مُفعّل — اضغط "تفعيل"'; color = 'var(--text-muted)'; bg = 'var(--bg)'; }
   el.innerHTML = `<div style="padding:12px;background:${bg};border-radius:var(--radius-md);border-right:3px solid currentColor;font-size:12.5px;color:${color};font-weight:600;">${status}</div>`;
   const infoEl = document.getElementById('deviceNotifInfoBox');
@@ -2134,9 +2239,9 @@ function updateDeviceNotifStatus() {
     const notifSupported = 'Notification' in window;
     infoEl.innerHTML = `
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;">
-        <div style="padding:10px;background:var(--bg);border-radius:var(--radius-sm);"><div style="color:var(--text-muted);font-size:11px;">Notifications API</div><div style="font-weight:700;color:${notifSupported ? 'var(--success-600)' : 'var(--danger-600)'};">${notifSupported ? '✅ مدعوم' : '❌ غير مدعوم'}</div></div>
-        <div style="padding:10px;background:var(--bg);border-radius:var(--radius-sm);"><div style="color:var(--text-muted);font-size:11px;">Service Worker</div><div style="font-weight:700;color:${swSupported ? 'var(--success-600)' : 'var(--warning-600)'};">${swSupported ? '✅ مدعوم' : '⚠️ غير مدعوم'}</div></div>
-        <div style="padding:10px;background:var(--bg);border-radius:var(--radius-sm);"><div style="color:var(--text-muted);font-size:11px;">حالة الإذن</div><div style="font-weight:700;color:var(--text);">${perm === 'granted' ? '✅ ممنوح' : perm === 'denied' ? '⛔ مرفوض' : '⏳ لم يُطلب'}</div></div>
+        <div style="padding:10px;background:var(--bg);border-radius:var(--radius-sm);"><div style="color:var(--text-muted);font-size:11px;">خدمة الإشعارات</div><div style="font-weight:700;color:${notifSupported ? 'var(--success-600)' : 'var(--danger-600)'};">${notifSupported ? '✅ مدعوم' : '❌ غير مدعوم'}</div></div>
+        <div style="padding:10px;background:var(--bg);border-radius:var(--radius-sm);"><div style="color:var(--text-muted);font-size:11px;">نظام الخلفية</div><div style="font-weight:700;color:${swSupported ? 'var(--success-600)' : 'var(--warning-600)'};">${swSupported ? '✅ مدعوم' : '⚠️ غير مدعوم'}</div></div>
+        <div style="padding:10px;background:var(--bg);border-radius:var(--radius-sm);"><div style="color:var(--text-muted);font-size:11px;">حالة السماح</div><div style="font-weight:700;color:var(--text);">${perm === 'granted' ? '✅ ممنوح' : perm === 'denied' ? '⛔ مرفوض' : '⏳ لم يُطلب'}</div></div>
         <div style="padding:10px;background:var(--bg);border-radius:var(--radius-sm);"><div style="color:var(--text-muted);font-size:11px;">الحالة الحالية</div><div style="font-weight:700;color:${enabled ? 'var(--success-600)' : 'var(--text-muted)'};">${enabled ? '🔔 مُفعّل' : '🔕 معطّل'}</div></div>
       </div>`;
   }
@@ -2285,168 +2390,6 @@ function maybeNotifyLowRate() {
   const pct = rateLimitInfo.limit > 0 ? (rateLimitInfo.remaining / rateLimitInfo.limit) * 100 : 100;
   if (pct < 10) { lastRateNotificationAt = now; addNotification('تنبيه', `استهلاك منخفض للحصة: ${rateLimitInfo.remaining} طلب متبقي`, 'warning', true); }
 }
-
-/* ══════════════════════════════════════════════════════════════
-   ✅ NOTIFICATIONS — نظام خارجي موحّد لكل المستخدمين
-   ══════════════════════════════════════════════════════════════ */
-
-/* ✅ إضافة إشعار جديد → يُحفظ في notifications.json فوراً */
-function addNotification(title, message, type = 'info', silent = false) {
-  const u = currentUser?.username;
-  const n = {
-    id: uid(),
-    title,
-    message,
-    type,
-    time: fmtDate(),
-    ts: Date.now(),
-    createdBy: u || 'system'
-  };
-  if (!Array.isArray(cache.notifications)) cache.notifications = [];
-  cache.notifications.unshift(n);
-  if (cache.notifications.length > 200) cache.notifications = cache.notifications.slice(0, 200);
-  renderNotifications();
-
-  // حفظ فوري في GitHub
-  saveNotificationsExternal().catch(() => {});
-
-  // إشعار جهاز
-  try {
-    if (typeof DeviceNotify !== 'undefined' && DeviceNotify.isEnabled()) {
-      const iconMap = { success: '✅', error: '❌', warning: '⚠️', info: '📢' };
-      const emoji = iconMap[type] || '📢';
-      DeviceNotify.show(`${emoji} ${title}`, { body: message, tag: 'oms-' + n.id, silent: false, data: { notificationId: n.id } });
-    }
-  } catch (_) {}
-
-  if (!silent) toast(`${title}: ${message}`, type || 'info');
-}
-
-/* ✅ حفظ مباشر لملف الإشعارات (بدون تعقيدات) */
-async function saveNotificationsExternal() {
-  if (!currentUser) return;
-  try {
-    // دمج مع النسخة الموجودة على السيرفر لتجنب فقدان إشعارات الآخرين
-    let remoteData = [];
-    try {
-      const r = await Storage.loadData(DATA_FILES.notifications, 'notifications');
-      if (r && r.data && Array.isArray(r.data)) remoteData = r.data;
-    } catch (_) {}
-
-    // دمج بسيط: كل إشعار معرف فريد، الأولوية للجديد
-    const byId = new Map();
-    remoteData.forEach(n => { if (n && n.id) byId.set(n.id, n); });
-    (cache.notifications || []).forEach(n => { if (n && n.id) byId.set(n.id, n); });
-    const merged = Array.from(byId.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 200);
-
-    cache.notifications = merged;
-    await Storage.saveData(DATA_FILES.notifications, merged, 'notifications');
-  } catch (e) {
-    console.warn('[Notifications] Save failed:', e);
-  }
-}
-
-/* ✅ سحب الإشعارات من GitHub مباشرة (بدون فلترة) */
-async function pullNotificationsExternal() {
-  if (!currentUser || syncing) return;
-  try {
-    const r = await Storage.loadData(DATA_FILES.notifications, 'notifications');
-    if (r.notModified) return;
-    const remote = Array.isArray(r.data) ? r.data : [];
-
-    const beforeIds = new Set((cache.notifications || []).map(n => n.id));
-    // دمج: كل مستخدم يرى كل الإشعارات
-    const byId = new Map();
-    remote.forEach(n => { if (n && n.id) byId.set(n.id, n); });
-    (cache.notifications || []).forEach(n => { if (n && n.id) byId.set(n.id, n); });
-    cache.notifications = Array.from(byId.values()).sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 200);
-
-    const newOnes = cache.notifications.filter(n => !beforeIds.has(n.id));
-    renderNotifications();
-
-    if (newOnes.length > 0) {
-      const latest = newOnes[0];
-      const author = latest.createdBy && latest.createdBy !== currentUser.username ? ` — من: ${latest.createdBy}` : '';
-      toast(`🔔 ${latest.title}${author}`, 'info');
-    }
-  } catch (e) { /* صامت */ }
-}
-
-/* ✅ Polling كل 10 ثواني */
-function startNotifPoll() {
-  stopNotifPoll();
-  _notifPollTimer = setInterval(() => {
-    if (currentUser && !document.hidden) pullNotificationsExternal();
-  }, NOTIF_POLL_INTERVAL);
-}
-function stopNotifPoll() {
-  if (_notifPollTimer) { clearInterval(_notifPollTimer); _notifPollTimer = null; }
-}
-
-/* ✅ كل المستخدمين يرون كل الإشعارات */
-function getVisibleNotifications() {
-  if (!currentUser) return [];
-  return cache.notifications || [];
-}
-
-/* ✅ عرض الإشعارات */
-function renderNotifications() {
-  const list = document.getElementById('notifList');
-  if (!list) return;
-  const visible = getVisibleNotifications();
-  const unread = visible.length;
-  const badge = document.getElementById('notifBadge');
-  if (badge) {
-    if (unread > 0) { badge.textContent = unread > 99 ? '99+' : unread; badge.style.display = ''; }
-    else badge.style.display = 'none';
-  }
-  if (!visible.length) {
-    list.innerHTML = `<div class="notif-empty">${ico('bell', 40)}<div style="margin-top:10px;">لا توجد إشعارات</div></div>`;
-    return;
-  }
-  list.innerHTML = visible.slice(0, 50).map(n => {
-    const author = n.createdBy && n.createdBy !== 'system' ? n.createdBy : '';
-    const isMine = n.createdBy === currentUser?.username;
-    return `<div class="notif-item ${n.type || 'info'}">
-      <div class="nt"><span>${esc(n.title || '')}</span>${isMine ? ' <span style="opacity:.6;font-size:10px;">(أنت)</span>' : ''}</div>
-      <div class="nm">${esc(n.message || '')}</div>
-      <div class="nd">
-        <span>${esc(n.time || '')}</span>
-        ${author ? `<span class="author">بواسطة: ${esc(author)}</span>` : ''}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-/* ✅ فتح/إغلاق اللوحة */
-window.toggleNotifPanel = function() {
-  const panel = document.getElementById('notifPanel');
-  panel.classList.toggle('show');
-  if (panel.classList.contains('show')) {
-    // سحب فوري عند الفتح
-    pullNotificationsExternal();
-    renderNotifications();
-  }
-};
-
-/* ✅ مسح الإشعارات — للجميع (تحذير) */
-window.clearAllNotifications = async function() {
-  if (!currentUser) return;
-  const ok = await dialog.confirm('سيتم مسح جميع الإشعارات للجميع. متابعة؟', { title: 'مسح الإشعارات', okText: 'نعم، امسح', type: 'warning', okClass: 'btn-warning' });
-  if (!ok) return;
-  cache.notifications = [];
-  renderNotifications();
-  try {
-    await Storage.saveData(DATA_FILES.notifications, [], 'notifications');
-    toast('تم مسح جميع الإشعارات', 'success');
-  } catch { toast(MSG.saveFail, 'error'); }
-};
-
-/* ══════════════════════════════════════════════════════════════
-   NOTIFICATIONS — توافقية (تُستدعى من الكود القديم)
-   ══════════════════════════════════════════════════════════════ */
-function scheduleNotificationsSave() { saveNotificationsExternal().catch(() => {}); }
-async function flushNotificationsSave() { try { await saveNotificationsExternal(); } catch {} }
 </script>
 <script>
 /* ══════════════════════════════════════════════════════════════
@@ -2681,7 +2624,6 @@ async function writeMeta(extra = {}) {
 async function persistKeys(keys) {
   setSyncing(true);
   try {
-    // ✅ الإشعارات تُحفظ عبر دالتها المخصصة
     const notifRequested = keys.includes('notifications');
     const filteredKeys = keys.filter(k => k !== 'notifications');
     if (notifRequested) saveNotificationsExternal().catch(() => {});
@@ -2754,10 +2696,7 @@ async function syncPull(force = false) {
             const r = await Storage.loadData(DATA_FILES[f], f);
             if (r.notModified) continue;
             if (f === 'settings') applyFileData('settings', r.data, r.wasPlain);
-            else if (f === 'notifications') {
-              // الإشعارات تُدمج عبر polling منفصل
-              continue;
-            }
+            else if (f === 'notifications') { continue; }
             else applyFileData(f, r.data, r.wasPlain);
             didChange = true;
           } catch (_) {}
@@ -3240,7 +3179,7 @@ function rebuildSettingsTabs() {
     { id:'users', icon:'user', label:'المستخدمون', perm:'tabUsers' },
     { id:'templates', icon:'printer', label:'قوالب الطباعة', perm:'tabTemplates' },
     { id:'customfields', icon:'grid', label:'الحقول المخصصة', perm:'tabCustomFields', feature:'featureCustomFields' },
-    { id:'notifications', icon:'bell', label:'إشعارات الجهاز', perm:'tabNotifications' },
+    { id:'notifications', icon:'bell', label:'إشعارات النظام', perm:'tabNotifications' },
     { id:'features', icon:'zap', label:'إدارة الميزات', perm:'tabFeatures', ownerOnly:true },
     { id:'backup', icon:'save', label:'نسخ احتياطي', perm:'tabBackup' }
   ].filter(t => {
@@ -3590,10 +3529,6 @@ function buildUI() {
   document.getElementById('logoutBtn').innerHTML = ico('logout', 17);
   document.getElementById('draftIcon').innerHTML = ico('file', 14);
   document.getElementById('connBannerIcon').innerHTML = ico('warning', 14);
-  document.getElementById('notifBtnIcon').innerHTML = ico('bell', 17);
-  document.getElementById('notifHeaderTitle').innerHTML = ico('bell', 15) + '<span style="margin-right:6px;">الإشعارات</span>';
-  document.getElementById('notifClearBtn').innerHTML = ico('trash', 15);
-  document.getElementById('notifCloseBtn').innerHTML = ico('x', 15);
   document.getElementById('sessionTimerIcon').innerHTML = ico('clock', 12);
   document.getElementById('rateIcon').innerHTML = ico('zap', 12);
   updateThemeBtn(); renderRateLimitWidget(); rebuildNav();
@@ -3740,8 +3675,8 @@ function buildUI() {
 
   document.getElementById('tab-notifications').innerHTML = `
     <div style="padding:12px;background:var(--brand-50);border-radius:var(--radius-md);font-size:12.5px;color:var(--brand-700);margin-bottom:14px;border:1px solid rgba(66,102,232,.2);line-height:1.6;">
-      🔔 <b>إشعارات الجهاز</b> تُظهر رسائل منبثقة على شاشة جهازك.<br>
-      ℹ️ <b>ملاحظة:</b> جميع المستخدمين يرون كل الإشعارات.
+      🔔 <b>إشعارات النظام</b> — تُعرض على شاشة جهازك مباشرة عند حدوث أي عملية في النظام من أي مستخدم.
+      <br><br>ℹ️ <b>ملاحظة:</b> لن ترى إشعاراً لعمليتك الخاصة — سترى فقط عمليات المستخدمين الآخرين.
     </div>
     <div class="template-card"><h4>${ico('bell', 17)}<span>التحكم في الإشعارات</span></h4>
       <div id="deviceNotifStatusBox" style="margin-bottom:14px;"></div>
@@ -3780,7 +3715,7 @@ function buildUI() {
     { title:'التنقل', icon:'home', items: [['الرئيسية',['Alt','1']],['إدخال الطلبات',['Alt','2']],['الطلبات الجاهزة',['Alt','3']],['سجل الطلبات',['Alt','4']],['العملاء',['Alt','5']]]},
     { title:'العمليات', icon:'check', items: [['بحث سريع',['Ctrl','K']],['طلب جديد',['Alt','N']],['حفظ',['Ctrl','Enter']],['طباعة',['Ctrl','P']],['تراجع',['Ctrl','Z']],['إعادة',['Ctrl','Y']],['تحويل جماعي',['Alt','B']],['ترحيل',['Alt','M']]]},
     { title:'النموذج', icon:'list', items: [['التالي',['Enter']],['السابق',['Shift','Enter']],['إغلاق',['Esc']],['مدفوع',['Alt','P']],['غير مدفوع',['Alt','U']],['VIP',['Alt','V']],['جاهز',['Alt','G']]]},
-    { title:'العرض', icon:'eye', items: [['تكبير',['Ctrl','=']],['تصغير',['Ctrl','-']],['100%',['Ctrl','0']],['حذف',['Delete']],['ليلي',['Alt','D']],['إشعارات',['Alt','I']]]}
+    { title:'العرض', icon:'eye', items: [['تكبير',['Ctrl','=']],['تصغير',['Ctrl','-']],['100%',['Ctrl','0']],['حذف',['Delete']],['ليلي',['Alt','D']],['الإشعارات',['Alt','I']]]}
   ].map(g => `<div class="shortcut-group"><h4>${ico(g.icon, 15)}<span>${g.title}</span></h4>${g.items.map(([d, keys]) => `<div class="shortcut-row"><span class="desc">${d}</span><span class="keys">${keys.map(k => `<kbd>${k}</kbd>`).join('')}</span></div>`).join('')}</div>`).join('');
 
   loadAnalyticsSettingsToForm();
@@ -4509,6 +4444,7 @@ window.saveGroup = async function () {
     closeModal('groupModal');
     renderGroups(); renderReady();
     toast(id ? 'تم التعديل بنجاح' : 'تم الإضافة بنجاح', 'success');
+    if (!id) addNotification('مجموعة جديدة', `${name} — ${orderIds.length} طلب`, 'success', true);
   } catch (e) { toast(e.message, 'error'); }
 };
 window.deleteGroup = async function (id) {
@@ -5158,6 +5094,7 @@ window.saveOrder = async function () {
       closeModal('orderModal'); clearDraft();
       try { await persistKeys(['log', 'activity']); UndoRedo.commitBatch(); } catch (e) { toast(e.message, 'error'); UndoRedo.cancelBatch(); return; }
       renderLog(); toast('تم التحديث بنجاح', 'success');
+      addNotification('تعديل في السجل', `${data.invoice} — ${data.customer}`, 'warning', true);
     } else {
       const existing = id ? cache.orders.find(x => x.id === id) : null;
       let approvalDate = document.getElementById('orderDate').value || (existing?.approvalDate || '');
@@ -5168,7 +5105,7 @@ window.saveOrder = async function () {
       closeModal('orderModal'); clearDraft();
       try { await persistKeys(['orders', 'activity']); UndoRedo.commitBatch(); } catch (e) { toast(e.message, 'error'); UndoRedo.cancelBatch(); return; }
       renderEntry(); toast('تم الحفظ بنجاح', 'success');
-      if (!id) addNotification('طلب جديد', `${data.invoice} — ${data.customer}`, 'success', true);
+      addNotification(id ? 'تعديل طلب' : 'طلب جديد', `${data.invoice} — ${data.customer}`, 'success', true);
     }
     lastSaveTime = Date.now();
   } catch (e) { toast(e.message, 'error'); UndoRedo.cancelBatch(); }
@@ -5258,7 +5195,7 @@ window.transferSingle = async function (id) {
     logActivity('transfer-single', `تحويل: ${order.invoice}`, '', 'success');
     await persistKeys(['orders', 'ready', 'activity']); UndoRedo.commitBatch();
     renderEntry(); renderDashboard();
-    addNotification('تحويل طلب', `تم تحويل ${order.invoice}`, 'success', true);
+    addNotification('تحويل طلب', `${order.invoice} — ${order.customer}`, 'success', true);
     toast('تم التحويل بنجاح', 'success');
   } catch (e) { cache.orders = backup.orders; cache.ready = backup.ready; UndoRedo.cancelBatch(); toast(e.message, 'error'); }
 };
@@ -5276,7 +5213,7 @@ window.bulkTransfer = async function () {
     logActivity('bulk-transfer', `تحويل جماعي: ${eligible.length}`, '', 'success');
     await persistKeys(['orders', 'ready', 'activity']); UndoRedo.commitBatch();
     renderEntry(); renderDashboard();
-    addNotification('تحويل جماعي', `${eligible.length} طلب`, 'success', true);
+    addNotification('تحويل جماعي', `${eligible.length} طلب إلى الجاهزة`, 'success', true);
     toast(`تم تحويل ${eligible.length} طلب بنجاح`, 'success');
   } catch (e) { cache.orders = backup.orders; cache.ready = backup.ready; UndoRedo.cancelBatch(); toast(e.message, 'error'); }
 };
@@ -5324,7 +5261,7 @@ window.returnReadyToEntry = async function (id) {
     logActivity('return-single', `إرجاع طلب: ${order.invoice}`, `العميل: ${order.customer}`, 'warning');
     await persistKeys(['orders', 'ready', 'activity']); UndoRedo.commitBatch();
     renderReady(); renderDashboard();
-    addNotification('إرجاع طلب', `تم إرجاع ${order.invoice}`, 'warning', true);
+    addNotification('إرجاع طلب', `${order.invoice} — ${order.customer}`, 'warning', true);
     toast('تم الإرجاع بنجاح', 'success');
   } catch (e) { cache.orders = backup.orders; cache.ready = backup.ready; UndoRedo.cancelBatch(); toast(e.message, 'error'); }
 };
@@ -5961,11 +5898,8 @@ function startApp() {
   }) || 'dashboard';
   go(firstAvailable);
   startPolling();
-  startNotifPoll(); /* ✅ polling الإشعارات كل 10 ثواني */
+  startNotifPoll();
   startSessionTimer();
-  renderNotifications();
-  // سحب فوري عند البدء
-  pullNotificationsExternal();
   addNotification('مرحباً', `أهلاً ${currentUser.username} (${rl.label})`, 'info', true);
   attachVisibilityHandler(); attachOnlineHandlers();
   setInterval(renderSaveQueueIndicator, 1000);
@@ -6058,7 +5992,7 @@ window.addEventListener('keydown', e => {
       if (c === 'KeyM' && document.getElementById('page-ready').classList.contains('active')) { e.preventDefault(); moveReadyToLog(); return; }
       if (c === 'KeyA' && document.getElementById('page-ready').classList.contains('active')) { e.preventDefault(); selectAllReady(); return; }
       if (c === 'KeyD') { e.preventDefault(); toggleTheme(); return; }
-      if (c === 'KeyI') { e.preventDefault(); toggleNotifPanel(); return; }
+      if (c === 'KeyI') { e.preventDefault(); toggleDeviceNotifications(); return; }
     }
     return;
   }
@@ -6130,7 +6064,6 @@ window.addEventListener('DOMContentLoaded', () => {
     navigator.serviceWorker.register(swUrl).catch(() => {});
   }
   setTimeout(() => { if (localStorage.getItem(DRAFT_KEY)) document.getElementById('draftBadge').classList.add('show'); }, 500);
-  renderNotifications();
   renderRateLimitWidget();
   setOnline(navigator.onLine);
 });

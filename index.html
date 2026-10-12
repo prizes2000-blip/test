@@ -479,26 +479,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .dialog-message{font-size:13.5px;color:var(--text-muted);line-height:1.7;margin-bottom:22px;white-space:pre-line}
 .dialog-actions{display:flex;gap:9px;justify-content:center}
 .dialog-actions .btn{min-width:105px}
-#forceUpdateModal{display:none;position:fixed;inset:0;background:rgba(7,11,21,.94);z-index:99999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
-#forceUpdateModal.show{display:flex}
-#forceUpdateModal .fu-box{background:var(--card-bg);padding:36px 30px;border-radius:var(--radius-xl);width:100%;max-width:500px;text-align:center;box-shadow:var(--shadow-xl);border:2px solid var(--warning-500)}
-#forceUpdateModal .fu-icon{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--warning-100),var(--warning-50));color:var(--warning-600);display:inline-flex;align-items:center;justify-content:center;margin-bottom:18px}
-[data-theme="dark"] #forceUpdateModal .fu-icon{color:#fbbf24}
-#forceUpdateModal h2{color:var(--text);font-size:22px;font-weight:800;margin-bottom:10px}
-#forceUpdateModal .fu-msg{color:var(--text-secondary);font-size:14px;line-height:1.7;margin-bottom:8px}
-#forceUpdateModal .fu-versions{display:flex;justify-content:center;gap:16px;margin:18px 0;flex-wrap:wrap}
-#forceUpdateModal .fu-ver{padding:10px 16px;border-radius:var(--radius-md);font-size:12px;font-weight:700}
-#forceUpdateModal .fu-ver.current{background:var(--slate-100);color:var(--slate-600)}
-[data-theme="dark"] #forceUpdateModal .fu-ver.current{background:rgba(148,163,184,.15);color:#cbd5e1}
-#forceUpdateModal .fu-ver.new{background:linear-gradient(135deg,var(--success-50),rgba(12,185,123,.15));color:var(--success-700);border:1px solid var(--success-500)}
-[data-theme="dark"] #forceUpdateModal .fu-ver.new{color:#6ee7b7}
-#forceUpdateModal .fu-btn{margin-top:12px;width:100%;height:50px;background:linear-gradient(180deg,#fbc23c,#d97d07);color:#4a2b00;border:none;border-radius:var(--radius-md);font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(217,125,7,.4);transition:var(--transition)}
-#forceUpdateModal .fu-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 22px rgba(217,125,7,.5)}
-#forceUpdateModal .fu-btn:disabled{opacity:.6;cursor:not-allowed}
-#forceUpdateModal .fu-status{margin-top:14px;font-size:12.5px;color:var(--text-muted);min-height:20px}
-#forceUpdateModal .fu-status.error{color:var(--danger-600);font-weight:600}
-#forceUpdateModal .fu-status.success{color:var(--success-600);font-weight:600}
-#forceUpdateModal .fu-retry{margin-top:12px;font-size:12px;color:var(--brand-600);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:inherit}
 .toast-container{position:fixed;bottom:22px;left:22px;z-index:3000;display:flex;flex-direction:column;gap:9px;pointer-events:none;max-width:360px}
 .toast{background:var(--card-bg);color:var(--text);padding:12px 16px;border-radius:var(--radius-md);font-size:13px;box-shadow:var(--shadow-lg);border:1px solid var(--card-border);border-right:3px solid var(--brand-500);opacity:0;transform:translateX(-30px);transition:.3s;pointer-events:auto;display:flex!important;align-items:center;gap:10px;font-weight:500}
 .toast.show{opacity:1;transform:translateX(0)}
@@ -802,8 +782,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
   .logo-size-row { grid-template-columns: 1fr; }
   .template-row { grid-template-columns: 1fr; }
   .custom-field-row { grid-template-columns: 1fr; }
-  #forceUpdateModal .fu-box { padding: 26px 20px; }
-  #forceUpdateModal h2 { font-size: 18px; }
 }
 @media (max-width: 420px) {
   .dash-grid { grid-template-columns: 1fr; }
@@ -826,41 +804,21 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 </head>
 <body oncontextmenu="return false">
 
-<!-- شريط انقطاع الاتصال -->
 <div id="connectionBanner" class="connection-banner">
   <span id="connBannerIcon"></span><span>لا يوجد اتصال — سيُعاد المحاولة تلقائياً</span>
 </div>
 
-<!-- شارة المسودة -->
 <div id="draftBadge" class="draft-badge" onclick="restoreDraft()">
   <span id="draftIcon"></span><span>مسودة محفوظة</span>
   <span onclick="event.stopPropagation();discardDraft()" style="background:rgba(0,0,0,.15);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:700;">×</span>
 </div>
 
-<!-- شاشة التحميل -->
 <div id="loadingOverlay">
   <div class="spinner"></div>
   <div class="loading-text" id="loadingText">جاري التحميل...</div>
   <div class="login-loading-progress"><div class="bar" id="loadingBar"></div></div>
 </div>
 
-<!-- نافذة التحديث الإجباري -->
-<div id="forceUpdateModal">
-  <div class="fu-box">
-    <div class="fu-icon" id="fuIcon"></div>
-    <h2>🔄 تحديث إجباري مطلوب</h2>
-    <p class="fu-msg">تم إصدار تحديث جديد للنظام. يجب تطبيق التحديث يدوياً للمتابعة.</p>
-    <div class="fu-versions">
-      <div class="fu-ver current">إصدارك: <span id="fuCurrentVer">—</span></div>
-      <div class="fu-ver new">المطلوب: <span id="fuNewVer">—</span></div>
-    </div>
-    <button class="fu-btn" id="fuApplyBtn" onclick="applyForceUpdate()">تطبيق التحديث الآن</button>
-    <button class="fu-retry" id="fuRetryBtn" onclick="retryUpdateCheck()" style="display:none;">🔄 إعادة المحاولة</button>
-    <div class="fu-status" id="fuStatus"></div>
-  </div>
-</div>
-
-<!-- لوحة الإشعارات -->
 <div id="notifPanel" class="notif-panel">
   <div class="notif-header">
     <span id="notifHeaderTitle"></span>
@@ -872,7 +830,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
   <div class="notif-list" id="notifList"></div>
 </div>
 
-<!-- شاشة تسجيل الدخول -->
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo" id="loginLogo"></div>
@@ -912,7 +869,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
   </div>
 </div>
 
-<!-- التطبيق الرئيسي -->
 <div id="app">
   <header>
     <div class="brand">
@@ -952,7 +908,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
   <nav id="navBar"></nav>
 
   <main>
-    <!-- الصفحة الرئيسية -->
+    <!-- الرئيسية -->
     <section id="page-dashboard" class="page active">
       <div class="dash-grid" id="dashGrid"></div>
       <div class="stats-filter-bar">
@@ -993,6 +949,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
       <div class="section-title-dash" id="title-performance"></div>
       <div class="analytics-card" style="margin-bottom:22px;"><div class="metric-grid" id="performanceMetrics"></div></div>
       <div class="sparkline"><h4 id="trendTitle"></h4><div id="trendChart"></div></div>
+
       <div class="section-title-dash" id="title-analytics"></div>
       <div class="analytics-row cols-2">
         <div class="analytics-card" id="anomalyCard">
@@ -1036,7 +993,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
       <div class="table-wrap"><table><thead><tr id="readyHead"></tr></thead><tbody id="readyBody"></tbody></table></div>
     </section>
 
-    <!-- الطلبات التي تم نقلها (جديد) -->
+    <!-- الطلبات التي تم نقلها -->
     <section id="page-transferred" class="page">
       <div class="section-header">
         <h2 id="transferredTitle"></h2>
@@ -1056,7 +1013,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
       <div id="groupsContainer"></div>
     </section>
 
-    <!-- سجل الطلبات -->
+    <!-- السجل -->
     <section id="page-log" class="page">
       <div class="section-header"><h2 id="logTitle"></h2><span id="logCount" style="color:var(--text-muted);font-size:12.5px;font-weight:600;"></span></div>
       <div class="filter-bar no-print" id="logFilterBar"></div>
@@ -1094,8 +1051,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
       <div id="tab-templates" class="tab-panel" style="display:none;"></div>
       <div id="tab-whatsapp" class="tab-panel" style="display:none;"></div>
       <div id="tab-customfields" class="tab-panel" style="display:none;"></div>
-      <div id="tab-features" class="tab-panel" style="display:none;"></div>
-      <div id="tab-updates" class="tab-panel" style="display:none;"></div>
       <div id="tab-backup" class="tab-panel" style="display:none;"></div>
     </section>
   </main>
@@ -1284,9 +1239,9 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
   <input type="hidden" id="waOrderId">
   <label>طريقة الاستلام</label>
   <select id="waReceiptMethod" onchange="updateWhatsAppPreview()">
-    <option value="المحل">🏪 المحل</option>
-    <option value="موصل">🚚 موصل</option>
-    <option value="مكتب">🏢 مكتب</option>
+    <option value="المحل">المحل</option>
+    <option value="موصل">موصل</option>
+    <option value="مكتب">مكتب</option>
   </select>
   <label>رقم واتساب العميل</label>
   <input id="waCustomerPhone" autocomplete="off" inputmode="tel" placeholder="مثال: 967771234567" style="direction:ltr;text-align:left;font-family:'SF Mono',monospace;">
@@ -1388,7 +1343,8 @@ const I = {
   inbox:'M22 12h-6l-2 3h-4l-2-3H2 M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z',
   whatsapp:'M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z M8.5 8.5c.3 1 1.2 2.3 2.2 3.2 1 .9 2.3 1.8 3.2 2.2',
   store:'M3 9l1.5-5h15L21 9 M3 9v11a1 1 0 001 1h16a1 1 0 001-1V9 M3 9h18 M9 14h6',
-  office:'M4 21V5a2 2 0 012-2h8a2 2 0 012 2v16 M8 7h2 M8 11h2 M8 15h2 M14 21v-4h4v4 M16 21h5V9h-5'
+  office:'M4 21V5a2 2 0 012-2h8a2 2 0 012 2v16 M8 7h2 M8 11h2 M8 15h2 M14 21v-4h4v4 M16 21h5V9h-5',
+  broadcast:'M12 12a2 2 0 100-4 2 2 0 000 4z M16.24 7.76a6 6 0 010 8.49m-8.48-.01a6 6 0 010-8.49m11.31-2.82a10 10 0 010 14.14m-14.14 0a10 10 0 010-14.14'
 };
 function ico(name, size = 16) {
   const p = I[name] || '';
@@ -1403,7 +1359,10 @@ const GITHUB_REPO  = 'test';
 const APP_ID       = 'test';
 const APP_BRANCH   = 'main';
 const APP_VERSION  = '3.7.0';
-const SYNC_INTERVAL = 30000;
+
+/* ✅ مزامنة سريعة وشاملة لكل المستخدمين */
+const SYNC_INTERVAL = 15000;        // 15 ثانية بدلاً من 60
+const SYNC_THROTTLE_MS = 2000;      // 2 ثانية بين عمليات المزامنة
 const SAVE_COOLDOWN = 1500;
 const SESSION_TIMEOUT = 60 * 60 * 1000;
 const SESSION_WARNING = 5 * 60 * 1000;
@@ -1412,17 +1371,36 @@ const THEME_KEY = 'oms_theme';
 const ACCESS_KEY = 'oms_access_key';
 const KEY_HIDDEN_FLAG = 'oms_key_hidden';
 const ACTIVITY_PER_PAGE = 30;
-const SYNC_THROTTLE_MS = 3000;
 const NOTIF_SAVE_DELAY = 800;
 const ACTIVITY_SAVE_DELAY = 2000;
-const UPDATE_CHECK_INTERVAL = 60000;
+const INSTANT_SYNC_DELAY = 500;     // ✅ مزامنة فورية بعد كل حفظ
+
+/* ✅ بث التغييرات عبر BroadcastChannel للتزامن بين التبويبات على نفس الجهاز */
+let _broadcastChannel = null;
+function initBroadcast() {
+  if (typeof BroadcastChannel === 'undefined') return;
+  try {
+    _broadcastChannel = new BroadcastChannel('oms_sync');
+    _broadcastChannel.onmessage = (e) => {
+      if (!currentUser) return;
+      if (e.data && e.data.type === 'data-changed') {
+        // تبويب آخر أجرى تعديلاً → مزامنة فورية
+        lastSyncTime = 0;
+        syncPull(true);
+      }
+    };
+  } catch (_) {}
+}
+function broadcastChange() {
+  try { if (_broadcastChannel) _broadcastChannel.postMessage({ type: 'data-changed', at: Date.now(), by: currentUser?.username }); } catch (_) {}
+}
 
 const RATE_LEVELS = [
-  { min: 3000, interval: 30000, label: 'مرتفعة' },
-  { min: 1500, interval: 60000, label: 'جيدة' },
-  { min: 800,  interval: 120000, label: 'متوسطة' },
-  { min: 300,  interval: 240000, label: 'منخفضة' },
-  { min: 100,  interval: 420000, label: 'منخفضة جداً' },
+  { min: 3000, interval: 15000, label: 'مرتفعة' },
+  { min: 1500, interval: 30000, label: 'جيدة' },
+  { min: 800,  interval: 60000, label: 'متوسطة' },
+  { min: 300,  interval: 120000, label: 'منخفضة' },
+  { min: 100,  interval: 240000, label: 'منخفضة جداً' },
   { min: 0,    interval: 0,      label: 'حرجة — موقوفة' }
 ];
 
@@ -1469,7 +1447,6 @@ const RECEIPT_NOT_RECEIVED = 'لا';
 const RECEIPT_RECEIVED     = 'تم';
 const RECEIPT_METHODS = ['المحل', 'موصل', 'مكتب'];
 
-/* ✅ حالات الطلب الموحدة */
 const ORDER_STATUS = {
   PROGRESS: 'قيد التجهيز',
   READY: 'جاهز'
@@ -1521,7 +1498,6 @@ const PERMISSIONS = {
   tabTemplates:{label:'قوالب الطباعة',cat:'settingsTabs',icon:'printer'},
   tabWhatsApp:{label:'قوالب واتساب',cat:'settingsTabs',icon:'whatsapp'},
   tabCustomFields:{label:'الحقول المخصصة',cat:'settingsTabs',icon:'grid'},
-  tabUpdates:{label:'إدارة التحديثات',cat:'settingsTabs',icon:'refresh'},
   tabBackup:{label:'نسخ احتياطي',cat:'settingsTabs',icon:'save'},
   manageCustomers:{label:'إدارة العملاء',cat:'manage',icon:'users'},
   manageDrivers:{label:'إدارة الموصلين',cat:'manage',icon:'truck'},
@@ -1541,8 +1517,7 @@ const PERMISSIONS = {
   editTask:{label:'تعديل مهمة',cat:'manage',icon:'edit'},
   deleteTask:{label:'حذف مهمة',cat:'manage',icon:'trash'},
   completeTask:{label:'إكمال مهمة',cat:'manage',icon:'check'},
-  manageFeatures:{label:'إدارة الميزات',cat:'manage',icon:'zap'},
-  publishUpdate:{label:'نشر تحديث',cat:'manage',icon:'refresh'}
+  manageFeatures:{label:'إدارة الميزات',cat:'manage',icon:'zap'}
 };
 const PERM_CATEGORIES = {
   pages:{label:'الصفحات الرئيسية',icon:'grid'},
@@ -1568,12 +1543,12 @@ const WORKER_DEFAULTS = {
   featureUndoRedo:false, featureFuzzySearch:true, featureCustomFields:false, featureWorkGroups:false, featureTasks:false,
   undoActions:false,
   tabToken:false, tabActivity:false, tabAnalytics:false, tabBranches:false, tabDrivers:false,
-  tabUsers:false, tabTemplates:false, tabWhatsApp:false, tabCustomFields:false, tabUpdates:false, tabBackup:false,
+  tabUsers:false, tabTemplates:false, tabWhatsApp:false, tabCustomFields:false, tabBackup:false,
   manageCustomers:false, manageDrivers:false, manageBranches:false, manageUsers:false,
   manageCustomFields:false, editTemplates:false, editWhatsAppTemplates:false, viewActivity:false, resetActivity:false, reset:false,
   manageGroups:false, createGroup:false, deleteGroup:false,
   manageTasks:false, createTask:false, editTask:false, deleteTask:false, completeTask:false,
-  manageFeatures:false, publishUpdate:false
+  manageFeatures:false
 };
 const MANAGER_DEFAULTS = {
   accessDashboard:true, accessEntry:true, accessReady:true, accessTransferred:true, accessLog:true,
@@ -1586,12 +1561,12 @@ const MANAGER_DEFAULTS = {
   featureUndoRedo:true, featureFuzzySearch:true, featureCustomFields:true, featureWorkGroups:true, featureTasks:true,
   undoActions:true,
   tabToken:false, tabActivity:true, tabAnalytics:true, tabBranches:true, tabDrivers:true,
-  tabUsers:true, tabTemplates:true, tabWhatsApp:true, tabCustomFields:true, tabUpdates:false, tabBackup:true,
+  tabUsers:true, tabTemplates:true, tabWhatsApp:true, tabCustomFields:true, tabBackup:true,
   manageCustomers:true, manageDrivers:true, manageBranches:true, manageUsers:true,
   manageCustomFields:true, editTemplates:true, editWhatsAppTemplates:true, viewActivity:true, resetActivity:false, reset:false,
   manageGroups:true, createGroup:true, deleteGroup:true,
   manageTasks:true, createTask:true, editTask:true, deleteTask:true, completeTask:true,
-  manageFeatures:false, publishUpdate:false
+  manageFeatures:false
 };
 
 const PRINT_COLUMNS = {
@@ -1677,20 +1652,10 @@ const DEFAULT_TEMPLATES = {
   }
 };
 
-/* ✅ قوالب واتساب منفصلة لكل طريقة استلام */
 const DEFAULT_WHATSAPP_TEMPLATES = {
-  'المحل': {
-    enabled: true,
-    message: 'عميلنا الكريم {customer}\n\nنود إعلامك أن طلبك رقم {invoice} قد وصل إلى *المحل* وجاهز للاستلام.\n\nيرجى الحضور لاستلام طلبكم في أقرب وقت.\n\nشكراً لتعاملكم معنا'
-  },
-  'موصل': {
-    enabled: true,
-    message: 'عميلنا الكريم {customer}\n\nنود إعلامك أن طلبك رقم {invoice} قد تم إرساله مع الموصل {driver}\nرقم الموصل: {driverPhone}\n\nيرجى استلام طلبكم منه عند وصوله.\n\nشكراً لتعاملكم معنا'
-  },
-  'مكتب': {
-    enabled: true,
-    message: 'عميلنا الكريم {customer}\n\nنود إعلامك أن طلبك رقم {invoice} قد وصل إلى *المكتب* وجاهز للاستلام.\n\nيرجى الحضور للمكتب لاستلام طلبكم.\n\nشكراً لتعاملكم معنا'
-  }
+  'المحل': { enabled: true, message: 'عميلنا الكريم {customer}\n\nنود إعلامك أن طلبك رقم {invoice} قد وصل إلى *المحل* وجاهز للاستلام.\n\nيرجى الحضور لاستلام طلبكم في أقرب وقت.\n\nشكراً لتعاملكم معنا' },
+  'موصل': { enabled: true, message: 'عميلنا الكريم {customer}\n\nنود إعلامك أن طلبك رقم {invoice} قد تم إرساله مع الموصل {driver}\nرقم الموصل: {driverPhone}\n\nيرجى استلام طلبكم منه عند وصوله.\n\nشكراً لتعاملكم معنا' },
+  'مكتب': { enabled: true, message: 'عميلنا الكريم {customer}\n\nنود إعلامك أن طلبك رقم {invoice} قد وصل إلى *المكتب* وجاهز للاستلام.\n\nيرجى الحضور للمكتب لاستلام طلبكم.\n\nشكراً لتعاملكم معنا' }
 };
 
 const DEFAULT_ANALYTICS_SETTINGS = {
@@ -1715,7 +1680,7 @@ let cache = {
 let templates = JSON.parse(JSON.stringify(DEFAULT_TEMPLATES));
 let whatsappTemplates = JSON.parse(JSON.stringify(DEFAULT_WHATSAPP_TEMPLATES));
 let localMeta = null;
-let pollTimer = null, updatePollTimer = null, syncing = false, selectedOrderId = null;
+let pollTimer = null, syncing = false, selectedOrderId = null;
 let selectedReadyIds = new Set();
 let zoomLevel = 1, tempPerms = {}, lastSaveTime = 0, saveInProgress = false;
 let rateLimitInfo = null, apiCallCount = 0, apiCachedCount = 0;
@@ -1732,6 +1697,7 @@ let lastRateNotificationAt = 0;
 let _notifSaveTimer = null;
 let _activitySaveTimer = null;
 let _lastNotifUnreadCount = 0;
+let _instantSyncTimer = null;
 let statsFilter = 'all';
 let statsFromDate = '';
 let statsToDate = '';
@@ -1744,8 +1710,7 @@ let featureFlags = {
 };
 let _groupSelectedOrders = new Set();
 let _groupCurrentFilter = 'all';
-let _forceUpdateActive = false;
-let _currentRemoteVersion = null;
+let _dataVersion = 0; // ✅ رقم إصدار داخلي للبيانات لسرعة الكشف عن التغييرات
 
 const MSG = {
   connFail:       'تعذر الاتصال بالخدمة، يرجى المحاولة لاحقاً',
@@ -1757,11 +1722,11 @@ const MSG = {
   parseFail:      'تعذر معالجة البيانات، يرجى المحاولة لاحقاً',
   rateExceeded:   'تم تجاوز الحد المسموح، يرجى المحاولة لاحقاً',
   noPermissions:  'لا تملك الصلاحيات الكافية لتنفيذ هذا الإجراء',
-  keyInvalid:     'المفتاح الجديد غير صالح، يرجى التحقق والمحاولة مجدداً',
-  keyShort:       'المفتاح قصير جداً، يجب أن يكون 20 حرفاً على الأقل',
+  keyInvalid:     'المفتاح الجديد غير صالح',
+  keyShort:       'المفتاح قصير جداً، 20 حرفاً على الأقل',
   keyMissing:     'يرجى إدخال المفتاح',
   keySuccess:     'تم تحديث المفتاح بنجاح',
-  storageIssues:  'تعذر الوصول إلى البيانات، تحقق من الاتصال بالشبكة',
+  storageIssues:  'تعذر الوصول إلى البيانات، تحقق من الاتصال',
   sessionExpired: 'انتهت الجلسة، يرجى تسجيل الدخول مجدداً',
   sessionWarning: 'ستنتهي جلستك قريباً',
   unauthorized:   'غير مصرح لك بتنفيذ هذا الإجراء',
@@ -2243,6 +2208,7 @@ async function saveFeatureFlags(newFlags) {
     await writeMeta({ featureFlags });
     logActivity('feature-flags', 'تحديث الميزات', JSON.stringify(newFlags), 'warning');
     applyFeatureUI();
+    scheduleInstantSync();
     toast('✅ تم حفظ إعدادات الميزات', 'success');
     return true;
   } catch (e) { toast('تعذر حفظ إعدادات الميزات', 'error'); return false; }
@@ -2397,127 +2363,8 @@ function maybeNotifyLowRate() {
   const now = Date.now();
   if (now - lastRateNotificationAt < 30 * 60 * 1000) return;
   const pct = rateLimitInfo.limit > 0 ? (rateLimitInfo.remaining / rateLimitInfo.limit) * 100 : 100;
-  if (pct < 10) { lastRateNotificationAt = now; addNotification('تنبيه', `استهلاك منخفض للحصة: ${rateLimitInfo.remaining} طلب متبقي`, 'warning', true); }
+  if (pct < 10) { lastRateNotificationAt = now; addDeliveryNotification('تنبيه', `استهلاك منخفض للحصة: ${rateLimitInfo.remaining}`, 'warning'); }
 }
-
-/* ══════════════════════════════════════════════════════════════
-   FORCE UPDATE SYSTEM — نظام التحديث الإجباري
-   ══════════════════════════════════════════════════════════════ */
-async function checkForUpdates(silent = false) {
-  if (_forceUpdateActive) return;
-  if (!currentUser && !silent) return;
-  try {
-    const url = `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${APP_BRANCH}/data/version.json?t=${Date.now()}`;
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) {
-      if (res.status === 404) return { status: 'no-version-file' };
-      return { status: 'network-error', code: res.status };
-    }
-    const data = await res.json();
-    const remoteVersion = String(data.version || '').trim();
-    const remoteUrl = data.url || '';
-    if (!remoteVersion) return { status: 'invalid-version' };
-    if (remoteVersion === APP_VERSION) return { status: 'up-to-date' };
-    _currentRemoteVersion = { version: remoteVersion, url: remoteUrl };
-    return { status: 'update-available', remoteVersion, remoteUrl };
-  } catch (e) {
-    return { status: 'network-error', error: e.message };
-  }
-}
-async function runUpdateCheck(silent = false) {
-  const result = await checkForUpdates(silent);
-  if (result.status === 'update-available') {
-    _forceUpdateActive = true;
-    showForceUpdateModal(result.remoteVersion);
-    stopPolling();
-  } else if (result.status === 'network-error' && !silent) {
-    toast('⚠️ تعذر الاتصال بمصدر التحديث — سيتم إعادة المحاولة', 'warning');
-  }
-}
-function showForceUpdateModal(remoteVersion) {
-  document.getElementById('fuCurrentVer').textContent = APP_VERSION;
-  document.getElementById('fuNewVer').textContent = remoteVersion;
-  const iconEl = document.getElementById('fuIcon');
-  if (iconEl) iconEl.innerHTML = ico('refresh', 40);
-  document.getElementById('fuStatus').textContent = '';
-  document.getElementById('fuStatus').className = 'fu-status';
-  document.getElementById('fuApplyBtn').disabled = false;
-  document.getElementById('fuApplyBtn').textContent = 'تطبيق التحديث الآن';
-  document.getElementById('forceUpdateModal').classList.add('show');
-}
-window.applyForceUpdate = async function() {
-  const btn = document.getElementById('fuApplyBtn');
-  const statusEl = document.getElementById('fuStatus');
-  btn.disabled = true;
-  btn.textContent = 'جاري التحديث...';
-  statusEl.className = 'fu-status';
-  statusEl.textContent = 'جاري التحقق من وجود تحديث...';
-  try {
-    if (_currentRemoteVersion?.url) {
-      statusEl.textContent = 'سيتم فتح رابط التحديث — يرجى تثبيته ثم إعادة فتح التطبيق.';
-      setTimeout(() => { window.open(_currentRemoteVersion.url, '_blank'); }, 500);
-      return;
-    }
-    const sw = await navigator.serviceWorker?.getRegistration();
-    if (sw) {
-      statusEl.textContent = 'جاري تحديث الملفات المخزنة...';
-      await sw.update();
-      const regs = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(regs.map(r => r.unregister()));
-    }
-    if (window.caches) {
-      statusEl.textContent = 'جاري مسح الذاكرة المؤقتة...';
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => caches.delete(k)));
-    }
-    statusEl.className = 'fu-status success';
-    statusEl.textContent = '✅ اكتمل التحضير — جاري إعادة التحميل...';
-    setTimeout(() => { window.location.reload(true); }, 1200);
-  } catch (e) {
-    statusEl.className = 'fu-status error';
-    statusEl.textContent = '❌ تعذر إكمال التحديث: ' + (e.message || 'خطأ غير معروف');
-    btn.disabled = false;
-    btn.textContent = 'إعادة محاولة التحديث';
-  }
-};
-window.retryUpdateCheck = async function() {
-  const statusEl = document.getElementById('fuStatus');
-  statusEl.className = 'fu-status';
-  statusEl.textContent = 'جاري إعادة التحقق...';
-  const result = await checkForUpdates(false);
-  if (result.status === 'update-available') {
-    _currentRemoteVersion = { version: result.remoteVersion, url: result.remoteUrl };
-    document.getElementById('fuNewVer').textContent = result.remoteVersion;
-    statusEl.className = 'fu-status success';
-    statusEl.textContent = '✅ تم العثور على التحديث — اضغط تطبيق التحديث';
-    document.getElementById('fuRetryBtn').style.display = 'none';
-    document.getElementById('fuApplyBtn').disabled = false;
-  } else if (result.status === 'up-to-date') {
-    statusEl.className = 'fu-status success';
-    statusEl.textContent = '✅ أنت على أحدث إصدار';
-    setTimeout(() => { document.getElementById('forceUpdateModal').classList.remove('show'); _forceUpdateActive = false; location.reload(); }, 1500);
-  } else if (result.status === 'network-error') {
-    statusEl.className = 'fu-status error';
-    statusEl.textContent = '⚠️ تعذر الاتصال — تحقق من الإنترنت ثم أعد المحاولة';
-    document.getElementById('fuRetryBtn').style.display = 'inline-block';
-  } else if (result.status === 'no-version-file') {
-    statusEl.className = 'fu-status error';
-    statusEl.textContent = '⚠️ لم يتم العثور على ملف الإصدار في المستودع';
-    document.getElementById('fuRetryBtn').style.display = 'inline-block';
-  } else {
-    statusEl.className = 'fu-status error';
-    statusEl.textContent = '⚠️ حالة غير معروفة: ' + result.status;
-    document.getElementById('fuRetryBtn').style.display = 'inline-block';
-  }
-};
-function startUpdatePolling() {
-  stopUpdatePolling();
-  updatePollTimer = setInterval(() => {
-    if (_forceUpdateActive) return;
-    if (currentUser) runUpdateCheck(true);
-  }, UPDATE_CHECK_INTERVAL);
-}
-function stopUpdatePolling() { if (updatePollTimer) { clearInterval(updatePollTimer); updatePollTimer = null; } }
 
 /* ══════════════════════════════════════════════════════════════
    PERMISSIONS & ROLES
@@ -2574,7 +2421,6 @@ function applyPermissionsUI() {
   rebuildNav(); rebuildSettingsTabs(); applyFeatureUI();
 }
 
-/* ✅ ترتيب التنقل: الرئيسية - إدخال الطلبات - الطلبات الجاهزة - الطلبات التي تم نقلها - مجموعات العمل - السجل - المهام - العملاء - الإعدادات */
 function rebuildNav() {
   const navBar = document.getElementById('navBar'); if (!navBar) return;
   const items = [
@@ -2607,7 +2453,6 @@ function rebuildSettingsTabs() {
     { id:'templates', icon:'printer', label:'قوالب الطباعة', perm:'tabTemplates' },
     { id:'whatsapp', icon:'whatsapp', label:'قوالب واتساب', perm:'tabWhatsApp' },
     { id:'customfields', icon:'grid', label:'الحقول المخصصة', perm:'tabCustomFields', feature:'featureCustomFields' },
-    { id:'updates', icon:'refresh', label:'إدارة التحديثات', perm:'tabUpdates', ownerOnly:true },
     { id:'backup', icon:'save', label:'نسخ احتياطي', perm:'tabBackup' }
   ].filter(t => {
     if (t.ownerOnly && currentUser?.role !== ROLE_OWNER) return false;
@@ -2626,7 +2471,7 @@ function rebuildSettingsTabs() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ✅ نظام الإشعارات الجديد — داخلي فقط لتغييرات التسليم
+   ✅ نظام الإشعارات الداخلية — تغييرات التسليم فقط
    ══════════════════════════════════════════════════════════════ */
 function scheduleNotificationsSave() {
   if (_notifSaveTimer) clearTimeout(_notifSaveTimer);
@@ -2637,35 +2482,24 @@ async function flushNotificationsSave() {
   if (!currentUser) return;
   try { await persistKeys(['notifications']); } catch {}
 }
-
-/* ✅ إضافة إشعار داخلي — النوع محصور بتغييرات التسليم */
 function addDeliveryNotification(title, message, type = 'info', orderId = null, orderInvoice = null) {
   const u = currentUser?.username;
   const n = {
-    id: uid(),
-    title,
-    message,
-    type,
-    time: fmtDate(),
-    ts: Date.now(),
+    id: uid(), title, message, type,
+    time: fmtDate(), ts: Date.now(),
     createdBy: u || 'system',
-    deletedBy: [],
-    readBy: [],
-    category: 'delivery', // ✅ جميع الإشعارات من نوع التسليم
-    orderId,
-    orderInvoice
+    deletedBy: [], readBy: [],
+    category: 'delivery',
+    orderId, orderInvoice
   };
   if (!Array.isArray(cache.notifications)) cache.notifications = [];
   cache.notifications.unshift(n);
   if (cache.notifications.length > 200) cache.notifications = cache.notifications.slice(0, 200);
   renderNotifications();
   scheduleNotificationsSave();
-  // ✅ لا يوجد إشعارات جهاز أو toast تلقائي هنا
-  // المستخدم يرى الإشعار عند فتح اللوحة
+  scheduleInstantSync(); // ✅ مزامنة فورية
 }
-/* ✅ إخفاء الوظيفة القديمة لمنع الاستخدام */
 function addNotification(title, message, type = 'info', silent = false) {
-  // الإشعارات الآن داخلية فقط — نمررها إلى addDeliveryNotification للحفاظ على التوافق
   addDeliveryNotification(title, message, type);
 }
 function getVisibleNotifications() {
@@ -2692,8 +2526,8 @@ function renderNotifications() {
   list.innerHTML = visible.slice(0, 50).map(n => {
     const isUnread = u && !(Array.isArray(n.readBy) && n.readBy.includes(u));
     const author = n.createdBy && n.createdBy !== 'system' ? n.createdBy : '';
-    const orderInfo = n.orderInvoice ? `<span style="color:var(--brand-600);font-weight:700;">${esc(n.orderInvoice)}</span>` : '';
-    return `<div class="notif-item ${n.type || 'info'}${isUnread ? ' unread' : ''}"><div class="nt">${esc(n.title || '')}</div><div class="nm">${esc(n.message || '')}${orderInfo ? ' — ' + orderInfo : ''}</div><div class="nd"><span>${esc(n.time || '')}</span>${author ? `<span class="author">بواسطة: ${esc(author)}</span>` : ''}</div></div>`;
+    const orderInfo = n.orderInvoice ? ` <span style="color:var(--brand-600);font-weight:700;">${esc(n.orderInvoice)}</span>` : '';
+    return `<div class="notif-item ${n.type || 'info'}${isUnread ? ' unread' : ''}"><div class="nt">${esc(n.title || '')}</div><div class="nm">${esc(n.message || '')}${orderInfo}</div><div class="nd"><span>${esc(n.time || '')}</span>${author ? `<span class="author">بواسطة: ${esc(author)}</span>` : ''}</div></div>`;
   }).join('');
 }
 window.toggleNotifPanel = function() {
@@ -2863,7 +2697,6 @@ window.showShortcuts = () => openModal('shortcutsModal');
 /* ══════════════════════════════════════════════════════════════
    THEME
    ══════════════════════════════════════════════════════════════ */
-let _themeMediaListener = null;
 function initTheme() {
   let saved = localStorage.getItem(THEME_KEY);
   if (!saved) saved = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
@@ -2986,13 +2819,7 @@ function postProcessData() {
   cache.notifications = (Array.isArray(cache.notifications) ? cache.notifications : [])
     .filter(n => n && n.id)
     .filter(n => n.category === 'delivery' || n.category === undefined)
-    .map(n => ({
-      ...n,
-      category: 'delivery',
-      deletedBy: Array.isArray(n.deletedBy) ? n.deletedBy : [],
-      readBy: Array.isArray(n.readBy) ? n.readBy : [],
-      createdBy: n.createdBy || 'system'
-    }));
+    .map(n => ({ ...n, category: 'delivery', deletedBy: Array.isArray(n.deletedBy) ? n.deletedBy : [], readBy: Array.isArray(n.readBy) ? n.readBy : [], createdBy: n.createdBy || 'system' }));
   cache.groups = (Array.isArray(cache.groups) ? cache.groups : [])
     .filter(g => g && g.id && g.name)
     .map(g => ({
@@ -3020,15 +2847,10 @@ function postProcessData() {
     }));
   cache.customFields = (Array.isArray(cache.customFields) ? cache.customFields : [])
     .filter(f => f && f.id && f.key && f.label)
-    .map(f => ({
-      ...f,
-      type: f.type || 'text',
-      required: f.required === true,
-      showInPrint: f.showInPrint !== false,
-      options: Array.isArray(f.options) ? f.options : []
-    }));
+    .map(f => ({ ...f, type: f.type || 'text', required: f.required === true, showInPrint: f.showInPrint !== false, options: Array.isArray(f.options) ? f.options : [] }));
   const validIds = new Set(cache.ready.map(o => o.id));
   Array.from(selectedReadyIds).forEach(id => { if (!validIds.has(id)) selectedReadyIds.delete(id); });
+  _dataVersion++;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -3104,7 +2926,20 @@ async function persistKeys(keys) {
       }));
     }
     if (activityRequested) scheduleActivitySave();
+    // ✅ بث التغييرات للتزامن الفوري بين التبويبات + جدولة مزامنة فورية
+    broadcastChange();
+    scheduleInstantSync();
   } finally { setSyncing(false); }
+}
+/* ✅ جدولة مزامنة فورية قصيرة بعد أي حفظ */
+function scheduleInstantSync() {
+  if (_instantSyncTimer) clearTimeout(_instantSyncTimer);
+  _instantSyncTimer = setTimeout(() => {
+    _instantSyncTimer = null;
+    if (!currentUser) return;
+    lastSyncTime = 0;
+    syncPull(true).catch(() => {});
+  }, INSTANT_SYNC_DELAY);
 }
 function scheduleActivitySave() {
   if (_activitySaveTimer) clearTimeout(_activitySaveTimer);
@@ -3129,11 +2964,10 @@ window.saveAllDataNow = async function() {
 };
 
 /* ══════════════════════════════════════════════════════════════
-   SYNC & POLLING — مزامنة فورية
+   SYNC & POLLING — مزامنة سريعة شاملة
    ══════════════════════════════════════════════════════════════ */
 async function syncPull(force = false) {
   if (syncing || !currentUser) return;
-  if (_forceUpdateActive) return;
   const now = Date.now();
   if (!force && now - lastSyncTime < SYNC_THROTTLE_MS) return;
   if (currentSyncInterval <= 0 && !force) return;
@@ -3201,28 +3035,18 @@ function setSyncing(on) {
 window.manualSync = async function () { toast('جاري المزامنة...', 'info'); localMeta = null; lastSyncTime = 0; await syncPull(true); };
 
 /* ══════════════════════════════════════════════════════════════
-   ✅ نظام النقل الجديد: ready → transferred → log
+   نظام النقل: ready → transferred → log
    ══════════════════════════════════════════════════════════════ */
-
-/* نقل طلب من الجاهزة إلى "التي تم نقلها" */
 async function moveOrderToTransferred(orderId, source = 'manual') {
   const order = cache.ready.find(x => x.id === orderId);
   if (!order) { toast('الطلب غير موجود في الجاهزة', 'error'); return false; }
   if (isOrderLockedByGroup(orderId)) { toast('الطلب محجوز في مجموعة — استخدم ترحيل المجموعة', 'warning'); return false; }
   const now = fmtDate(); const user = currentUser.username;
-  cache.transferred.push({
-    ...order,
-    transferredAt: now,
-    transferredBy: user,
-    receiptStatus: RECEIPT_NOT_RECEIVED,
-    receiptMethod: order.receiptMethod || 'المحل'
-  });
+  cache.transferred.push({ ...order, transferredAt: now, transferredBy: user, receiptStatus: RECEIPT_NOT_RECEIVED, receiptMethod: order.receiptMethod || 'المحل' });
   cache.ready = cache.ready.filter(x => x.id !== orderId);
   selectedReadyIds.delete(orderId);
   return true;
 }
-
-/* تغيير حالة الاستلام — مع النقل التلقائي */
 async function changeReceiptStatusWithTransfer(orderId, newStatus) {
   const order = cache.transferred.find(x => x.id === orderId) || cache.log.find(x => x.id === orderId);
   if (!order) { toast('الطلب غير موجود', 'error'); return false; }
@@ -3230,27 +3054,17 @@ async function changeReceiptStatusWithTransfer(orderId, newStatus) {
   const isOwner = currentUser?.role === ROLE_OWNER;
   const canRevert = hasPerm('revertReceiptStatus');
   if (current === newStatus) return true;
-
-  // من "لا" إلى "تم" → نقل إلى السجل
   if (current === RECEIPT_NOT_RECEIVED && newStatus === RECEIPT_RECEIVED) {
     if (!isOwner && !hasPerm('editReceiptStatus')) { toast(MSG.unauthorized, 'error'); return false; }
     const ok = await dialog.confirm(`هل تم استلام الطلب "${order.invoice}" للعميل "${order.customer}"؟`, { title: 'تأكيد الاستلام', okText: 'نعم، تم الاستلام', type: 'success', okClass: 'btn-success' });
     if (!ok) return false;
     UndoRedo.beginBatch(`تأكيد استلام: ${order.invoice}`);
-    // نقل من transferred إلى log
     const idx = cache.transferred.findIndex(x => x.id === orderId);
     if (idx === -1) { UndoRedo.cancelBatch(); return false; }
-    const movedOrder = {
-      ...cache.transferred[idx],
-      receiptStatus: RECEIPT_RECEIVED,
-      receiptUpdatedAt: fmtDate(),
-      receiptUpdatedBy: currentUser.username,
-      archivedAt: fmtDate(),
-      archivedBy: currentUser.username
-    };
+    const movedOrder = { ...cache.transferred[idx], receiptStatus: RECEIPT_RECEIVED, receiptUpdatedAt: fmtDate(), receiptUpdatedBy: currentUser.username, archivedAt: fmtDate(), archivedBy: currentUser.username };
     cache.log.push(movedOrder);
     cache.transferred.splice(idx, 1);
-    logActivity('receipt-received', `تأكيد استلام: ${order.invoice}`, `العميل: ${order.customer} — انتقل إلى السجل`, 'success');
+    logActivity('receipt-received', `تأكيد استلام: ${order.invoice}`, `العميل: ${order.customer}`, 'success');
     addDeliveryNotification('✅ تأكيد استلام', `تم استلام الطلب`, 'success', order.id, order.invoice);
     try {
       await persistKeys(['transferred', 'log', 'activity', 'notifications']);
@@ -3260,37 +3074,28 @@ async function changeReceiptStatusWithTransfer(orderId, newStatus) {
       return true;
     } catch (e) { UndoRedo.cancelBatch(); toast(e.message, 'error'); return false; }
   }
-
-  // من "تم" إلى "لا" → إرجاع من السجل إلى "التي تم نقلها"
   if (current === RECEIPT_RECEIVED && newStatus === RECEIPT_NOT_RECEIVED) {
     if (!isOwner && !canRevert) { toast('لا يمكن التراجع عن تأكيد الاستلام', 'error'); return false; }
     const ok = await dialog.confirm(`إلغاء تأكيد استلام الطلب "${order.invoice}"؟\nسيُعاد الطلب إلى قسم "الطلبات التي تم نقلها".`, { title: 'إلغاء الاستلام', okText: 'نعم، إلغاء', type: 'warning', okClass: 'btn-warning' });
     if (!ok) return false;
     UndoRedo.beginBatch(`إلغاء استلام: ${order.invoice}`);
-    // نقل من log إلى transferred
     const idx = cache.log.findIndex(x => x.id === orderId);
     if (idx === -1) { UndoRedo.cancelBatch(); return false; }
-    const returnedOrder = {
-      ...cache.log[idx],
-      receiptStatus: RECEIPT_NOT_RECEIVED,
-      receiptUpdatedAt: fmtDate(),
-      receiptUpdatedBy: currentUser.username
-    };
+    const returnedOrder = { ...cache.log[idx], receiptStatus: RECEIPT_NOT_RECEIVED, receiptUpdatedAt: fmtDate(), receiptUpdatedBy: currentUser.username };
     delete returnedOrder.archivedAt;
     delete returnedOrder.archivedBy;
     cache.transferred.push(returnedOrder);
     cache.log.splice(idx, 1);
-    logActivity('receipt-revert', `إلغاء استلام: ${order.invoice}`, `العميل: ${order.customer} — أعيد إلى "الطلبات التي تم نقلها"`, 'warning');
+    logActivity('receipt-revert', `إلغاء استلام: ${order.invoice}`, `العميل: ${order.customer}`, 'warning');
     addDeliveryNotification('↩️ إلغاء استلام', `تم إلغاء استلام الطلب`, 'warning', order.id, order.invoice);
     try {
       await persistKeys(['transferred', 'log', 'activity', 'notifications']);
       UndoRedo.commitBatch();
       renderTransferred(); renderLog(); renderDashboard();
-      toast('تم إلغاء الاستلام — أعيد الطلب إلى قسم "الطلبات التي تم نقلها"', 'warning');
+      toast('تم إلغاء الاستلام — أعيد الطلب إلى "التي تم نقلها"', 'warning');
       return true;
     } catch (e) { UndoRedo.cancelBatch(); toast(e.message, 'error'); return false; }
   }
-
   return false;
 }
 
@@ -3362,7 +3167,7 @@ function updateDriverSuggestion() {
         </div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;">
           <button type="button" class="btn btn-primary btn-sm" onclick="applyDriverSuggestion('${esc(top.name).replace(/'/g, "&#39;")}', '${esc(top.phone || '').replace(/'/g, "&#39;")}')" style="height:26px;padding:0 10px;font-size:11.5px;">✓ تعيين ${esc(top.name)}</button>
-          ${suggestions.length > 1 ? `<button type="button" class="btn btn-ghost btn-sm" onclick="toggleMoreSuggestions()" style="height:26px;padding:0 10px;font-size:11.5px;">بدائل أخرى (${suggestions.length - 1})</button>` : ''}
+          ${suggestions.length > 1 ? `<button type="button" class="btn btn-ghost btn-sm" onclick="toggleMoreSuggestions()" style="height:26px;padding:0 10px;font-size:11.5px;">بدائل (${suggestions.length - 1})</button>` : ''}
         </div>
         <div id="moreSuggestions" style="display:none;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(66,102,232,.25);">
           ${suggestions.slice(1).map(s => `
@@ -3373,7 +3178,7 @@ function updateDriverSuggestion() {
           `).join('')}
         </div>
       </div>
-      <button type="button" onclick="dismissDriverSuggestion()" style="border:none;background:transparent;color:var(--text-muted);cursor:pointer;font-size:16px;padding:0 4px;line-height:1;" title="إغلاق">×</button>
+      <button type="button" onclick="dismissDriverSuggestion()" style="border:none;background:transparent;color:var(--text-muted);cursor:pointer;font-size:16px;padding:0 4px;line-height:1;">×</button>
     </div>
   `;
 }
@@ -3394,7 +3199,7 @@ window.toggleMoreSuggestions = function() { const el = document.getElementById('
 window.dismissDriverSuggestion = function() { const box = document.getElementById('driverSuggestionBox'); if (box) box.style.display = 'none'; };
 
 /* ══════════════════════════════════════════════════════════════
-   ✅ نظام الواتساب المستقل
+   الواتساب المستقل
    ══════════════════════════════════════════════════════════════ */
 function buildWhatsAppMessage(order, method) {
   const m = method || order.receiptMethod || 'المحل';
@@ -3427,7 +3232,6 @@ function openWhatsApp(phone, message) {
   if (isWindows) { window.location.href = `whatsapp://send?phone=${phone}&text=${text}`; setTimeout(() => { try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 5000); } catch(_){} }, 2000); return; }
   try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 6000); } catch(_){}
 }
-/* فتح نموذج الإرسال */
 window.openWhatsAppModal = function(orderId, location = 'transferred') {
   if (!hasPerm('sendWhatsApp')) { toast(MSG.unauthorized, 'error'); return; }
   const o = (location === 'transferred' ? cache.transferred : location === 'log' ? cache.log : [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log]).find(x => x.id === orderId);
@@ -3503,9 +3307,7 @@ const Analytics = (() => {
     });
     const inactiveDays = localMeta?.analyticsSettings?.anomalyInactiveDays || 30;
     return Object.values(stats).map(s => ({
-      ...s,
-      locations: Array.from(s.locations),
-      drivers: Array.from(s.drivers),
+      ...s, locations: Array.from(s.locations), drivers: Array.from(s.drivers),
       daysSinceLastOrder: s.lastOrder ? Math.floor((Date.now() - s.lastOrder.getTime()) / 86400000) : null,
       loyaltyScore: s.count * 10 + s.received * 5,
       isInactive: s.lastOrder && Math.floor((Date.now() - s.lastOrder.getTime()) / 86400000) > inactiveDays
@@ -3549,11 +3351,7 @@ const Analytics = (() => {
       total: list.length,
       received: list.filter(o => o.receiptStatus === RECEIPT_RECEIVED).length,
       notReceived: list.filter(o => o.receiptStatus === RECEIPT_NOT_RECEIVED).length,
-      byMethod: {
-        'المحل': list.filter(o => o.receiptMethod === 'المحل').length,
-        'موصل': list.filter(o => o.receiptMethod === 'موصل').length,
-        'مكتب': list.filter(o => o.receiptMethod === 'مكتب').length
-      },
+      byMethod: { 'المحل': list.filter(o => o.receiptMethod === 'المحل').length, 'موصل': list.filter(o => o.receiptMethod === 'موصل').length, 'مكتب': list.filter(o => o.receiptMethod === 'مكتب').length },
       customers: new Set(list.map(o => o.customer).filter(Boolean)).size,
       drivers: new Set(list.map(o => o.driver).filter(Boolean)).size
     });
@@ -3565,15 +3363,8 @@ const Analytics = (() => {
       return { pct: Math.abs(pct), dir: pct > 0 ? 'up' : pct < 0 ? 'down' : 'flat' };
     };
     return {
-      current: { period: period1, ...s1 },
-      previous: { period: period2, ...s2 },
-      changes: {
-        total: diff(s1.total, s2.total),
-        received: diff(s1.received, s2.received),
-        notReceived: diff(s1.notReceived, s2.notReceived),
-        customers: diff(s1.customers, s2.customers),
-        drivers: diff(s1.drivers, s2.drivers)
-      }
+      current: { period: period1, ...s1 }, previous: { period: period2, ...s2 },
+      changes: { total: diff(s1.total, s2.total), received: diff(s1.received, s2.received), notReceived: diff(s1.notReceived, s2.notReceived), customers: diff(s1.customers, s2.customers), drivers: diff(s1.drivers, s2.drivers) }
     };
   }
   return { getAllOrders, getOrderDate, getPeriodOrders, analyzeCustomers, analyzeDrivers, analyzeLocations, comparePeriods };
@@ -3594,33 +3385,29 @@ const Anomaly = (() => {
     const previous = all.filter(o => { const d = Analytics.getOrderDate(o); return d && (now - d.getTime()) > windowMs && (now - d.getTime()) <= windowMs * 2; });
     if (previous.length >= 5) {
       const drop = ((previous.length - recent.length) / previous.length) * 100;
-      if (drop >= settings.anomalyDropPercent) anomalies.push({ type: 'drop', severity: drop >= 60 ? 'high' : 'medium', icon: 'trendDown', title: 'انخفاض في عدد الطلبات', description: `انخفضت الطلبات بنسبة ${Math.round(drop)}% خلال آخر ${settings.anomalyWindowDays} أيام (${recent.length} مقابل ${previous.length})`, suggestion: 'راجع أسباب انخفاض الطلب' });
+      if (drop >= settings.anomalyDropPercent) anomalies.push({ type: 'drop', severity: drop >= 60 ? 'high' : 'medium', icon: 'trendDown', title: 'انخفاض في عدد الطلبات', description: `انخفضت الطلبات بنسبة ${Math.round(drop)}% (${recent.length} مقابل ${previous.length})`, suggestion: 'راجع أسباب انخفاض الطلب' });
     }
     if (previous.length >= 5) {
       const spike = ((recent.length - previous.length) / previous.length) * 100;
-      if (spike >= settings.anomalySpikePercent) anomalies.push({ type: 'spike', severity: spike >= 100 ? 'high' : 'medium', icon: 'trendUp', title: 'ارتفاع غير طبيعي في الطلبات', description: `ارتفعت الطلبات بنسبة ${Math.round(spike)}% خلال آخر ${settings.anomalyWindowDays} أيام`, suggestion: 'تأكد من جاهزية الموصلين والمخزون' });
+      if (spike >= settings.anomalySpikePercent) anomalies.push({ type: 'spike', severity: spike >= 100 ? 'high' : 'medium', icon: 'trendUp', title: 'ارتفاع غير طبيعي', description: `ارتفعت الطلبات بنسبة ${Math.round(spike)}%`, suggestion: 'تأكد من الجاهزية' });
     }
     const customers = Analytics.analyzeCustomers();
     const inactive = customers.filter(c => c.daysSinceLastOrder && c.daysSinceLastOrder >= settings.anomalyInactiveDays && c.count >= 3);
     if (inactive.length > 0) {
       const top5 = inactive.slice(0, 5);
-      anomalies.push({ type: 'inactive-customers', severity: inactive.length >= 10 ? 'high' : 'medium', icon: 'user', title: `${inactive.length} عميل غير نشط`, description: `عملاء لم يطلبوا منذ ${settings.anomalyInactiveDays}+ يوماً:\n${top5.map(c => `• ${c.name} (${c.daysSinceLastOrder} يوم)`).join('\n')}${inactive.length > 5 ? `\n... و${inactive.length - 5} آخرين` : ''}`, suggestion: 'تواصل معهم' });
+      anomalies.push({ type: 'inactive-customers', severity: inactive.length >= 10 ? 'high' : 'medium', icon: 'user', title: `${inactive.length} عميل غير نشط`, description: top5.map(c => `• ${c.name} (${c.daysSinceLastOrder} يوم)`).join('\n'), suggestion: 'تواصل معهم' });
     }
     const recentNotReceived = recent.filter(o => (o.receiptStatus || RECEIPT_NOT_RECEIVED) === RECEIPT_NOT_RECEIVED);
     if (recent.length >= 10) {
       const notReceivedRate = (recentNotReceived.length / recent.length) * 100;
-      if (notReceivedRate >= 40) anomalies.push({ type: 'not-received-rate', severity: notReceivedRate >= 60 ? 'high' : 'medium', icon: 'inbox', title: 'نسبة الاستلام منخفضة', description: `${Math.round(notReceivedRate)}% من الطلبات خلال آخر ${settings.anomalyWindowDays} أيام لم يتم استلامها بعد`, suggestion: 'تابع الموصلين والعملاء' });
+      if (notReceivedRate >= 40) anomalies.push({ type: 'not-received-rate', severity: notReceivedRate >= 60 ? 'high' : 'medium', icon: 'inbox', title: 'نسبة الاستلام منخفضة', description: `${Math.round(notReceivedRate)}% لم يتم استلامها`, suggestion: 'تابع الموصلين' });
     }
     const invoiceMap = {};
     all.forEach(o => { if (!o.invoice) return; const key = String(o.invoice).trim(); if (!invoiceMap[key]) invoiceMap[key] = []; invoiceMap[key].push(o); });
     const duplicates = Object.entries(invoiceMap).filter(([_, arr]) => arr.length > 1);
-    if (duplicates.length > 0) {
-      anomalies.push({ type: 'duplicate-invoice', severity: 'high', icon: 'warning', title: `${duplicates.length} فاتورة مكررة!`, description: `أرقام فواتير متكررة:\n${duplicates.slice(0, 5).map(([inv, arr]) => `• ${inv} (${arr.length} مرة)`).join('\n')}`, suggestion: 'راجع هذه الفواتير' });
-    }
+    if (duplicates.length > 0) anomalies.push({ type: 'duplicate-invoice', severity: 'high', icon: 'warning', title: `${duplicates.length} فاتورة مكررة!`, description: duplicates.slice(0, 5).map(([inv, arr]) => `• ${inv} (${arr.length}×)`).join('\n'), suggestion: 'راجعها فوراً' });
     const staleTransferred = cache.transferred.filter(o => { const d = parseDate(o.transferredAt); if (!d) return false; return Math.floor((now - d.getTime()) / 86400000) >= 14; });
-    if (staleTransferred.length > 0) {
-      anomalies.push({ type: 'stale-transferred', severity: staleTransferred.length >= 5 ? 'high' : 'medium', icon: 'clock', title: `${staleTransferred.length} طلب في "تم نقلها" منذ 14+ يوم`, description: `طلبات لم يتم تأكيد استلامها:\n${staleTransferred.slice(0, 5).map(o => `• ${o.invoice} — ${o.customer} (${Math.floor((now - parseDate(o.transferredAt).getTime()) / 86400000)} يوم)`).join('\n')}`, suggestion: 'تابع العملاء لتأكيد الاستلام' });
-    }
+    if (staleTransferred.length > 0) anomalies.push({ type: 'stale-transferred', severity: staleTransferred.length >= 5 ? 'high' : 'medium', icon: 'clock', title: `${staleTransferred.length} طلب منذ 14+ يوم`, description: staleTransferred.slice(0, 5).map(o => `• ${o.invoice} — ${o.customer}`).join('\n'), suggestion: 'تابع العملاء' });
     return anomalies.sort((a, b) => {
       const sev = { high: 3, medium: 2, low: 1 };
       return (sev[b.severity] || 0) - (sev[a.severity] || 0);
@@ -3675,7 +3462,6 @@ window.selectRow = function (id, event) {
   document.querySelector(`#entryBody tr[data-id="${id}"]`)?.classList.add('selected');
 };
 
-/* ✅ تغيير حالة الطلب بزر (مثل الاستلام) */
 window.changeOrderStatus = async function(orderId, newStatus, source = 'orders') {
   if (!hasPerm('changeOrderStatus')) { toast(MSG.unauthorized, 'error'); return; }
   if (![ORDER_STATUS.PROGRESS, ORDER_STATUS.READY].includes(newStatus)) { toast('حالة غير صحيحة', 'error'); return; }
@@ -3806,7 +3592,7 @@ function renderReady() {
 }
 window.toggleReadySelection = function(id, checked) {
   if (!hasPerm('selectReadyOrders')) { toast(MSG.unauthorized, 'error'); return; }
-  if (isOrderLockedByGroup(id)) { toast('الطلب محجوز في مجموعة — لا يمكن تحديده', 'warning'); return; }
+  if (isOrderLockedByGroup(id)) { toast('الطلب محجوز في مجموعة', 'warning'); return; }
   if (checked) selectedReadyIds.add(id); else selectedReadyIds.delete(id);
   renderReady();
 };
@@ -3820,7 +3606,7 @@ window.onSelectAllReadyChange = function(checked) {
 window.selectAllReady = function() {
   if (!hasPerm('selectReadyOrders')) { toast(MSG.unauthorized, 'error'); return; }
   const data = getReadyFilteredData().filter(o => !isOrderInActiveGroup(o.id));
-  if (!data.length) { toast('لا توجد طلبات متاحة للتحديد', 'warning'); return; }
+  if (!data.length) { toast('لا توجد طلبات متاحة', 'warning'); return; }
   data.forEach(o => selectedReadyIds.add(o.id));
   renderReady();
   toast(`تم تحديد ${data.length} طلب`, 'success');
@@ -3833,33 +3619,23 @@ window.deselectAllReady = function() {
 };
 
 /* ══════════════════════════════════════════════════════════════
-   RENDER: TRANSFERRED — قسم جديد
+   RENDER: TRANSFERRED
    ══════════════════════════════════════════════════════════════ */
 function renderTransferred() {
   const data = cache.transferred;
   document.getElementById('transferredCount').textContent = `الإجمالي: ${data.length}`;
   const body = document.getElementById('transferredBody');
-  if (!data.length) { body.innerHTML = emptyState('transfer', 'لا توجد طلبات منقولة', 'الطلبات التي تُرحَّل من "الجاهزة" تظهر هنا حتى يتم تأكيد الاستلام', 16); return; }
+  if (!data.length) { body.innerHTML = emptyState('transfer', 'لا توجد طلبات منقولة', 'الطلبات المرحَّلة من "الجاهزة" تظهر هنا', 15); return; }
   const canReceive = hasPerm('editReceiptStatus');
-  const canRevert = hasPerm('revertReceiptStatus');
   const canSendWA = hasPerm('sendWhatsApp');
   const isOwner = currentUser?.role === ROLE_OWNER;
   body.innerHTML = data.map((o, i) => {
     const receipt = o.receiptStatus || RECEIPT_NOT_RECEIVED;
     let receiptCell;
-    if (receipt === RECEIPT_RECEIVED) {
-      receiptCell = `<span class="badge badge-received">${ico('check', 11)} تم</span>`;
-    } else if (canReceive || isOwner) {
-      receiptCell = `<select class="receipt-select" onclick="event.stopPropagation()" onchange="changeReceiptStatusWithTransfer('${o.id}', this.value)">
-        <option value="${RECEIPT_NOT_RECEIVED}" selected>لا</option>
-        <option value="${RECEIPT_RECEIVED}">تم</option>
-      </select>`;
-    } else {
-      receiptCell = `<span class="badge badge-not-received">لا</span>`;
-    }
-    const waBtn = canSendWA
-      ? `<button class="btn btn-whatsapp btn-sm" onclick="event.stopPropagation();openWhatsAppModal('${o.id}', 'transferred')" title="إرسال واتساب">${ico('whatsapp', 13)}</button>`
-      : '';
+    if (receipt === RECEIPT_RECEIVED) receiptCell = `<span class="badge badge-received">${ico('check', 11)} تم</span>`;
+    else if (canReceive || isOwner) receiptCell = `<select class="receipt-select" onclick="event.stopPropagation()" onchange="changeReceiptStatusWithTransfer('${o.id}', this.value)"><option value="${RECEIPT_NOT_RECEIVED}" selected>لا</option><option value="${RECEIPT_RECEIVED}">تم</option></select>`;
+    else receiptCell = `<span class="badge badge-not-received">لا</span>`;
+    const waBtn = canSendWA ? `<button class="btn btn-whatsapp btn-sm" onclick="event.stopPropagation();openWhatsAppModal('${o.id}', 'transferred')" title="إرسال واتساب">${ico('whatsapp', 13)}</button>` : '';
     return `<tr class="row-transferred">
       <td>${i+1}</td><td><b>${esc(o.invoice)}</b></td><td>${branchBadge(o.branch)}</td><td>${esc(o.customer)}</td>
       <td>${phoneBadge(o.customerPhone)}</td>
@@ -3876,7 +3652,7 @@ function renderTransferred() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   RENDER: LOG — عرض فقط + تغيير حالة الاستلام فقط
+   RENDER: LOG
    ══════════════════════════════════════════════════════════════ */
 function getLogFilteredData() {
   const fromVal = document.getElementById('filterLogFrom')?.value || '';
@@ -3904,13 +3680,8 @@ function receiptStatusCellLog(o) {
   const isDone = status === RECEIPT_RECEIVED;
   const canRevert = hasPerm('revertReceiptStatus');
   const isOwner = currentUser?.role === ROLE_OWNER;
-  if (!canRevert && !isOwner) {
-    return isDone ? `<span class="badge badge-received">${ico('check', 11)} تم</span>` : `<span class="badge badge-not-received">لا</span>`;
-  }
-  return `<select class="receipt-select ${isDone ? 'is-done owner-locked' : ''}" onclick="event.stopPropagation()" onchange="changeReceiptStatusWithTransfer('${o.id}', this.value)" ${!isDone ? 'disabled title="تم تأكيد الاستلام — للتراجع استخدم صلاحية التراجع"' : ''}>
-    <option value="${RECEIPT_NOT_RECEIVED}" ${!isDone ? 'selected' : ''}>لا</option>
-    <option value="${RECEIPT_RECEIVED}" ${isDone ? 'selected' : ''}>تم</option>
-  </select>`;
+  if (!canRevert && !isOwner) return isDone ? `<span class="badge badge-received">${ico('check', 11)} تم</span>` : `<span class="badge badge-not-received">لا</span>`;
+  return `<select class="receipt-select ${isDone ? 'is-done owner-locked' : ''}" onclick="event.stopPropagation()" onchange="changeReceiptStatusWithTransfer('${o.id}', this.value)" ${!isDone ? 'disabled' : ''}><option value="${RECEIPT_NOT_RECEIVED}" ${!isDone ? 'selected' : ''}>لا</option><option value="${RECEIPT_RECEIVED}" ${isDone ? 'selected' : ''}>تم</option></select>`;
 }
 function renderLog() {
   const data = getLogFilteredData();
@@ -3921,9 +3692,7 @@ function renderLog() {
   if (!data.length) { body.innerHTML = emptyState('archive', 'لا توجد نتائج', cache.log.length ? 'جرّب تعديل الفلاتر' : 'لم يتم ترحيل بعد', 15); return; }
   const canSendWA = hasPerm('sendWhatsApp');
   body.innerHTML = data.map((o, i) => {
-    const waBtn = canSendWA
-      ? `<button class="btn btn-whatsapp btn-sm" onclick="event.stopPropagation();openWhatsAppModal('${o.id}', 'log')" title="إرسال واتساب">${ico('whatsapp', 13)}</button>`
-      : '';
+    const waBtn = canSendWA ? `<button class="btn btn-whatsapp btn-sm" onclick="event.stopPropagation();openWhatsAppModal('${o.id}', 'log')" title="إرسال واتساب">${ico('whatsapp', 13)}</button>` : '';
     return `<tr class="row-received">
       <td>${i+1}</td><td><b>${esc(o.invoice)}</b></td><td>${branchBadge(o.branch)}</td><td>${esc(o.customer)}</td>
       <td>${phoneBadge(o.customerPhone)}</td>
@@ -4110,8 +3879,6 @@ window.deleteGroup = async function (id) {
   try { await persistKeys(['groups', 'activity']); renderGroups(); renderReady(); toast('تم الحذف بنجاح', 'success'); }
   catch (e) { toast(e.message, 'error'); }
 };
-
-/* ✅ ترحيل المجموعة → تنتقل طلباتها إلى "التي تم نقلها" */
 window.transferGroupToLog = async function(groupId) {
   if (!hasPerm('moveToLog')) { toast(MSG.unauthorized, 'error'); return; }
   const g = cache.groups.find(x => x.id === groupId); if (!g) { toast('المجموعة غير موجودة', 'error'); return; }
@@ -4126,21 +3893,13 @@ window.transferGroupToLog = async function(groupId) {
     const now = fmtDate(); const user = currentUser.username;
     const idsToMove = new Set(orders.map(o => o.id));
     orders.forEach(o => {
-      cache.transferred.push({
-        ...o,
-        transferredAt: now,
-        transferredBy: user,
-        receiptStatus: RECEIPT_NOT_RECEIVED,
-        receiptMethod: o.receiptMethod || 'المحل',
-        groupId: g.id,
-        groupName: g.name
-      });
+      cache.transferred.push({ ...o, transferredAt: now, transferredBy: user, receiptStatus: RECEIPT_NOT_RECEIVED, receiptMethod: o.receiptMethod || 'المحل', groupId: g.id, groupName: g.name });
     });
     cache.ready = cache.ready.filter(o => !idsToMove.has(o.id));
     const gi = cache.groups.findIndex(x => x.id === groupId);
     if (gi > -1) { cache.groups[gi].status = 'مؤرشفة'; cache.groups[gi].archivedAt = now; cache.groups[gi].archivedBy = user; }
-    logActivity('move-group-transferred', `ترحيل مجموعة: ${g.name}`, `${orders.length} طلب إلى "التي تم نقلها"`, 'success');
-    addDeliveryNotification('📦 ترحيل مجموعة', `تم ترحيل ${orders.length} طلب من المجموعة "${g.name}"`, 'info');
+    logActivity('move-group-transferred', `ترحيل مجموعة: ${g.name}`, `${orders.length} طلب`, 'success');
+    addDeliveryNotification('📦 ترحيل مجموعة', `تم ترحيل ${orders.length} طلب من "${g.name}"`, 'info');
     await persistKeys(['ready', 'transferred', 'groups', 'activity', 'notifications']);
     UndoRedo.commitBatch();
     renderGroups(); renderReady(); renderTransferred(); renderDashboard();
@@ -4153,7 +3912,7 @@ window.transferGroupToLog = async function(groupId) {
 };
 
 /* ══════════════════════════════════════════════════════════════
-   RENDER: TASKS — منع تعديل المكتملة
+   RENDER: TASKS
    ══════════════════════════════════════════════════════════════ */
 function renderTasks() {
   const container = document.getElementById('tasksContainer'); if (!container) return;
@@ -4250,23 +4009,13 @@ window.saveTask = async function () {
   const dueDate = document.getElementById('taskDueDate').value;
   const status = document.getElementById('taskStatus').value;
   const existing = id ? cache.tasks.find(t => t.id === id) : null;
-  const taskData = {
-    id: id || uid(), title, description, assignee, priority, dueDate, status,
-    createdAt: existing?.createdAt || fmtDate(),
-    createdBy: existing?.createdBy || currentUser.username,
-    completedAt: existing?.completedAt || null,
-    completedBy: existing?.completedBy || null
-  };
+  const taskData = { id: id || uid(), title, description, assignee, priority, dueDate, status, createdAt: existing?.createdAt || fmtDate(), createdBy: existing?.createdBy || currentUser.username, completedAt: existing?.completedAt || null, completedBy: existing?.completedBy || null };
   if (status === 'مكتملة' && !taskData.completedAt) { taskData.completedAt = fmtDate(); taskData.completedBy = currentUser.username; }
   if (status !== 'مكتملة') { taskData.completedAt = null; taskData.completedBy = null; }
   if (id) { const idx = cache.tasks.findIndex(t => t.id === id); if (idx > -1) cache.tasks[idx] = taskData; logActivity('edit-task', `تعديل مهمة: ${title}`, '', 'warning'); }
-  else { cache.tasks.push(taskData); logActivity('add-task', `إضافة مهمة: ${title}`, `تعيين: ${assignee || 'بدون'}`, 'success'); }
-  try {
-    await persistKeys(['tasks', 'activity']);
-    closeModal('taskModal');
-    renderTasks();
-    toast(id ? 'تم التعديل بنجاح' : 'تم الإضافة بنجاح', 'success');
-  } catch (e) { toast(e.message, 'error'); }
+  else { cache.tasks.push(taskData); logActivity('add-task', `إضافة مهمة: ${title}`, '', 'success'); }
+  try { await persistKeys(['tasks', 'activity']); closeModal('taskModal'); renderTasks(); toast(id ? 'تم التعديل' : 'تم الإضافة', 'success'); }
+  catch (e) { toast(e.message, 'error'); }
 };
 window.completeTask = async function (id) {
   if (!hasPerm('completeTask')) { toast(MSG.unauthorized, 'error'); return; }
@@ -4275,7 +4024,7 @@ window.completeTask = async function (id) {
   const ok = await dialog.confirm(`إكمال المهمة "${t.title}"؟\n\n⚠️ بمجرد الإكمال، لا يمكن تعديلها أو حذفها.`, { type: 'success', okText: 'نعم، اكتملت' });
   if (!ok) return;
   t.status = 'مكتملة'; t.completedAt = fmtDate(); t.completedBy = currentUser.username;
-  logActivity('complete-task', `إكمال مهمة: ${t.title}`, `بواسطة: ${currentUser.username}`, 'success');
+  logActivity('complete-task', `إكمال مهمة: ${t.title}`, '', 'success');
   try { await persistKeys(['tasks', 'activity']); renderTasks(); toast('✅ تم إكمال المهمة — أصبحت مقفلة', 'success'); }
   catch (e) { toast(e.message, 'error'); }
 };
@@ -4295,7 +4044,7 @@ window.deleteTask = async function (id) {
    ══════════════════════════════════════════════════════════════ */
 function renderSettings() {
   renderBranchesList(); renderDriversList(); renderUsers(); renderActivity();
-  renderCustomFieldsList(); loadAnalyticsSettingsToForm(); renderUpdatesPanel();
+  renderCustomFieldsList(); loadAnalyticsSettingsToForm();
 }
 function renderBranchesList() {
   const canManage = hasPerm('manageBranches');
@@ -4451,10 +4200,10 @@ window.saveCustomField = async function() {
   const required = document.getElementById('customFieldRequired').checked;
   const showInPrint = document.getElementById('customFieldShowInPrint').checked;
   if (!key) { setFieldError('customFieldKey', 'المفتاح مطلوب'); valid = false; }
-  else if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(key)) { setFieldError('customFieldKey', 'المفتاح يجب أن يبدأ بحرف إنجليزي'); valid = false; }
+  else if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(key)) { setFieldError('customFieldKey', 'المفتاح يبدأ بحرف إنجليزي'); valid = false; }
   else if (cache.customFields.some(f => f.key === key && f.id !== id)) { setFieldError('customFieldKey', 'المفتاح مستخدم مسبقاً'); valid = false; }
-  if (!label) { setFieldError('customFieldLabel', 'الاسم المعروض مطلوب'); valid = false; }
-  if (!valid) { focusFirstError('customFieldModal'); toast('يرجى تصحيح الحقول', 'error'); return; }
+  if (!label) { setFieldError('customFieldLabel', 'الاسم مطلوب'); valid = false; }
+  if (!valid) { focusFirstError('customFieldModal'); toast('صحح الحقول', 'error'); return; }
   const options = type === 'select' ? optionsRaw.split('\n').map(o => o.trim()).filter(Boolean) : [];
   if (type === 'select' && !options.length) { toast('أضف خياراً واحداً على الأقل', 'error'); return; }
   const data = { id: id || uid(), key, label, type, required, showInPrint, options };
@@ -4464,7 +4213,7 @@ window.saveCustomField = async function() {
   catch (e) { toast(e.message, 'error'); }
 };
 
-/* ✅ قوالب الواتساب في الإعدادات */
+/* WHATSAPP TEMPLATES */
 function renderWhatsAppTemplates() {
   const container = document.getElementById('whatsappTemplatesContainer'); if (!container) return;
   if (!hasPerm('editWhatsAppTemplates')) { container.innerHTML = `<div class="perm-note">غير مصرح</div>`; return; }
@@ -4497,41 +4246,6 @@ window.resetWhatsAppTemplates = async function() {
   whatsappTemplates = JSON.parse(JSON.stringify(DEFAULT_WHATSAPP_TEMPLATES));
   renderWhatsAppTemplates();
   toast('تمت الاستعادة', 'info');
-};
-
-/* ✅ لوحة التحديثات */
-function renderUpdatesPanel() {
-  const el = document.getElementById('updatesPanelContent'); if (!el) return;
-  if (currentUser?.role !== ROLE_OWNER) { el.innerHTML = '<div class="perm-note">مخصص للمالك فقط</div>'; return; }
-  el.innerHTML = `
-    <div class="template-card">
-      <h4>${ico('refresh', 17)}<span>معلومات الإصدار الحالي</span></h4>
-      <div class="template-row"><label>الإصدار:</label><input value="${APP_VERSION}" readonly style="background:var(--bg);font-family:monospace;"></div>
-      <div class="template-row"><label>الحالة:</label><span id="updateStatusText" style="font-size:13px;font-weight:700;color:var(--text-muted);">—</span></div>
-      <div class="toolbar" style="margin-top:14px;">
-        <button class="btn btn-primary" onclick="checkUpdateNow()">${ico('search', 15)}<span>التحقق الآن</span></button>
-      </div>
-    </div>
-    <div class="template-card">
-      <h4>${ico('info', 17)}<span>ملاحظات مهمة</span></h4>
-      <div style="font-size:12.5px;color:var(--text-secondary);line-height:1.8;">
-        • يتم نشر الإصدار عبر ملف <code style="background:var(--bg);padding:2px 6px;border-radius:4px;font-family:monospace;">data/version.json</code>.<br>
-        • عند وجود إصدار أحدث، يُجبر جميع المستخدمين على تطبيق التحديث.<br>
-        • لا يُسمح بتجاوز التحديث الإلزامي.<br>
-        • لا يؤدي التحديث إلى فقدان البيانات.
-      </div>
-    </div>`;
-}
-window.checkUpdateNow = async function() {
-  const statusEl = document.getElementById('updateStatusText');
-  if (statusEl) { statusEl.textContent = 'جاري التحقق...'; statusEl.style.color = 'var(--brand-600)'; }
-  const result = await checkForUpdates(false);
-  if (!statusEl) return;
-  if (result.status === 'up-to-date') { statusEl.textContent = '✅ على أحدث إصدار'; statusEl.style.color = 'var(--success-600)'; }
-  else if (result.status === 'update-available') { statusEl.textContent = `⚠️ يتوفر تحديث: ${result.remoteVersion}`; statusEl.style.color = 'var(--warning-600)'; }
-  else if (result.status === 'network-error') { statusEl.textContent = '⚠️ تعذر الاتصال'; statusEl.style.color = 'var(--danger-600)'; }
-  else if (result.status === 'no-version-file') { statusEl.textContent = '⚠️ لا يوجد ملف إصدار'; statusEl.style.color = 'var(--warning-600)'; }
-  else { statusEl.textContent = '⚠️ حالة غير معروفة'; statusEl.style.color = 'var(--warning-600)'; }
 };
 
 /* ANALYTICS SETTINGS */
@@ -4652,12 +4366,12 @@ window.resetActivityLog = async function() {
   if (!ok) return;
   const ok2 = await dialog.confirm('تأكيد أخير؟', { type: 'warning' });
   if (!ok2) return;
-  try { cache.activity = []; await saveActivity(); logActivity('reset-activity', 'تصفير سجل النشاط', `تم حذف ${count}`, 'danger'); await saveActivity(); renderActivity(); toast('تم التصفير', 'success'); }
+  try { cache.activity = []; await saveActivity(); logActivity('reset-activity', 'تصفير سجل النشاط', '', 'danger'); await saveActivity(); renderActivity(); toast('تم التصفير', 'success'); }
   catch (e) { toast(e.message, 'error'); }
 };
 
 /* ══════════════════════════════════════════════════════════════
-   DASHBOARD STATS
+   DASHBOARD
    ══════════════════════════════════════════════════════════════ */
 window.setStatsFilter = function(type) {
   statsFilter = type;
@@ -4777,11 +4491,11 @@ function renderStats() {
   renderTopList('topDrivers', topDrivers, topDrivers[0]?.[1] || 1);
   renderTopList('topUsers', topUsers, topUsers[0]?.[1] || 1);
   document.getElementById('performanceMetrics').innerHTML = `
-    <div class="metric-box"><div class="mv">${total}</div><div class="ml">إجمالي الطلبات</div></div>
+    <div class="metric-box"><div class="mv">${total}</div><div class="ml">إجمالي</div></div>
     <div class="metric-box"><div class="mv">${todayCount}</div><div class="ml">اليوم</div></div>
-    <div class="metric-box"><div class="mv green">${received}</div><div class="ml">تم استلامها</div></div>
-    <div class="metric-box"><div class="mv red">${notReceived}</div><div class="ml">قيد الانتظار</div></div>
-    <div class="metric-box"><div class="mv">${completionRate}%</div><div class="ml">نسبة الاستلام</div></div>
+    <div class="metric-box"><div class="mv green">${received}</div><div class="ml">مستلمة</div></div>
+    <div class="metric-box"><div class="mv red">${notReceived}</div><div class="ml">منتظرة</div></div>
+    <div class="metric-box"><div class="mv">${completionRate}%</div><div class="ml">الاستلام</div></div>
     <div class="metric-box"><div class="mv">${avgDaily}</div><div class="ml">متوسط يومي</div></div>`;
   renderTrend7Days();
   prevStats = { orders: active, ready: ready, transferred: transferred, log: archived, total: total };
@@ -5108,7 +4822,6 @@ window.transferSingle = async function (id) {
 };
 window.bulkTransfer = async function () {
   if (!hasPerm('bulkTransfer')) { toast(MSG.unauthorized, 'error'); return; }
-  /* ✅ الشرط الوحيد: حالة الطلب "جاهز" */
   const eligible = cache.orders.filter(o => o.status === ORDER_STATUS.READY);
   if (!eligible.length) { toast('لا توجد طلبات مستوفية (حالتها "جاهز")', 'error'); return; }
   const ok = await dialog.confirm(`تحويل ${eligible.length} طلب إلى "الجاهزة"؟`, { title: 'تحويل جماعي' }); if (!ok) return;
@@ -5124,7 +4837,6 @@ window.bulkTransfer = async function () {
     toast(`تم تحويل ${eligible.length} طلب`, 'success');
   } catch (e) { cache.orders = backup.orders; cache.ready = backup.ready; UndoRedo.cancelBatch(); toast(e.message, 'error'); }
 };
-/* ✅ ترحيل من "الجاهزة" إلى "التي تم نقلها" */
 window.moveReadyToLog = async function () {
   if (!hasPerm('moveToLog')) { toast(MSG.unauthorized, 'error'); return; }
   if (!cache.ready.length) { toast('لا توجد طلبات جاهزة', 'error'); return; }
@@ -5141,18 +4853,12 @@ window.moveReadyToLog = async function () {
     const count = toMove.length; const now = fmtDate(); const user = currentUser.username;
     const idsToMove = new Set(toMove.map(o => o.id));
     toMove.forEach(o => {
-      cache.transferred.push({
-        ...o,
-        transferredAt: now,
-        transferredBy: user,
-        receiptStatus: RECEIPT_NOT_RECEIVED,
-        receiptMethod: o.receiptMethod || 'المحل'
-      });
+      cache.transferred.push({ ...o, transferredAt: now, transferredBy: user, receiptStatus: RECEIPT_NOT_RECEIVED, receiptMethod: o.receiptMethod || 'المحل' });
     });
     cache.ready = cache.ready.filter(o => !idsToMove.has(o.id));
     idsToMove.forEach(id => selectedReadyIds.delete(id));
-    logActivity('move-transferred', `نقل ${count} طلب إلى "التي تم نقلها"`, '', 'success');
-    addDeliveryNotification('📦 نقل طلبات', `تم نقل ${count} طلب إلى قسم "التي تم نقلها"`, 'info');
+    logActivity('move-transferred', `نقل ${count} طلب`, '', 'success');
+    addDeliveryNotification('📦 نقل طلبات', `تم نقل ${count} طلب إلى "التي تم نقلها"`, 'info');
     await persistKeys(['ready', 'transferred', 'activity', 'notifications']); UndoRedo.commitBatch();
     renderReady(); renderTransferred(); renderDashboard();
     toast(`تم نقل ${count} طلب`, 'success');
@@ -5392,7 +5098,7 @@ function validateUserForm() {
     else if (password.length < 6) { setFieldError('userPass', 'يجب 6 أحرف على الأقل'); valid = false; }
     else if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) { setFieldError('userPass', 'يجب أحرف وأرقام'); valid = false; }
   } else if (password) {
-    if (password.length < 6) { setFieldError('userPass', 'يجب 6 أحرف على الأقل'); valid = false; }
+    if (password.length < 6) { setFieldError('userPass', 'يجب 6 أحرف'); valid = false; }
     else if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) { setFieldError('userPass', 'يجب أحرف وأرقام'); valid = false; }
   }
   if (!valid) { focusFirstError('userModal'); toast('صحح الحقول', 'error'); }
@@ -5532,29 +5238,28 @@ function buildPrintHTML(items, template, extra = {}) {
   const paperKey = tpl.paperSize || 'A4';
   const paper = PAPER_SIZES[paperKey] || PAPER_SIZES.A4;
   const baseFont = Math.max(9, Math.min(14, tpl.fontSize || 10));
-  const titleSize = baseFont + 6; const subtitleSize = baseFont + 1; const headerSize = baseFont; const bodySize = baseFont; const footerSize = baseFont + 1;
   const logoHTML = templates.logo ? `<div class="print-logo"><img src="${templates.logo}" alt="" style="width:${templates.logoWidth || 180}mm;max-width:100%;height:auto;max-height:${templates.logoHeight || 40}mm;object-fit:contain;display:block;margin:0 auto;"></div>` : '';
   return `<!DOCTYPE html><html dir="rtl" lang="ar"><head><meta charset="utf-8"><title>${esc(replaceVars(tpl.title))}</title>
 <style>
   @page { size: ${paper.w}mm ${paper.h}mm portrait; margin: 8mm 8mm 10mm 8mm; }
-  * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   html, body { margin: 0; padding: 0; background: #fff; color: #000; font-family: 'Segoe UI', Tahoma, Arial, sans-serif; direction: rtl; }
-  body { font-size: ${bodySize}pt; line-height: 1.4; }
-  .print-logo { text-align: center; margin: 0 0 5mm 0; page-break-inside: avoid; }
+  body { font-size: ${baseFont}pt; line-height: 1.4; }
+  .print-logo { text-align: center; margin: 0 0 5mm 0; }
   .print-logo img { display: block; margin: 0 auto; max-width: 100%; height: auto; }
-  h1.print-title { font-size: ${titleSize}pt; color: #1d3193; margin: 0 0 3mm 0; text-align: center; font-weight: 800; line-height: 1.25; page-break-inside: avoid; }
-  .print-subtitle { text-align: center; font-size: ${subtitleSize}pt; color: #475569; margin: 0 0 5mm 0; line-height: 1.5; font-weight: 500; page-break-inside: avoid; }
-  table.print-table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: ${bodySize}pt; page-break-inside: auto; }
+  h1.print-title { font-size: ${baseFont + 6}pt; color: #1d3193; margin: 0 0 3mm 0; text-align: center; font-weight: 800; }
+  .print-subtitle { text-align: center; font-size: ${baseFont + 1}pt; color: #475569; margin: 0 0 5mm 0; }
+  table.print-table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: ${baseFont}pt; }
   table.print-table thead { display: table-header-group; }
-  table.print-table tr { page-break-inside: avoid; break-inside: avoid; }
-  table.print-table th { background: #1d3193; color: #fff; font-weight: 700; font-size: ${headerSize}pt; text-align: center; padding: 4mm 1.5mm; border: 0.6px solid #1a2870; line-height: 1.25; vertical-align: middle; white-space: nowrap; }
-  table.print-table td { padding: 3mm 1.5mm; border: 0.6px solid #64748b; line-height: 1.4; vertical-align: middle; background: #fff; word-break: break-word; overflow-wrap: anywhere; }
+  table.print-table tr { page-break-inside: avoid; }
+  table.print-table th { background: #1d3193; color: #fff; font-weight: 700; font-size: ${baseFont}pt; text-align: center; padding: 4mm 1.5mm; border: 0.6px solid #1a2870; }
+  table.print-table td { padding: 3mm 1.5mm; border: 0.6px solid #64748b; background: #fff; word-break: break-word; }
   table.print-table tbody tr:nth-child(even) td { background: #eef4ff; }
-  .col-num { text-align: center !important; font-weight: 700; color: #1d3193; white-space: nowrap; }
-  .col-code { direction: ltr; text-align: center !important; font-family: 'Courier New', Consolas, monospace; font-size: ${bodySize - 0.5}pt; white-space: nowrap; }
-  .col-name { text-align: right !important; white-space: normal; }
-  .col-notes { text-align: right !important; white-space: normal !important; overflow-wrap: anywhere; line-height: 1.35; font-size: ${bodySize - 0.3}pt; color: #334155; }
-  .print-footer { margin-top: 8mm; padding-top: 4mm; text-align: center; font-size: ${footerSize}pt; color: #334155; page-break-inside: avoid; border-top: 0.8px dashed #94a3b8; }
+  .col-num { text-align: center !important; font-weight: 700; color: #1d3193; }
+  .col-code { direction: ltr; text-align: center !important; font-family: 'Courier New', Consolas, monospace; font-size: ${baseFont - 0.5}pt; }
+  .col-name { text-align: right !important; }
+  .col-notes { text-align: right !important; overflow-wrap: anywhere; font-size: ${baseFont - 0.3}pt; }
+  .print-footer { margin-top: 8mm; padding-top: 4mm; text-align: center; font-size: ${baseFont + 1}pt; border-top: 0.8px dashed #94a3b8; }
   @media screen { body { background: #e5e7eb; padding: 15mm 10mm; } .print-container { background: #fff; width: ${paper.w}mm; max-width: 100%; min-height: ${paper.h}mm; margin: 0 auto; padding: 8mm 8mm 10mm 8mm; box-shadow: 0 4px 20px rgba(0,0,0,0.15); } }
   @media print { .print-container { width: 100%; padding: 0; box-shadow: none; } }
 </style></head><body>
@@ -5657,7 +5362,7 @@ window.exportBackup = async function () {
     const byMonth = {};
     (cache.activity || []).forEach(a => { const m = a.month || getMonthKey(a.ts ? new Date(a.ts) : new Date()); if (!byMonth[m]) byMonth[m] = []; byMonth[m].push(a); });
     Object.keys(byMonth).forEach(m => { activityFolder.file(`${m}.json`, JSON.stringify(byMonth[m], null, 2)); });
-    const info = { name: 'نظام إدارة الطلبات v3.7', createdAt: stamp.toISOString(), createdBy: currentUser?.username || 'unknown', structure: 'v7', counts: { orders: cache.orders.length, ready: cache.ready.length, transferred: cache.transferred.length, log: cache.log.length, customers: cache.customers.length, users: cache.users.length, drivers: cache.drivers.length, branches: cache.branches.length, groups: cache.groups.length, tasks: cache.tasks.length } };
+    const info = { name: 'نظام إدارة الطلبات v3.7', createdAt: stamp.toISOString(), createdBy: currentUser?.username || 'unknown', structure: 'v7' };
     zip.file('backup-info.json', JSON.stringify(info, null, 2));
     const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 9 } });
     downloadBlob(blob, `backup_${dateStr}.zip`);
@@ -5700,10 +5405,9 @@ window.go = function (page) {
   if (page === 'settings') { rebuildSettingsTabs(); renderSettings(); updateCurrentKeyInfo(); renderWhatsAppTemplates(); }
 };
 window.switchTab = function (evt, tab) {
-  const tabPerm = { token:'tabToken', activity:'tabActivity', analytics:'tabAnalytics', branches:'tabBranches', drivers:'tabDrivers', users:'tabUsers', templates:'tabTemplates', whatsapp:'tabWhatsApp', customfields:'tabCustomFields', updates:'tabUpdates', backup:'tabBackup' };
+  const tabPerm = { token:'tabToken', activity:'tabActivity', analytics:'tabAnalytics', branches:'tabBranches', drivers:'tabDrivers', users:'tabUsers', templates:'tabTemplates', whatsapp:'tabWhatsApp', customfields:'tabCustomFields', backup:'tabBackup' };
   if (tabPerm[tab] && !hasPerm(tabPerm[tab])) { toast(MSG.unauthorized, 'error'); return; }
   if (tab === 'customfields' && !isFeatureEnabled('featureCustomFields')) { toast('الميزة معطّلة', 'error'); return; }
-  if (tab === 'updates' && currentUser?.role !== ROLE_OWNER) { toast('مخصص للمالك', 'error'); return; }
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.tab-panel').forEach(p => p.style.display = 'none');
   const btn = evt.target.closest('.tab-btn'); if (btn) btn.classList.add('active');
@@ -5716,7 +5420,6 @@ window.switchTab = function (evt, tab) {
   if (tab === 'analytics') loadAnalyticsSettingsToForm();
   if (tab === 'users') renderUsers();
   if (tab === 'customfields') renderCustomFieldsList();
-  if (tab === 'updates') renderUpdatesPanel();
 };
 
 /* ══════════════════════════════════════════════════════════════
@@ -5769,15 +5472,6 @@ window.doLogin = async function () {
     logActivity('login', `تسجيل دخول: ${u}`, `الدور: ${currentUser.role}`, 'success');
     loadEl.textContent = 'تم';
     hideLoading();
-    // ✅ التحقق من التحديث الإجباري قبل الدخول
-    const updateResult = await checkForUpdates(true);
-    if (updateResult.status === 'update-available') {
-      _forceUpdateActive = true;
-      showForceUpdateModal(updateResult.remoteVersion);
-      // لا نكمل startApp الآن — سيتم إعادة التحميل بعد التحديث
-      btn.disabled = false;
-      return;
-    }
     startApp();
   } catch (e) { errEl.textContent = e.message || MSG.connFail; errEl.classList.add('show'); hideLoading(); }
   finally { btn.disabled = false; }
@@ -5788,11 +5482,11 @@ window.logout = async function (silent = false) {
   try { await flushNotificationsSave(); } catch {}
   try { await flushActivitySave(); } catch {}
   try { await SaveQueue.drain(); } catch (_) {}
-  stopPolling(); stopUpdatePolling(); stopSessionTimer();
+  stopPolling(); stopSessionTimer();
   currentUser = null; selectedOrderId = null; selectedReadyIds.clear();
   Storage.resetCache(); localMeta = null;
   currentSyncInterval = SYNC_INTERVAL; lastSyncTime = 0;
-  UndoRedo.clear(); _forceUpdateActive = false; _currentRemoteVersion = null;
+  UndoRedo.clear();
   document.getElementById('app').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginPass').value = ''; document.getElementById('loginLoading').textContent = '';
@@ -5819,9 +5513,10 @@ function startApp() {
     return true;
   }) || 'dashboard';
   go(firstAvailable);
-  startPolling(); startUpdatePolling(); startSessionTimer();
+  startPolling(); startSessionTimer();
   renderNotifications();
   attachVisibilityHandler(); attachOnlineHandlers();
+  initBroadcast();
   setInterval(renderSaveQueueIndicator, 1000);
   applyFeatureUI(); updateUndoUI();
   toast(`أهلاً ${currentUser.username}`, 'success');
@@ -5921,7 +5616,7 @@ function buildUI() {
   document.getElementById('transferredTitle').innerHTML = ico('transfer', 20) + '<span>الطلبات التي تم نقلها</span>';
   document.getElementById('transferredToolbar').innerHTML = `
     <button class="btn btn-primary perm-print" onclick="printTransferred()">${ico('printer', 15)}<span>طباعة</span></button>
-    <div style="margin-right:auto;font-size:12px;color:var(--text-muted);background:var(--brand-50);padding:8px 14px;border-radius:20px;">${ico('info', 13)} هذه الطلبات بانتظار تأكيد الاستلام — عند التأكيد تنتقل تلقائياً إلى السجل</div>`;
+    <div style="margin-right:auto;font-size:12px;color:var(--text-muted);background:var(--brand-50);padding:8px 14px;border-radius:20px;">${ico('info', 13)} بانتظار تأكيد الاستلام — عند التأكيد تنتقل تلقائياً للسجل</div>`;
   document.getElementById('transferredHead').innerHTML = ['#','رقم الفاتورة','الفرع','العميل','هاتف العميل','الموقع','حالة الطلب','تاريخ الاعتماد','طريقة الاستلام','الموصل','رقم الموصل','ملاحظات','تاريخ النقل','حالة الاستلام','إرسال واتساب'].map(h => `<th>${h}</th>`).join('');
   document.getElementById('logTitle').innerHTML = ico('archive', 20) + '<span>السجل</span>';
   document.getElementById('logFilterBar').innerHTML = `
@@ -5997,7 +5692,7 @@ function buildUI() {
     <div class="toolbar" style="margin-top:16px;"><button class="btn btn-success" onclick="saveTemplates()">${ico('save', 15)}<span>حفظ</span></button><button class="btn btn-ghost" onclick="resetTemplates()">${ico('refresh', 15)}<span>استعادة</span></button></div>`;
   document.getElementById('tab-whatsapp').innerHTML = `
     <div style="padding:12px;background:var(--brand-50);border-radius:var(--radius-md);font-size:12.5px;color:var(--brand-700);margin-bottom:14px;border:1px solid rgba(66,102,232,.2);line-height:1.6;">
-      ${ico('whatsapp', 14)} <b>قوالب واتساب منفصلة</b> — تخصص رسالة لكل طريقة استلام. يُرسل يدوياً من قسم "الطلبات التي تم نقلها" أو من السجل.
+      ${ico('whatsapp', 14)} <b>قوالب واتساب منفصلة</b> — خصص رسالة لكل طريقة استلام. يُرسل يدوياً من "الطلبات التي تم نقلها" أو من السجل.
     </div>
     <div id="whatsappTemplatesContainer"></div>
     <div class="toolbar" style="margin-top:16px;">
@@ -6008,7 +5703,6 @@ function buildUI() {
     <div class="toolbar"><button class="btn btn-primary perm-manageCustomFields" onclick="openCustomFieldModal()">${ico('plus', 15)}<span>حقل جديد</span></button></div>
     <div style="padding:12px;background:var(--brand-50);border-radius:var(--radius-md);font-size:12.5px;color:var(--brand-700);margin-bottom:14px;border:1px solid rgba(66,102,232,.2);line-height:1.6;">💡 أضف حقولاً مخصصة تظهر في نموذج الطلب.</div>
     <div id="customFieldsList"></div>`;
-  document.getElementById('tab-updates').innerHTML = `<div id="updatesPanelContent"></div>`;
   document.getElementById('tab-backup').innerHTML = `
     <div class="toolbar">
       <button class="btn btn-primary" onclick="exportBackup()">${ico('zip', 15)}<span>تصدير ZIP</span></button>
@@ -6123,7 +5817,6 @@ function handleEnterNavigation(e) {
 ['orderModal','customerModal','userModal','keyModal','customFieldModal','taskModal','groupModal'].forEach(id => { const m = document.getElementById(id); if (m) m.addEventListener('keydown', handleEnterNavigation); });
 function isInInput() { const t = document.activeElement?.tagName; return t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT'; }
 window.addEventListener('keydown', e => {
-  if (_forceUpdateActive) { if (e.key === 'Escape' || e.key === 'F5' || (e.ctrlKey && e.key === 'r')) e.preventDefault(); return; }
   const inInput = isInInput(); const activeModal = getActiveModal(); const dialogActive = document.getElementById('dialogBg').classList.contains('active');
   if (dialogActive) { if (e.key === 'Enter') { e.preventDefault(); dialogResolve(true); } if (e.key === 'Escape') { e.preventDefault(); dialogResolve(false); } return; }
   if (e.key === 'Escape' && activeModal) { activeModal.classList.remove('active'); return; }
@@ -6203,12 +5896,12 @@ window.addEventListener('DOMContentLoaded', () => {
   loadLastUser();
   initCustomerSearch();
   initLocationSuggestion();
+  initBroadcast();
   document.getElementById('loginLogo').innerHTML = ico('package', 54);
   document.getElementById('adminToggleIcon').innerHTML = ico('shield2', 13);
   document.getElementById('adminHeaderIcon').innerHTML = ico('key', 16);
   document.getElementById('adminBtnIcon').innerHTML = ico('check', 16);
   document.getElementById('rateIcon').innerHTML = ico('zap', 12);
-  const fuIcon = document.getElementById('fuIcon'); if (fuIcon) fuIcon.innerHTML = ico('refresh', 40);
   document.getElementById('loginPass').addEventListener('keydown', e => { if (e.key === 'Enter') window.doLogin(); });
   document.getElementById('loginUser').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('loginPass').focus(); });
   document.getElementById('loginKey').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('loginUser').focus(); });
@@ -6227,7 +5920,6 @@ window.addEventListener('DOMContentLoaded', () => {
   setOnline(navigator.onLine);
 });
 window.addEventListener('beforeunload', (e) => {
-  if (_forceUpdateActive) { e.preventDefault(); e.returnValue = ''; return; }
   if (!currentUser) return;
   const stats = SaveQueue.getStats();
   if (stats.pending > 0) { e.preventDefault(); e.returnValue = 'لا يزال هناك حفظ جارٍ...'; }

@@ -1100,23 +1100,26 @@ const APP_ID       = 'test';
 const APP_BRANCH   = 'main';
 const APP_VERSION  = '4.0.0';
 
-/* ✅ مزامنة لحظية — 3 ثوان في الأمام و15 ثانية في الخلفية */
-const SYNC_INTERVAL = 3000;
-const SYNC_INTERVAL_HIDDEN = 15000;
-const SYNC_THROTTLE_MS = 400;
-const INSTANT_SYNC_DELAY = 80;
-const DEBOUNCE_SYNC_MS = 150;
+const SYNC_INTERVAL = 5000;
+const SYNC_INTERVAL_HIDDEN = 30000;
+const SYNC_THROTTLE_MS = 1500;
+const INSTANT_SYNC_DELAY = 1500;   /* ✅ أُلغيت فعليًا — لا يُستخدم */
+const DEBOUNCE_SYNC_MS = 1000;
+/* ✅ فترة حماية ضد Race Condition */
+const SYNC_GRACE_MS = 10000;
+/* ✅ أقصى عدد من SHAs السابقة المحفوظة لكل ملف */
+const PREV_SHA_HISTORY = 20;
 
-const SAVE_COOLDOWN = 500;
-const SUBMIT_LOCK_MS = 800;
+const SAVE_COOLDOWN = 800;
+const SUBMIT_LOCK_MS = 1000;
 
 const DRAFT_KEY = 'oms_draft_order';
 const THEME_KEY = 'oms_theme';
 const ACCESS_KEY = 'oms_access_key';
 const KEY_HIDDEN_FLAG = 'oms_key_hidden';
 const ACTIVITY_PER_PAGE = 30;
-const NOTIF_SAVE_DELAY = 400;
-const ACTIVITY_SAVE_DELAY = 1000;
+const NOTIF_SAVE_DELAY = 600;
+const ACTIVITY_SAVE_DELAY = 1500;
 
 let _broadcastChannel = null;
 function initBroadcast() {
@@ -1127,7 +1130,6 @@ function initBroadcast() {
       if (!currentUser) return;
       if (e.data && e.data.type === 'data-changed') {
         lastSyncTime = 0;
-        /* ✅ تحديث فوري بدون تأخير */
         syncPull(true).catch(() => {});
       }
     };
@@ -1146,11 +1148,11 @@ function broadcastChange() {
 }
 
 const RATE_LEVELS = [
-  { min: 3000, interval: 3000,  label: 'مرتفعة' },
-  { min: 1500, interval: 5000,  label: 'جيدة' },
-  { min: 800,  interval: 10000, label: 'متوسطة' },
-  { min: 300,  interval: 20000, label: 'منخفضة' },
-  { min: 100,  interval: 40000, label: 'منخفضة جداً' },
+  { min: 3000, interval: 5000,  label: 'مرتفعة' },
+  { min: 1500, interval: 8000,  label: 'جيدة' },
+  { min: 800,  interval: 15000, label: 'متوسطة' },
+  { min: 300,  interval: 30000, label: 'منخفضة' },
+  { min: 100,  interval: 60000, label: 'منخفضة جداً' },
   { min: 0,    interval: 0,     label: 'حرجة - موقوفة' }
 ];
 
@@ -1384,7 +1386,6 @@ let statsFilter = 'all', statsFromDate = '', statsToDate = '';
 let featureFlags = { featureFuzzySearch: true, featureCustomFields: true, featureWorkGroups: true, featureTasks: true };
 let _groupSelectedOrders = new Set();
 
-/* ✅ أقفال منع التكرار */
 let _orderSubmitLock = 0;
 let _customerSubmitLock = 0;
 let _driverSubmitLock = 0;
@@ -1652,13 +1653,18 @@ const InFlight = (() => {
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   STORAGE LAYER
+   STORAGE LAYER — مع حماية Race Condition
    ══════════════════════════════════════════════════════════════ */
 const Storage = (() => {
   const API_BASE = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
   const TREE_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/trees/${APP_BRANCH}?recursive=1`;
   const SHAs = {}, ETags = {};
+  /* ✅ سجل SHAs السابقة (لتجاهل Tree المتأخر) */
+  const PREV_SHAS = {};
+  /* ✅ وقت آخر حفظ لكل ملف (فترة حماية) */
+  const RECENTLY_SAVED = {};
   let treeDisabled = false;
+
   function headers(json = false, key = null) {
     const h = { 'Authorization': `Bearer ${getStoredKey()}`, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
     if (json) h['Content-Type'] = 'application/json';
@@ -1666,6 +1672,7 @@ const Storage = (() => {
     return h;
   }
   function isMetaPath(path) { return path === 'data/meta.json'; }
+
   async function _loadData(path, cacheKey) {
     const url = `${API_BASE}/${path}?ref=${APP_BRANCH}`;
     let res;
@@ -1692,9 +1699,11 @@ const Storage = (() => {
     }
     try { return { notModified: false, data: JSON.parse(raw), wasPlain: true }; } catch { return { notModified: false, data: null }; }
   }
+
   async function loadData(path, cacheKey = null) {
     return InFlight.run(`load:${path}:${cacheKey || ''}`, () => _loadData(path, cacheKey));
   }
+
   async function _writeFile(path, data, cacheKey, isCreate) {
     const jsonStr = JSON.stringify(data, null, 2);
     const content = isMetaPath(path) ? jsonStr : encryptText(jsonStr);
@@ -1710,9 +1719,20 @@ const Storage = (() => {
       throw new Error(isCreate ? MSG.createFail : MSG.saveFail);
     }
     const json = await res.json();
-    if (cacheKey) { SHAs[cacheKey] = json.content.sha; delete ETags[cacheKey]; }
+    if (cacheKey) {
+      /* ✅ احفظ SHA السابق في السجل قبل التحديث */
+      if (SHAs[cacheKey]) {
+        if (!PREV_SHAS[cacheKey]) PREV_SHAS[cacheKey] = [];
+        PREV_SHAS[cacheKey].push(SHAs[cacheKey]);
+        if (PREV_SHAS[cacheKey].length > PREV_SHA_HISTORY) PREV_SHAS[cacheKey].shift();
+      }
+      SHAs[cacheKey] = json.content.sha;
+      delete ETags[cacheKey];
+      RECENTLY_SAVED[cacheKey] = Date.now();
+    }
     return json;
   }
+
   async function _saveData(path, data, cacheKey) {
     if (cacheKey && SHAs[cacheKey]) {
       try { return await _writeFile(path, data, cacheKey, false); }
@@ -1728,9 +1748,11 @@ const Storage = (() => {
       throw e;
     }
   }
+
   async function saveData(path, data, cacheKey = null) {
     return SaveQueue.enqueue(cacheKey || path, () => withRetry(() => _saveData(path, data, cacheKey), { maxAttempts: 4, baseDelay: 600 }));
   }
+
   async function getTreeShas() {
     if (treeDisabled) return null;
     try {
@@ -1750,8 +1772,30 @@ const Storage = (() => {
       return shas;
     } catch { return null; }
   }
-  function resetCache() { Object.keys(SHAs).forEach(k => delete SHAs[k]); Object.keys(ETags).forEach(k => delete ETags[k]); treeDisabled = false; }
-  return { loadData, saveData, getTreeShas, resetCache, SHAs };
+
+  /* ✅ فحص ما إذا كان SHA قادماً من Tree متأخر (SHA قديم عرفناه) */
+  function isStaleSha(cacheKey, remoteSha) {
+    if (!remoteSha) return false;
+    if (remoteSha === SHAs[cacheKey]) return true;
+    if (PREV_SHAS[cacheKey] && PREV_SHAS[cacheKey].includes(remoteSha)) return true;
+    return false;
+  }
+
+  /* ✅ فحص ما إذا كان الملف حُفظ مؤخراً (فترة حماية) */
+  function isRecentlySaved(cacheKey) {
+    const t = RECENTLY_SAVED[cacheKey];
+    return t && (Date.now() - t) < SYNC_GRACE_MS;
+  }
+
+  function resetCache() {
+    Object.keys(SHAs).forEach(k => delete SHAs[k]);
+    Object.keys(ETags).forEach(k => delete ETags[k]);
+    Object.keys(PREV_SHAS).forEach(k => delete PREV_SHAS[k]);
+    Object.keys(RECENTLY_SAVED).forEach(k => delete RECENTLY_SAVED[k]);
+    treeDisabled = false;
+  }
+
+  return { loadData, saveData, getTreeShas, resetCache, SHAs, isStaleSha, isRecentlySaved };
 })();
 
 /* ══════════════════════════════════════════════════════════════
@@ -1976,14 +2020,37 @@ function filterOrdersByPermission(list) {
   if (!allowed.length) return [];
   return list.filter(o => allowed.includes(o.receiptMethod || 'المحل'));
 }
+
+/* ✅ دالة كانت مفقودة تماماً — السبب الجذري لمشكلة الرئيسية الفارغة */
+function applyFeatureUI() {
+  try {
+    document.querySelectorAll('[data-feature]').forEach(el => {
+      const feature = el.getAttribute('data-feature');
+      if (!feature) return;
+      const enabled = isFeatureEnabled(feature);
+      el.style.display = enabled ? '' : 'none';
+    });
+  } catch (e) { console.warn('applyFeatureUI:', e); }
+}
+
+/* ✅ نسخة محمية بـ try/catch لضمان عدم توقف التنفيذ */
 function applyPermissionsUI() {
-  document.querySelectorAll('[class*="perm-"]').forEach(el => {
-    const classes = el.className.split(' ');
-    let allowed = true;
-    classes.forEach(c => { if (c.startsWith('perm-')) { const perm = c.replace('perm-', ''); if (PERMISSIONS[perm] && !hasPerm(perm)) allowed = false; } });
-    el.style.display = allowed ? '' : 'none';
-  });
-  rebuildNav(); rebuildSettingsTabs(); applyFeatureUI();
+  try {
+    document.querySelectorAll('[class*="perm-"]').forEach(el => {
+      const classes = el.className.split(' ');
+      let allowed = true;
+      classes.forEach(c => {
+        if (c.startsWith('perm-')) {
+          const perm = c.replace('perm-', '');
+          if (PERMISSIONS[perm] && !hasPerm(perm)) allowed = false;
+        }
+      });
+      el.style.display = allowed ? '' : 'none';
+    });
+  } catch (e) { console.warn('perm UI:', e); }
+  try { rebuildNav(); } catch (e) { console.warn('nav:', e); }
+  try { rebuildSettingsTabs(); } catch (e) { console.warn('tabs:', e); }
+  try { applyFeatureUI(); } catch (e) { console.warn('features:', e); }
 }
 
 function rebuildNav() {
@@ -2051,7 +2118,6 @@ function addDeliveryNotification(title, message, type = 'info', orderId = null, 
   if (cache.notifications.length > 200) cache.notifications = cache.notifications.slice(0, 200);
   renderNotifications();
   scheduleNotificationsSave();
-  scheduleInstantSync();
 }
 function addTaskNotification(title, message, taskId = null, taskTitle = null) {
   const u = currentUser?.username;
@@ -2061,7 +2127,6 @@ function addTaskNotification(title, message, taskId = null, taskTitle = null) {
   if (cache.notifications.length > 200) cache.notifications = cache.notifications.slice(0, 200);
   renderNotifications();
   scheduleNotificationsSave();
-  scheduleInstantSync();
 }
 function getVisibleNotifications() {
   const u = currentUser?.username; if (!u) return [];
@@ -2447,6 +2512,8 @@ async function writeMeta(extra = {}) {
     else throw e;
   }
 }
+
+/* ✅ persistKeys بدون scheduleInstantSync — تجنب Race Condition */
 async function persistKeys(keys) {
   setSyncing(true);
   try {
@@ -2457,7 +2524,15 @@ async function persistKeys(keys) {
       await Promise.all(Array.from(filesToWrite).map(async f => {
         let data;
         if (f === 'settings') {
-          data = { users: cache.users || [], drivers: cache.drivers || [], branches: cache.branches || [], customFields: cache.customFields || [], templates: templates || {}, whatsappTemplates: whatsappTemplates || {}, invoiceSettings: invoiceSettings || {} };
+          data = {
+            users: cache.users || [],
+            drivers: cache.drivers || [],
+            branches: cache.branches || [],
+            customFields: cache.customFields || [],
+            templates: templates || {},
+            whatsappTemplates: whatsappTemplates || {},
+            invoiceSettings: invoiceSettings || {}
+          };
         } else if (f === 'meta') {
           data = localMeta || { lastUpdate: new Date().toISOString(), version: 10, appVersion: APP_VERSION, featureFlags, invoiceSettings };
         } else { data = cache[f] || []; }
@@ -2466,19 +2541,15 @@ async function persistKeys(keys) {
     }
     if (activityRequested) scheduleActivitySave();
     broadcastChange();
-    scheduleInstantSync();
-    /* ✅ تحديث فوري للواجهة الحالية */
+    /* ✅ لا نُشغّل syncPull فوراً بعد الحفظ */
+    /* scheduleInstantSync(); ← معطّل */
     renderActive();
   } finally { setSyncing(false); }
 }
+
 function scheduleInstantSync() {
-  if (_instantSyncTimer) clearTimeout(_instantSyncTimer);
-  _instantSyncTimer = setTimeout(() => {
-    _instantSyncTimer = null;
-    if (!currentUser) return;
-    lastSyncTime = 0;
-    syncPull(true).catch(() => {});
-  }, INSTANT_SYNC_DELAY);
+  /* ✅ معطّلة — كانت تسبب Race Condition */
+  /* لم نعد نستدعيها بعد الحفظ */
 }
 function scheduleSync() {
   if (_debounceSyncTimer) clearTimeout(_debounceSyncTimer);
@@ -2499,7 +2570,7 @@ async function flushActivitySave() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SYNC
+   SYNC — مع حماية Race Condition
    ══════════════════════════════════════════════════════════════ */
 async function syncPull(force = false) {
   if (syncing || !currentUser) return;
@@ -2512,9 +2583,22 @@ async function syncPull(force = false) {
     const treeShas = await Storage.getTreeShas();
     if (treeShas) {
       const fileKeys = Object.keys(DATA_FILES);
-      const changedFiles = fileKeys.filter(f => { const remoteSha = treeShas[f]; return remoteSha && remoteSha !== Storage.SHAs[f]; });
+      /* ✅ تجاهل SHA المتطابق أو القديم أو حديث الحفظ */
+      const changedFiles = fileKeys.filter(f => {
+        const remoteSha = treeShas[f];
+        if (!remoteSha) return false;
+        if (Storage.isStaleSha(f, remoteSha)) return false;
+        if (Storage.isRecentlySaved(f)) return false;
+        return true;
+      });
       const activityRemote = Object.keys(treeShas).filter(k => k.startsWith('activity/'));
-      const changedActivity = activityRemote.filter(k => treeShas[k] !== Storage.SHAs[k]);
+      const changedActivity = activityRemote.filter(k => {
+        const remoteSha = treeShas[k];
+        if (Storage.isStaleSha(k, remoteSha)) return false;
+        if (Storage.isRecentlySaved(k)) return false;
+        return true;
+      });
+
       if (changedFiles.length) {
         for (const f of changedFiles) {
           try {
@@ -2530,7 +2614,9 @@ async function syncPull(force = false) {
       if (didChange) postProcessData();
     } else {
       const meta = await readMeta();
-      if (!localMeta || meta.lastUpdate !== localMeta.lastUpdate) { localMeta = meta; await readAll(); await loadActivity(); didChange = true; }
+      if (!localMeta || meta.lastUpdate !== localMeta.lastUpdate) {
+        localMeta = meta; await readAll(); await loadActivity(); didChange = true;
+      }
     }
     if (didChange) {
       const me = cache.users.find(u => u.username === currentUser.username);
@@ -2544,19 +2630,22 @@ async function syncPull(force = false) {
   } catch (e) { setOnline(true); }
   finally { syncing = false; }
 }
+
 function renderActive() {
-  /* لا نُحدّث الواجهة إذا كان هناك نافذة مفتوحة (حتى لا يفقد المستخدم ما يكتبه) */
+  /* لا نُحدّث الواجهة إذا كان هناك نافذة مفتوحة */
   if (document.querySelector('.modal-bg.active')) return;
   const a = document.querySelector('.page.active')?.id?.replace('page-', '');
-  if (a === 'dashboard') renderDashboard();
-  if (a === 'entry') renderEntry();
-  if (a === 'groups') renderGroups();
-  if (a === 'ready') renderReady();
-  if (a === 'transferred') renderTransferred();
-  if (a === 'log') renderLog();
-  if (a === 'customers') renderCustomers();
-  if (a === 'tasks') renderTasks();
-  if (a === 'settings') renderSettings();
+  try {
+    if (a === 'dashboard') renderDashboard();
+    if (a === 'entry') renderEntry();
+    if (a === 'groups') renderGroups();
+    if (a === 'ready') renderReady();
+    if (a === 'transferred') renderTransferred();
+    if (a === 'log') renderLog();
+    if (a === 'customers') renderCustomers();
+    if (a === 'tasks') renderTasks();
+    if (a === 'settings') renderSettings();
+  } catch (e) { console.warn('renderActive:', e); }
 }
 function startPolling() {
   stopPolling();
@@ -2573,7 +2662,7 @@ function setOnline(ok) {
 }
 function setSyncing(on) {
   const dot = document.getElementById('connDot');
-  if (dot) dot.className = 'status-dot online'; /* ✅ أخضر دائم */
+  if (dot) dot.className = 'status-dot online';
   const ind = document.getElementById('syncIndicator');
   if (ind) {
     if (on) {
@@ -2632,19 +2721,19 @@ function getEntryFilteredData() {
 window.updateEntryFilter = function(field, value) { pageFilters.entry[field] = value; renderEntry(); };
 window.resetEntryFilters = function() {
   pageFilters.entry = { search:'', branch:'', status:'', receiptMethod:'' };
-  document.getElementById('entrySearch').value = '';
-  document.getElementById('entryBranchFilter').value = '';
-  document.getElementById('entryStatusFilter').value = '';
-  document.getElementById('entryMethodFilter').value = '';
+  const eS = document.getElementById('entrySearch'); if (eS) eS.value = '';
+  const eB = document.getElementById('entryBranchFilter'); if (eB) eB.value = '';
+  const eSt = document.getElementById('entryStatusFilter'); if (eSt) eSt.value = '';
+  const eM = document.getElementById('entryMethodFilter'); if (eM) eM.value = '';
   renderEntry();
 };
 function renderEntry() {
   const data = getEntryFilteredData();
   const body = document.getElementById('entryBody');
+  if (!body) return;
   if (!data.length) { body.innerHTML = emptyState('list', 'لا توجد طلبات', 'ابدأ بإضافة طلب جديد أو عدّل الفلاتر', 13); return; }
   const canEdit = hasPerm('editOrder'), canDelete = hasPerm('deleteOrder'), canTrans = hasPerm('transferSingle'), canChangeStatus = hasPerm('changeOrderStatus');
   body.innerHTML = data.map((o, i) => {
-    const cls = o.status === ORDER_STATUS.READY ? 'status-ready' : 'status-progress';
     const sel = selectedOrderId === o.id ? ' selected' : '';
     const group = getOrderGroup(o.id);
     const isLocked = !!group;
@@ -2707,7 +2796,7 @@ function renderGroups() {
   const allGroups = cache.groups || [];
   const activeGroups = allGroups.filter(g => g.status !== 'مؤرشفة');
   const archivedGroups = allGroups.filter(g => g.status === 'مؤرشفة');
-  document.getElementById('groupsCount').textContent = `نشطة: ${activeGroups.length} - مؤرشفة: ${archivedGroups.length}`;
+  const gc = document.getElementById('groupsCount'); if (gc) gc.textContent = `نشطة: ${activeGroups.length} - مؤرشفة: ${archivedGroups.length}`;
   if (!allGroups.length) { container.innerHTML = `<div class="empty-state"><div class="icon">${ico('layers', 26)}</div><div class="title">لا توجد مجموعات</div><div class="desc">ابدأ بإنشاء مجموعة عمل جديدة</div></div>`; return; }
   const renderGroupCard = (g, isArchived) => {
     const orders = getGroupOrders(g.id);
@@ -2877,9 +2966,9 @@ function getReadyFilteredData() {
 window.updateReadyFilter = function(field, value) { pageFilters.ready[field] = value; renderReady(); };
 window.resetReadyFilters = function() {
   pageFilters.ready = { search:'', branch:'', receiptMethod:'' };
-  document.getElementById('readySearch').value = '';
-  document.getElementById('readyBranchFilter').value = '';
-  document.getElementById('readyMethodFilter').value = '';
+  const rS = document.getElementById('readySearch'); if (rS) rS.value = '';
+  const rB = document.getElementById('readyBranchFilter'); if (rB) rB.value = '';
+  const rM = document.getElementById('readyMethodFilter'); if (rM) rM.value = '';
   renderReady();
 };
 function updateReadyHeaderUI() {
@@ -2909,7 +2998,7 @@ function updateReadySelectionInfo() {
 }
 function renderReady() {
   const data = getReadyFilteredData();
-  const body = document.getElementById('readyBody');
+  const body = document.getElementById('readyBody'); if (!body) return;
   if (!data.length) { body.innerHTML = emptyState('box', 'لا توجد طلبات جاهزة', 'قم بتحويل الطلبات من الإدخال', 14); updateReadyHeaderUI(); updateReadySelectionInfo(); return; }
   const canSelect = hasPerm('selectReadyOrders');
   const canReturn = hasPerm('returnSingle');
@@ -2982,16 +3071,17 @@ function getTransferredFilteredData() {
 window.updateTransferredFilter = function(field, value) { pageFilters.transferred[field] = value; renderTransferred(); };
 window.resetTransferredFilters = function() {
   pageFilters.transferred = { search:'', branch:'', receiptMethod:'' };
-  document.getElementById('transferredSearch').value = '';
-  document.getElementById('transferredBranchFilter').value = '';
-  document.getElementById('transferredMethodFilter').value = '';
+  const tS = document.getElementById('transferredSearch'); if (tS) tS.value = '';
+  const tB = document.getElementById('transferredBranchFilter'); if (tB) tB.value = '';
+  const tM = document.getElementById('transferredMethodFilter'); if (tM) tM.value = '';
   renderTransferred();
 };
 function renderTransferred() {
   const data = getTransferredFilteredData();
   const total = filterOrdersByPermission(cache.transferred).length;
-  document.getElementById('transferredCount').textContent = `الإجمالي: ${data.length} من ${total}`;
-  const body = document.getElementById('transferredBody');
+  const tcEl = document.getElementById('transferredCount');
+  if (tcEl) tcEl.textContent = `الإجمالي: ${data.length} من ${total}`;
+  const body = document.getElementById('transferredBody'); if (!body) return;
   if (!data.length) { body.innerHTML = emptyState('transfer', 'لا توجد طلبات منقولة', 'الطلبات المرحَّلة من "الجاهزة" أو من المجموعات تظهر هنا', 15); return; }
   const canReceive = hasPerm('editReceiptStatus');
   const canSendWA = hasPerm('sendWhatsApp');
@@ -3049,12 +3139,7 @@ function getLogFilteredData() {
 window.updateLogFilter = function(field, value) { pageFilters.log[field] = value; renderLog(); };
 window.resetLogFilters = function() {
   pageFilters.log = { search:'', branch:'', receipt:'', receiptMethod:'', from:'', to:'' };
-  document.getElementById('logSearch').value = '';
-  document.getElementById('logBranchFilter').value = '';
-  document.getElementById('logReceiptFilter').value = '';
-  document.getElementById('logMethodFilter').value = '';
-  document.getElementById('logFromDate').value = '';
-  document.getElementById('logToDate').value = '';
+  ['logSearch','logBranchFilter','logReceiptFilter','logMethodFilter','logFromDate','logToDate'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   renderLog();
 };
 function receiptStatusCellLog(o) {
@@ -3068,10 +3153,10 @@ function receiptStatusCellLog(o) {
 function renderLog() {
   const data = getLogFilteredData();
   const total = filterOrdersByPermission(cache.log).length;
-  document.getElementById('logCount').textContent = `الإجمالي: ${total}`;
+  const lc = document.getElementById('logCount'); if (lc) lc.textContent = `الإجمالي: ${total}`;
   const fc = document.getElementById('logFilteredCount');
   if (fc) fc.textContent = `المُفلتر: ${data.length}`;
-  const body = document.getElementById('logBody');
+  const body = document.getElementById('logBody'); if (!body) return;
   if (!data.length) { body.innerHTML = emptyState('archive', 'لا توجد نتائج', cache.log.length ? 'جرّب تعديل الفلاتر' : 'لم يتم ترحيل بعد', 15); return; }
   const canSendWA = hasPerm('sendWhatsApp');
   body.innerHTML = data.map((o, i) => {
@@ -3099,9 +3184,9 @@ window.updateCustomersFilter = function(field, value) { pageFilters.customers[fi
 function renderCustomers() {
   const q = pageFilters.customers.search;
   const data = q ? searchCustomersList(cache.customers, q) : cache.customers;
-  document.getElementById('custCount').textContent = `الإجمالي: ${cache.customers.length}`;
+  const cc = document.getElementById('custCount'); if (cc) cc.textContent = `الإجمالي: ${cache.customers.length}`;
   const canManage = hasPerm('manageCustomers');
-  const body = document.getElementById('custBody');
+  const body = document.getElementById('custBody'); if (!body) return;
   if (!data.length) { body.innerHTML = q ? emptyState('search', 'لا نتائج', 'جرّب كلمات أخرى', 6) : emptyState('users', 'لا يوجد عملاء', 'ابدأ بإضافة عميل جديد', 6); return; }
   body.innerHTML = data.map((c, i) => `<tr>
     <td>${i+1}</td><td><b>${esc(c.code)}</b></td><td>${esc(c.name)}</td><td>${esc(c.location)}</td><td>${esc(c.phone)}</td>
@@ -3120,7 +3205,7 @@ function renderTasks() {
   if (f.status) tasks = tasks.filter(t => t.status === f.status);
   if (f.priority) tasks = tasks.filter(t => t.priority === f.priority);
   if (f.search) tasks = tasks.filter(t => smartSearch(`${t.title} ${t.description || ''} ${t.assignee || ''}`, f.search));
-  document.getElementById('tasksCount').textContent = `الإجمالي: ${tasks.length} من ${cache.tasks.length}`;
+  const tc = document.getElementById('tasksCount'); if (tc) tc.textContent = `الإجمالي: ${tasks.length} من ${cache.tasks.length}`;
   if (!tasks.length) { container.innerHTML = `<div class="empty-state"><div class="icon">${ico('check', 26)}</div><div class="title">لا توجد مهام</div><div class="desc">ابدأ بإضافة مهمة جديدة</div></div>`; return; }
   tasks.sort((a, b) => {
     const order = { 'عالية': 0, 'عادية': 1, 'منخفضة': 2 };
@@ -3717,7 +3802,8 @@ function renderStats() {
   const diff = (curr, prev) => { if (prev === 0 && curr === 0) return { dir:'flat', pct:0 }; if (prev === 0) return { dir:'up', pct:100 }; const pct = Math.round(((curr - prev) / prev) * 100); return { dir: pct > 0 ? 'up' : pct < 0 ? 'down' : 'flat', pct: Math.abs(pct) }; };
   const trendIcon = (dir) => dir === 'up' ? ico('trendUp', 10) : dir === 'down' ? ico('trendDown', 10) : '';
   const badgeT = (t) => (t && t.dir !== 'flat') ? `<span class="trend ${t.dir}">${trendIcon(t.dir)}<span>${t.pct}%</span></span>` : '';
-  document.getElementById('statsOverview').innerHTML = `
+  const statsOverviewEl = document.getElementById('statsOverview'); if (!statsOverviewEl) return;
+  statsOverviewEl.innerHTML = `
     <div class="stat"><div class="stat-head"><div class="stat-icon">${ico('layers', 17)}</div>${badgeT(diff(total, prevStats.total))}</div><div class="num">${total.toLocaleString()}</div><div class="lbl">إجمالي الطلبات</div><div class="sub">حسب الفترة</div></div>
     <div class="stat orange"><div class="stat-head"><div class="stat-icon">${ico('list', 17)}</div></div><div class="num">${active.toLocaleString()}</div><div class="lbl">قيد الإدخال</div><div class="sub">${progressActive} قيد - ${readyActive} جاهز</div></div>
     <div class="stat green"><div class="stat-head"><div class="stat-icon">${ico('box', 17)}</div></div><div class="num">${ready.toLocaleString()}</div><div class="lbl">جاهزة للنقل</div><div class="sub">${readyRate}% من النشطة</div></div>
@@ -3725,7 +3811,8 @@ function renderStats() {
     <div class="stat purple"><div class="stat-head"><div class="stat-icon">${ico('archive', 17)}</div></div><div class="num">${archived.toLocaleString()}</div><div class="lbl">في السجل</div><div class="sub">مؤكدة الاستلام</div></div>
     <div class="stat green"><div class="stat-head"><div class="stat-icon">${ico('inbox', 17)}</div></div><div class="num">${receivedRate}%</div><div class="lbl">نسبة الاستلام</div><div class="progress-bar"><div class="fill green" style="width:${receivedRate}%"></div></div></div>
     <div class="stat red"><div class="stat-head"><div class="stat-icon">${ico('clock', 17)}</div></div><div class="num">${notReceivedRate}%</div><div class="lbl">قيد الانتظار</div><div class="progress-bar"><div class="fill red" style="width:${notReceivedRate}%"></div></div></div>`;
-  document.getElementById('timeStatsContainer').innerHTML = `
+  const timeStatsEl = document.getElementById('timeStatsContainer');
+  if (timeStatsEl) timeStatsEl.innerHTML = `
     <div class="time-stats">
       <div class="time-stat"><div class="tv">${todayCount}</div><div class="tl">اليوم</div></div>
       <div class="time-stat"><div class="tv">${weekCount}</div><div class="tl">آخر 7 أيام</div></div>
@@ -3752,7 +3839,8 @@ function renderStats() {
   renderTopList('topBranches', topBranches, topBranches[0]?.[1] || 1);
   renderTopList('topDrivers', topDrivers, topDrivers[0]?.[1] || 1);
   renderTopList('topUsers', topUsers, topUsers[0]?.[1] || 1);
-  document.getElementById('performanceMetrics').innerHTML = `
+  const perfEl = document.getElementById('performanceMetrics');
+  if (perfEl) perfEl.innerHTML = `
     <div class="metric-box"><div class="mv">${total}</div><div class="ml">إجمالي</div></div>
     <div class="metric-box"><div class="mv">${todayCount}</div><div class="ml">اليوم</div></div>
     <div class="metric-box"><div class="mv green">${received}</div><div class="ml">مستلمة</div></div>
@@ -5024,15 +5112,17 @@ window.go = function (page) {
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + page)?.classList.add('active');
   document.querySelector(`nav button[data-page="${page}"]`)?.classList.add('active');
-  if (page === 'dashboard') renderDashboard();
-  if (page === 'entry') { populateAllSelects(); loadDriversIntoSelects(); renderEntry(); }
-  if (page === 'groups') { populateAllSelects(); renderGroups(); }
-  if (page === 'ready') { populateAllSelects(); renderReady(); }
-  if (page === 'transferred') { populateAllSelects(); renderTransferred(); }
-  if (page === 'log') { populateAllSelects(); renderLog(); }
-  if (page === 'customers') renderCustomers();
-  if (page === 'tasks') { populateAllSelects(); renderTasks(); }
-  if (page === 'settings') { rebuildSettingsTabs(); renderSettings(); updateCurrentKeyInfo(); renderWhatsAppTemplates(); }
+  try {
+    if (page === 'dashboard') renderDashboard();
+    if (page === 'entry') { populateAllSelects(); loadDriversIntoSelects(); renderEntry(); }
+    if (page === 'groups') { populateAllSelects(); renderGroups(); }
+    if (page === 'ready') { populateAllSelects(); renderReady(); }
+    if (page === 'transferred') { populateAllSelects(); renderTransferred(); }
+    if (page === 'log') { populateAllSelects(); renderLog(); }
+    if (page === 'customers') renderCustomers();
+    if (page === 'tasks') { populateAllSelects(); renderTasks(); }
+    if (page === 'settings') { rebuildSettingsTabs(); renderSettings(); updateCurrentKeyInfo(); renderWhatsAppTemplates(); }
+  } catch (e) { console.warn('go:', e); }
 };
 window.switchTab = function (evt, tab) {
   const tabPerm = { token:'tabToken', activity:'tabActivity', analytics:'tabAnalytics', invoice:'tabInvoice', branches:'tabBranches', drivers:'tabDrivers', users:'tabUsers', templates:'tabTemplates', whatsapp:'tabWhatsApp', customfields:'tabCustomFields', backup:'tabBackup' };
@@ -5128,13 +5218,20 @@ function loadLastUser() {
   const last = localStorage.getItem('oms_lastUser');
   if (last) { document.getElementById('loginUser').value = last; setTimeout(() => document.getElementById('loginPass').focus(), 150); }
 }
+
+/* ✅ startApp محمية بالكامل — إصلاح مشكلة الرئيسية الفارغة */
 function startApp() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   const rl = roleLabel(currentUser.role);
   document.getElementById('currentUserName').innerHTML = `${esc(currentUser.username)} <span style="opacity:.75;font-size:11px;margin-right:4px;">${rl.label}</span>`;
-  buildUI(); applyPermissionsUI(); populateAllSelects(); loadDriversIntoSelects();
-  renderRateLimitWidget();
+
+  try { buildUI(); } catch (e) { console.error('buildUI:', e); }
+  try { applyPermissionsUI(); } catch (e) { console.error('perms:', e); }
+  try { populateAllSelects(); } catch (e) { console.error('selects:', e); }
+  try { loadDriversIntoSelects(); } catch (e) { console.error('drivers:', e); }
+  try { renderRateLimitWidget(); } catch (e) { console.error('rate:', e); }
+
   const firstAvailable = ['dashboard','entry','groups','ready','transferred','log','tasks','customers','settings'].find(p => {
     const pp = { dashboard:'accessDashboard', entry:'accessEntry', groups:'accessGroups', ready:'accessReady', transferred:'accessTransferred', log:'accessLog', customers:'accessCustomers', tasks:'accessTasks', settings:'accessSettings' };
     if (!hasPerm(pp[p])) return false;
@@ -5142,12 +5239,17 @@ function startApp() {
     if (p === 'tasks' && !isFeatureEnabled('featureTasks')) return false;
     return true;
   }) || 'dashboard';
-  go(firstAvailable);
+
+  try { go(firstAvailable); } catch (e) { console.error('go:', e); }
+
+  /* ✅ ضمان مزدوج: إعادة الرسم بعد بدء المزامنة */
+  setTimeout(() => { try { renderActive(); } catch (_) {} }, 500);
+
   startPolling();
   renderNotifications();
   attachVisibilityHandler(); attachOnlineHandlers();
   initBroadcast();
-  applyFeatureUI();
+  try { applyFeatureUI(); } catch (_) {}
   toast(`أهلاً ${currentUser.username}`, 'success');
 }
 let _visHandlerAttached = false;

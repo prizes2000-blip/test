@@ -1,12 +1,19 @@
 {
-  "lastUpdate": "2026-10-09T12:01:39.342Z",
-  "version": 5,
+  "lastUpdate": "2026-10-13T09:22:43.602Z",
+  "version": 8,
+  "appVersion": "3.8.0",
   "featureFlags": {
-    "featureUndoRedo": true,
     "featureFuzzySearch": true,
     "featureCustomFields": true,
     "featureWorkGroups": true,
-    "featureTasks": true
+    "featureTasks": true,
+    "featureUndoRedo": true
+  },
+  "invoiceSettings": {
+    "prefix": "",
+    "nextNumber": 501,
+    "digits": 6,
+    "autoIncrement": true
   },
   "analyticsSettings": {
     "anomalyWindowDays": 7,

@@ -110,10 +110,6 @@ kbd{background:rgba(15,23,42,.08);color:var(--text-secondary);padding:2px 6px;bo
 .rate-widget.warn .rate-fill{background:linear-gradient(90deg,#ffd66b,#f5a318)}
 .rate-widget.danger .rate-fill{background:linear-gradient(90deg,#f9717f,#ef3d52);animation:pulseRed 1.5s infinite}
 .rate-widget .rate-text{font-family:'SF Mono','Consolas',monospace;letter-spacing:.3px;white-space:nowrap;font-size:10px;opacity:.95;direction:ltr}
-#saveQueueIndicator{display:none;align-items:center;gap:6px;padding:5px 12px;border-radius:14px;background:linear-gradient(135deg,rgba(255,193,7,.95),rgba(255,152,0,.95));border:1px solid rgba(255,193,7,.6);font-size:11px;font-weight:700;color:#3d2800;box-shadow:0 2px 8px rgba(255,152,0,.4)}
-#saveQueueIndicator.show{display:inline-flex}
-#saveQueueIndicator .ico{animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 #syncIndicator{display:none;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;background:rgba(12,185,123,.25);border:1px solid rgba(12,185,123,.4);font-size:10.5px;font-weight:700;color:#fff}
 #syncIndicator.show{display:inline-flex}
 .col-toggles{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
@@ -140,6 +136,7 @@ kbd{background:rgba(15,23,42,.08);color:var(--text-secondary);padding:2px 6px;bo
 #loadingOverlay{display:none;position:fixed;inset:0;background:rgba(7,11,21,.85);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:22px;color:#fff;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 #loadingOverlay.show{display:flex}
 .spinner{width:62px;height:62px;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:15px;font-weight:500;letter-spacing:.3px;text-align:center;max-width:80vw}
 .login-loading-progress{width:220px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
 .login-loading-progress .bar{height:100%;background:linear-gradient(90deg,var(--brand-300),var(--brand-500));width:0%;transition:width .3s ease;border-radius:2px}
@@ -185,10 +182,6 @@ header h1{font-size:16px;font-weight:600;letter-spacing:.2px}
 .user-info{display:flex;align-items:center;gap:8px;font-size:13px}
 .user-chip{display:inline-flex!important;align-items:center;gap:8px;background:rgba(255,255,255,.16);padding:6px 13px;border-radius:20px;font-size:12.5px;border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .user-chip .ico{width:14px;height:14px;opacity:.9}
-.session-timer{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);padding:5px 10px;border-radius:14px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,.1)}
-.session-timer.warning{background:rgba(245,163,24,.35);color:#fff7e0;border-color:rgba(245,163,24,.5)}
-.session-timer.danger{background:rgba(239,61,82,.45);animation:pulseRed 1s infinite;border-color:rgba(239,61,82,.6)}
-@keyframes pulseRed{0%,100%{opacity:1}50%{opacity:.7}}
 .status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--slate-400);transition:var(--transition)}
 .status-dot.online{background:#4be0a8;box-shadow:0 0 8px #4be0a8;animation:pulseGreen 2s infinite}
 .status-dot.sync{background:#93b4fe;animation:pulseBlue 1s infinite}
@@ -483,7 +476,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .activity-search-box input{border:none;background:transparent;padding:9px 0;box-shadow:none!important;width:100%}
 .activity-filters select{width:auto;padding:8px 12px;font-size:12.5px;min-width:140px}
 .activity-stats{display:flex;gap:18px;flex-wrap:wrap;padding:10px 14px;margin-bottom:12px;background:linear-gradient(135deg,var(--brand-50),rgba(104,144,250,.03));border-radius:var(--radius-md);font-size:12.5px;color:var(--text-muted);border:1px solid rgba(66,102,232,.2)}
-.activity-stats span{display:inline-flex;align-items:center;gap:5px}
 .activity-stats b{color:var(--brand-700);font-weight:700}
 .activity-pagination{margin-top:14px;padding:14px;background:var(--card-bg);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--card-border)}
 .activity-pagination-inner{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center}
@@ -498,7 +490,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .custom-field-row .cf-label{font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px}
 .custom-field-row .cf-value{font-size:13px;color:var(--text);font-weight:500}
 .custom-field-row .cf-actions{position:absolute;top:8px;left:8px;display:flex;gap:4px;opacity:.5}
-.custom-field-row:hover .cf-actions{opacity:1}
 .task-card{padding:14px;border-radius:var(--radius-md);background:var(--bg);border:1px solid var(--border);margin-bottom:8px;position:relative;border-right:3px solid var(--brand-500)}
 .task-card.completed{opacity:.9;background:linear-gradient(135deg,rgba(12,185,123,.06),rgba(12,185,123,.02));border-right-color:var(--success-500)}
 .task-card.high{border-right-color:var(--danger-500)}
@@ -521,7 +512,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 @media print {
     @page { size: A4 portrait; margin: 10mm; }
     html, body { width: 100%; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    header, nav, .toolbar, .no-print, .section-header, .filter-bar, .stats-filter-bar, .tabs, .draft-badge, .connection-banner, #loadingOverlay, .toast-container, .notif-panel, .activity-filters, .activity-pagination, .rate-widget, #saveQueueIndicator, #syncIndicator { display: none !important; }
+    header, nav, .toolbar, .no-print, .section-header, .filter-bar, .stats-filter-bar, .tabs, .draft-badge, .connection-banner, #loadingOverlay, .toast-container, .notif-panel, .activity-filters, .activity-pagination, .rate-widget, #syncIndicator { display: none !important; }
     main { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
     .table-wrap { width: 100% !important; box-shadow: none !important; border: none !important; border-radius: 0 !important; overflow: visible !important; }
     table { width: 100% !important; min-width: 0 !important; table-layout: fixed !important; border-collapse: collapse !important; font-size: 9px !important; }
@@ -656,16 +647,11 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
       <h1>نظام إدارة الطلبات v4.0</h1>
     </div>
     <div class="user-info">
-      <span id="saveQueueIndicator"></span>
       <span id="syncIndicator"></span>
       <div class="rate-widget" id="rateWidget" title="استهلاك الحصة">
         <span class="rate-ico" id="rateIcon"></span>
         <div class="rate-bar"><div class="rate-fill" id="rateFill"></div></div>
         <span class="rate-text" id="rateText">— / —</span>
-      </div>
-      <div class="session-timer" id="sessionTimer">
-        <span id="sessionTimerIcon"></span>
-        <span id="sessionTimerText">—</span>
       </div>
       <div class="user-chip">
         <span id="connDot" class="status-dot"></span>
@@ -749,7 +735,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
       <div class="table-wrap"><table><thead><tr id="entryHead"></tr></thead><tbody id="entryBody"></tbody></table></div>
     </section>
 
-    <!-- مجموعات العمل (قبل الطلبات التي تم نقلها) -->
+    <!-- مجموعات العمل -->
     <section id="page-groups" class="page" data-feature="featureWorkGroups">
       <div class="section-header"><h2 id="groupsTitle"></h2><span id="groupsCount" style="color:var(--text-muted);font-size:12.5px;font-weight:600;"></span></div>
       <div class="toolbar no-print" id="groupsToolbar"></div>
@@ -830,13 +816,12 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
   </div>
   <label>حالة الطلب</label><select id="orderStatus"><option>قيد التجهيز</option><option>جاهز</option></select>
   <label>تاريخ الاعتماد</label><input id="orderDate" readonly placeholder="تلقائي">
-  <label>طريقة الاستلام</label><select id="orderReceiptMethod">
+  <label>طريقة الاستلام</label><select id="orderReceiptMethod" onchange="onReceiptMethodChange()">
     <option value="المحل">المحل</option>
     <option value="موصل">موصل</option>
     <option value="مكتب">مكتب</option>
   </select>
   <label>الموصل</label><select id="orderDriver" onchange="onDriverSelect()"></select>
-  <div id="driverSuggestionBox" style="display:none;"></div>
   <label>رقم الموصل</label><input id="orderDriverPhone" placeholder="تلقائي">
   <div id="customFieldsInOrder"></div>
   <label>ملاحظات</label><textarea id="orderNotes" rows="4" placeholder="اكتب أي ملاحظات هنا..."></textarea>
@@ -881,6 +866,27 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
   <div class="modal-actions">
     <button class="btn btn-ghost" onclick="closeModal('userModal')">إلغاء</button>
     <button class="btn btn-primary" onclick="saveUser()">حفظ المستخدم</button>
+  </div>
+</div></div>
+
+<!-- نموذج تعديل الموصل -->
+<div id="driverModal" class="modal-bg"><div class="modal">
+  <h3 id="driverModalTitle"></h3>
+  <input type="hidden" id="editDriverId">
+  <label class="field-required">اسم الموصل</label>
+  <input id="editDriverName" autocomplete="off">
+  <div class="field-error-msg" id="err-editDriverName"></div>
+  <label>رقم الهاتف</label>
+  <input id="editDriverPhone" autocomplete="off" inputmode="tel" style="direction:ltr;text-align:left;">
+  <label>طرق الاستلام المتاحة</label>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;padding:12px;background:var(--bg);border-radius:var(--radius-md);border:1px solid var(--border);">
+    <label class="template-checkbox-label"><input type="checkbox" id="editDriverMethodStore"><span>المحل</span></label>
+    <label class="template-checkbox-label"><input type="checkbox" id="editDriverMethodDriver"><span>موصل</span></label>
+    <label class="template-checkbox-label"><input type="checkbox" id="editDriverMethodOffice"><span>مكتب</span></label>
+  </div>
+  <div class="modal-actions">
+    <button class="btn btn-ghost" onclick="closeModal('driverModal')">إلغاء</button>
+    <button class="btn btn-primary" onclick="saveDriverEdit()">حفظ التعديلات</button>
   </div>
 </div></div>
 
@@ -1111,13 +1117,18 @@ const GITHUB_OWNER = 'prizes2000-blip';
 const GITHUB_REPO  = 'test';
 const APP_ID       = 'test';
 const APP_BRANCH   = 'main';
-const APP_VERSION  = '3.9.0';
+const APP_VERSION  = '4.0.0';
 
-const SYNC_INTERVAL = 20000;
-const SYNC_THROTTLE_MS = 2000;
+/* ✅ مزامنة ذكية لتقليل استهلاك التوكن */
+const SYNC_INTERVAL = 45000;
+const SYNC_INTERVAL_HIDDEN = 180000;
+const SYNC_THROTTLE_MS = 3000;
+const INSTANT_SYNC_DELAY = 300;
+const DEBOUNCE_SYNC_MS = 800;
+
 const SAVE_COOLDOWN = 1000;
-const SESSION_TIMEOUT = 60 * 60 * 1000;   // ساعة
-const SESSION_WARNING = 5 * 60 * 1000;     // 5 دقائق
+const SUBMIT_LOCK_MS = 1500;
+
 const DRAFT_KEY = 'oms_draft_order';
 const THEME_KEY = 'oms_theme';
 const ACCESS_KEY = 'oms_access_key';
@@ -1125,14 +1136,12 @@ const KEY_HIDDEN_FLAG = 'oms_key_hidden';
 const ACTIVITY_PER_PAGE = 30;
 const NOTIF_SAVE_DELAY = 800;
 const ACTIVITY_SAVE_DELAY = 2000;
-const INSTANT_SYNC_DELAY = 400;
-const DEBOUNCE_SYNC_MS = 1000;
 
 let _broadcastChannel = null;
 function initBroadcast() {
   if (typeof BroadcastChannel === 'undefined') return;
   try {
-    _broadcastChannel = new BroadcastChannel('oms_sync_v39');
+    _broadcastChannel = new BroadcastChannel('oms_sync_v40');
     _broadcastChannel.onmessage = (e) => {
       if (!currentUser) return;
       if (e.data && e.data.type === 'data-changed') {
@@ -1147,11 +1156,11 @@ function broadcastChange() {
 }
 
 const RATE_LEVELS = [
-  { min: 3000, interval: 20000, label: 'مرتفعة' },
-  { min: 1500, interval: 40000, label: 'جيدة' },
-  { min: 800,  interval: 60000, label: 'متوسطة' },
-  { min: 300,  interval: 120000, label: 'منخفضة' },
-  { min: 100,  interval: 240000, label: 'منخفضة جداً' },
+  { min: 3000, interval: 45000, label: 'مرتفعة' },
+  { min: 1500, interval: 60000, label: 'جيدة' },
+  { min: 800,  interval: 120000, label: 'متوسطة' },
+  { min: 300,  interval: 240000, label: 'منخفضة' },
+  { min: 100,  interval: 420000, label: 'منخفضة جداً' },
   { min: 0,    interval: 0,      label: 'حرجة - موقوفة' }
 ];
 
@@ -1372,12 +1381,10 @@ let invoiceSettings = JSON.parse(JSON.stringify(DEFAULT_INVOICE_SETTINGS));
 let localMeta = null;
 let pollTimer = null, syncing = false, selectedOrderId = null;
 let selectedReadyIds = new Set();
-let selectedGroupOrders = new Set();
 let zoomLevel = 1, tempPerms = {}, lastSaveTime = 0, saveInProgress = false;
 let rateLimitInfo = null;
-let prevStats = { orders:0, groups:0, ready:0, transferred:0, log:0, total:0 };
+let prevStats = { orders:0, ready:0, transferred:0, log:0, total:0 };
 let hasLegacyFiles = false;
-let sessionTimer = null, sessionWarningTimer = null, sessionExpireAt = 0;
 let activityCurrentPage = 1;
 let activityFilterUser = '', activityFilterType = '', activitySearchQuery = '';
 let currentSyncInterval = SYNC_INTERVAL;
@@ -1387,6 +1394,13 @@ let statsFilter = 'all', statsFromDate = '', statsToDate = '';
 let featureFlags = { featureFuzzySearch: true, featureCustomFields: true, featureWorkGroups: true, featureTasks: true };
 let _groupSelectedOrders = new Set();
 let _connectionErrorCount = 0;
+
+/* ✅ أقفال منع التكرار */
+let _orderSubmitLock = 0;
+let _customerSubmitLock = 0;
+let _driverSubmitLock = 0;
+let _taskSubmitLock = 0;
+let _groupSubmitLock = 0;
 
 let pageFilters = {
   entry: { search:'', branch:'', status:'', receiptMethod:'' },
@@ -1403,7 +1417,6 @@ const MSG = {
   readFail:'تعذر قراءة البيانات', parseFail:'تعذر معالجة البيانات', rateExceeded:'تم تجاوز الحد المسموح',
   noPermissions:'لا تملك الصلاحيات الكافية', keyInvalid:'المفتاح غير صالح', keyShort:'المفتاح قصير جداً، 20 حرفاً على الأقل',
   keyMissing:'يرجى إدخال المفتاح', keySuccess:'تم تحديث المفتاح بنجاح', storageIssues:'تعذر الوصول إلى البيانات',
-  sessionExpired:'انتهت الجلسة، يرجى تسجيل الدخول مجدداً', sessionWarning:'ستنتهي جلستك قريباً',
   unauthorized:'غير مصرح لك بتنفيذ هذا الإجراء', missingData:'يرجى تعبئة الحقول المطلوبة',
   invoiceDup:'رقم الفاتورة مستخدم مسبقاً', taskLocked:'لا يمكن تعديل أو حذف مهمة مكتملة',
   customerCodeDup:'رقم العميل مستخدم مسبقاً', customerPhoneDup:'رقم الهاتف مستخدم مسبقاً', customerNameDup:'اسم العميل مستخدم مسبقاً',
@@ -1466,10 +1479,6 @@ function generateNextInvoice() {
   const s = invoiceSettings;
   const n = String(s.nextNumber || 1).padStart(s.digits || 4, '0');
   return `${s.prefix || ''}${n}`;
-}
-function previewNextInvoice() {
-  const el = document.getElementById('nextInvoicePreview');
-  if (el) el.textContent = generateNextInvoice();
 }
 function getWaCount(orderId) {
   const list = cache.activity || [];
@@ -1619,8 +1628,7 @@ const SaveQueue = (() => {
     return next;
   }
   function drain() { return Promise.all(Array.from(queues.values()).map(p => p.catch(() => {}))); }
-  function getStats() { return { pending: queues.size }; }
-  return { enqueue, drain, getStats };
+  return { enqueue, drain };
 })();
 
 async function withRetry(fn, opts = {}) {
@@ -1654,7 +1662,7 @@ const InFlight = (() => {
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   STORAGE LAYER
+   STORAGE LAYER — مع دعم ETag لتقليل استهلاك التوكن
    ══════════════════════════════════════════════════════════════ */
 const Storage = (() => {
   const API_BASE = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
@@ -1669,7 +1677,7 @@ const Storage = (() => {
   }
   function isMetaPath(path) { return path === 'data/meta.json'; }
   async function _loadData(path, cacheKey) {
-    const url = `${API_BASE}/${path}?ref=${APP_BRANCH}&_=${Date.now()}`;
+    const url = `${API_BASE}/${path}?ref=${APP_BRANCH}`;
     let res;
     try { res = await fetch(url, { headers: headers(false, cacheKey) }); }
     catch { setOnline(false); _connectionErrorCount++; throw new Error(MSG.connFail); }
@@ -1738,9 +1746,10 @@ const Storage = (() => {
   async function getTreeShas() {
     if (treeDisabled) return null;
     try {
-      const res = await fetch(`${TREE_API}&_=${Date.now()}`, { headers: headers(false) });
+      const res = await fetch(TREE_API, { headers: headers(false, 'tree') });
       updateRateLimit(res.headers);
       if (res.ok) _connectionErrorCount = 0;
+      if (res.status === 304) return null;
       if (!res.ok) { if (res.status >= 400 && res.status < 500 && res.status !== 403) treeDisabled = true; return null; }
       const json = await res.json();
       const shas = {};
@@ -1990,7 +1999,6 @@ function applyPermissionsUI() {
   rebuildNav(); rebuildSettingsTabs(); applyFeatureUI();
 }
 
-/* ✅ ترتيب التنقل الجديد: الرئيسية → إدخال → مجموعات → جاهزة → تم نقلها → السجل → المهام → العملاء → الإعدادات */
 function rebuildNav() {
   const navBar = document.getElementById('navBar'); if (!navBar) return;
   const items = [
@@ -2287,63 +2295,6 @@ function updateThemeBtn() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SESSION TIMER — مُصلح
-   ══════════════════════════════════════════════════════════════ */
-function startSessionTimer() {
-  stopSessionTimer();
-  sessionExpireAt = Date.now() + SESSION_TIMEOUT;
-  updateSessionTimer();
-  sessionTimer = setInterval(updateSessionTimer, 1000);
-  sessionWarningTimer = setInterval(checkSessionWarning, 5000);
-}
-function stopSessionTimer() {
-  if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
-  if (sessionWarningTimer) { clearInterval(sessionWarningTimer); sessionWarningTimer = null; }
-}
-function resetSessionTimer() {
-  if (!currentUser) return;
-  sessionExpireAt = Date.now() + SESSION_TIMEOUT;
-}
-function updateSessionTimer() {
-  if (!currentUser) return;
-  const el = document.getElementById('sessionTimer'); const txt = document.getElementById('sessionTimerText');
-  if (!el || !txt) return;
-  const remaining = sessionExpireAt - Date.now();
-  if (remaining <= 0) {
-    txt.textContent = 'منتهية';
-    el.className = 'session-timer danger';
-    stopSessionTimer();
-    logout(true);
-    toast(MSG.sessionExpired, 'warning');
-    return;
-  }
-  const mins = Math.floor(remaining / 60000);
-  const secs = Math.floor((remaining % 60000) / 1000);
-  txt.textContent = `${mins}:${String(secs).padStart(2, '0')}`;
-  if (remaining < 2 * 60 * 1000) el.className = 'session-timer danger';
-  else if (remaining < SESSION_WARNING) el.className = 'session-timer warning';
-  else el.className = 'session-timer';
-}
-let _lastWarnShown = 0;
-function checkSessionWarning() {
-  if (!currentUser) return;
-  const remaining = sessionExpireAt - Date.now();
-  if (remaining <= 0) {
-    if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
-    logout(true); toast(MSG.sessionExpired, 'warning'); return;
-  }
-  const now = Date.now();
-  if (remaining <= SESSION_WARNING && remaining > SESSION_WARNING - 5000 && now - _lastWarnShown > 60000) {
-    _lastWarnShown = now;
-    toast('ستنتهي جلستك خلال 5 دقائق', 'warning');
-  }
-}
-/* إعادة تعيين جلسة عند أي نشاط */
-['mousemove','keydown','click','scroll','touchstart','focus'].forEach(evt => {
-  document.addEventListener(evt, () => { if (currentUser) resetSessionTimer(); }, { passive: true });
-});
-
-/* ══════════════════════════════════════════════════════════════
    APPLY / POST-PROCESS
    ══════════════════════════════════════════════════════════════ */
 function applyFileData(k, data, wasPlain) {
@@ -2380,9 +2331,15 @@ function applyFileData(k, data, wasPlain) {
   }
 }
 function postProcessData() {
+  /* ✅ الموصل مع طرق الاستلام */
   cache.drivers = (cache.drivers || []).map(d => {
-    if (typeof d === 'string') return { id: uid(), name: d, phone: '' };
-    return { id: d.id || uid(), name: d.name || '', phone: d.phone || '' };
+    if (typeof d === 'string') return { id: uid(), name: d, phone: '', methods: [...RECEIPT_METHODS] };
+    return {
+      id: d.id || uid(),
+      name: d.name || '',
+      phone: d.phone || '',
+      methods: Array.isArray(d.methods) && d.methods.length ? d.methods.filter(m => RECEIPT_METHODS.includes(m)) : [...RECEIPT_METHODS]
+    };
   }).filter(d => d.name);
   cache.branches = (cache.branches || []).map(b => {
     if (typeof b === 'string') return { id: uid(), name: b };
@@ -2488,15 +2445,15 @@ async function readAll(keysToRead = null) {
 async function readMeta() {
   try {
     const r = await Storage.loadData(DATA_FILES.meta, 'meta');
-    if (r.notModified) { const m = localMeta || { lastUpdate: '', version: 9 }; loadFeatureFlags(); return m; }
-    const data = r.data || { lastUpdate: '', version: 9 };
+    if (r.notModified) { const m = localMeta || { lastUpdate: '', version: 10 }; loadFeatureFlags(); return m; }
+    const data = r.data || { lastUpdate: '', version: 10 };
     if (data.featureFlags) featureFlags = { ...featureFlags, ...data.featureFlags };
     if (data.invoiceSettings) invoiceSettings = { ...invoiceSettings, ...data.invoiceSettings };
     return data;
-  } catch { return { lastUpdate: '', version: 9 }; }
+  } catch { return { lastUpdate: '', version: 10 }; }
 }
 async function writeMeta(extra = {}) {
-  const meta = { lastUpdate: new Date().toISOString(), version: 9, appVersion: APP_VERSION, featureFlags, invoiceSettings, ...extra };
+  const meta = { lastUpdate: new Date().toISOString(), version: 10, appVersion: APP_VERSION, featureFlags, invoiceSettings, ...extra };
   if (localMeta?.analyticsSettings && !extra.analyticsSettings) meta.analyticsSettings = localMeta.analyticsSettings;
   try { await Storage.saveData(DATA_FILES.meta, meta, 'meta'); localMeta = meta; }
   catch (e) {
@@ -2516,7 +2473,7 @@ async function persistKeys(keys) {
         if (f === 'settings') {
           data = { users: cache.users || [], drivers: cache.drivers || [], branches: cache.branches || [], customFields: cache.customFields || [], templates: templates || {}, whatsappTemplates: whatsappTemplates || {}, invoiceSettings: invoiceSettings || {} };
         } else if (f === 'meta') {
-          data = localMeta || { lastUpdate: new Date().toISOString(), version: 9, appVersion: APP_VERSION, featureFlags, invoiceSettings };
+          data = localMeta || { lastUpdate: new Date().toISOString(), version: 10, appVersion: APP_VERSION, featureFlags, invoiceSettings };
         } else { data = cache[f] || []; }
         await Storage.saveData(DATA_FILES[f], data, f);
       }));
@@ -2608,7 +2565,12 @@ function renderActive() {
   if (a === 'tasks') renderTasks();
   if (a === 'settings') renderSettings();
 }
-function startPolling() { stopPolling(); const interval = currentSyncInterval || SYNC_INTERVAL; if (interval <= 0) return; pollTimer = setInterval(() => syncPull(false), interval); }
+function startPolling() {
+  stopPolling();
+  const interval = document.hidden ? SYNC_INTERVAL_HIDDEN : (currentSyncInterval || SYNC_INTERVAL);
+  if (interval <= 0) return;
+  pollTimer = setInterval(() => syncPull(false), interval);
+}
 function stopPolling() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
 function setOnline(ok) {
   const dot = document.getElementById('connDot');
@@ -2623,48 +2585,6 @@ function setSyncing(on) {
   if (ind) ind.classList.toggle('show', on);
 }
 window.manualSync = async function () { toast('جاري المزامنة...', 'info'); localMeta = null; lastSyncTime = 0; await syncPull(true); };
-
-/* ══════════════════════════════════════════════════════════════
-   RECEIPT STATUS
-   ══════════════════════════════════════════════════════════════ */
-async function changeReceiptStatusWithTransfer(orderId, newStatus) {
-  const order = cache.transferred.find(x => x.id === orderId) || cache.log.find(x => x.id === orderId);
-  if (!order) { toast('الطلب غير موجود', 'error'); return false; }
-  const current = order.receiptStatus || RECEIPT_NOT_RECEIVED;
-  const isOwner = currentUser?.role === ROLE_OWNER;
-  const canRevert = hasPerm('revertReceiptStatus');
-  if (current === newStatus) return true;
-  if (current === RECEIPT_NOT_RECEIVED && newStatus === RECEIPT_RECEIVED) {
-    if (!isOwner && !hasPerm('editReceiptStatus')) { toast(MSG.unauthorized, 'error'); return false; }
-    const ok = await dialog.confirm(`هل تم استلام الطلب "${order.invoice}" للعميل "${order.customer}"؟`, { title: 'تأكيد الاستلام', okText: 'نعم، تم الاستلام', type: 'success', okClass: 'btn-success' });
-    if (!ok) return false;
-    const idx = cache.transferred.findIndex(x => x.id === orderId);
-    if (idx === -1) return false;
-    const movedOrder = { ...cache.transferred[idx], receiptStatus: RECEIPT_RECEIVED, receiptUpdatedAt: fmtDate(), receiptUpdatedBy: currentUser.username, archivedAt: fmtDate(), archivedBy: currentUser.username };
-    cache.log.push(movedOrder);
-    cache.transferred.splice(idx, 1);
-    logActivity('receipt-received', `تأكيد استلام: ${order.invoice}`, `العميل: ${order.customer}`, 'success');
-    addDeliveryNotification('تأكيد استلام', `تم استلام الطلب للعميل ${order.customer}`, 'success', order.id, order.invoice);
-    try { await persistKeys(['transferred', 'log', 'activity', 'notifications']); renderTransferred(); renderLog(); renderDashboard(); toast('تم تأكيد الاستلام وانتقل الطلب إلى السجل', 'success'); return true; }
-    catch (e) { toast(e.message, 'error'); return false; }
-  }
-  if (current === RECEIPT_RECEIVED && newStatus === RECEIPT_NOT_RECEIVED) {
-    if (!isOwner && !canRevert) { toast('لا يمكن التراجع عن تأكيد الاستلام', 'error'); return false; }
-    const ok = await dialog.confirm(`إلغاء تأكيد استلام الطلب "${order.invoice}"؟\nسيُعاد الطلب إلى قسم "الطلبات التي تم نقلها".`, { title: 'إلغاء الاستلام', okText: 'نعم، إلغاء', type: 'warning', okClass: 'btn-warning' });
-    if (!ok) return false;
-    const idx = cache.log.findIndex(x => x.id === orderId);
-    if (idx === -1) return false;
-    const returnedOrder = { ...cache.log[idx], receiptStatus: RECEIPT_NOT_RECEIVED, receiptUpdatedAt: fmtDate(), receiptUpdatedBy: currentUser.username };
-    delete returnedOrder.archivedAt; delete returnedOrder.archivedBy;
-    cache.transferred.push(returnedOrder);
-    cache.log.splice(idx, 1);
-    logActivity('receipt-revert', `إلغاء استلام: ${order.invoice}`, `العميل: ${order.customer}`, 'warning');
-    addDeliveryNotification('إلغاء استلام', `تم إلغاء استلام الطلب للعميل ${order.customer}`, 'warning', order.id, order.invoice);
-    try { await persistKeys(['transferred', 'log', 'activity', 'notifications']); renderTransferred(); renderLog(); renderDashboard(); toast('تم إلغاء الاستلام', 'warning'); return true; }
-    catch (e) { toast(e.message, 'error'); return false; }
-  }
-  return false;
-}
 
 /* ══════════════════════════════════════════════════════════════
    GROUP HELPERS
@@ -2690,7 +2610,6 @@ function isOrderLockedByGroup(orderId, excludeGroupId = null) {
     return (g.orderIds || []).includes(orderId);
   });
 }
-/* ✅ الطلبات المتاحة للمجموعة: من الإدخال بحالة "جاهز" وغير محجوزة */
 function getAvailableOrdersForGroup(excludeGroupId = null) {
   return cache.orders.filter(o =>
     o.status === ORDER_STATUS.READY &&
@@ -2735,7 +2654,6 @@ function renderEntry() {
           <option value="${ORDER_STATUS.READY}" ${o.status === ORDER_STATUS.READY ? 'selected' : ''}>${ORDER_STATUS.READY}</option>
         </select>`
       : badge(o.status);
-    /* ✅ منع تحويل الطلبات المحجوزة في مجموعة */
     const transferBtn = canTrans && !isLocked
       ? `<button class="btn btn-success btn-sm" onclick="event.stopPropagation();transferSingle('${o.id}')" title="تحويل">${ico('arrowRight', 13)}</button>`
       : (isLocked ? `<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;font-size:10px;" title="محجوز في مجموعة: ${esc(group.name)}">${ico('lock', 11)} ${esc(group.name.substring(0, 15))}${group.name.length > 15 ? '…' : ''}</span>` : '');
@@ -2782,7 +2700,7 @@ window.changeOrderStatus = async function(orderId, newStatus, source = 'orders')
 };
 
 /* ══════════════════════════════════════════════════════════════
-   RENDER: GROUPS (من الإدخال بحالة جاهز)
+   RENDER: GROUPS
    ══════════════════════════════════════════════════════════════ */
 function renderGroups() {
   const container = document.getElementById('groupsContainer'); if (!container) return;
@@ -2879,23 +2797,26 @@ window.editGroup = function (id) {
   openModal('groupModal');
 };
 window.saveGroup = async function () {
+  const now = Date.now();
+  if (now - _groupSubmitLock < SUBMIT_LOCK_MS) { toast('جاري الحفظ...', 'warning'); return; }
+  _groupSubmitLock = now;
   const id = document.getElementById('groupId').value;
-  if (id ? !hasPerm('manageGroups') : !hasPerm('createGroup')) { toast(MSG.unauthorized, 'error'); return; }
+  if (id ? !hasPerm('manageGroups') : !hasPerm('createGroup')) { toast(MSG.unauthorized, 'error'); _groupSubmitLock = 0; return; }
   clearAllErrors('groupModal');
   const name = document.getElementById('groupName').value.trim();
-  if (!name) { setFieldError('groupName', 'اسم المجموعة مطلوب'); focusFirstError('groupModal'); return; }
-  if (cache.groups.some(g => g.name === name && g.id !== id)) { setFieldError('groupName', 'الاسم مستخدم مسبقاً'); focusFirstError('groupModal'); return; }
+  if (!name) { setFieldError('groupName', 'اسم المجموعة مطلوب'); focusFirstError('groupModal'); _groupSubmitLock = 0; return; }
+  if (cache.groups.some(g => g.name === name && g.id !== id)) { setFieldError('groupName', 'الاسم مستخدم مسبقاً'); focusFirstError('groupModal'); _groupSubmitLock = 0; return; }
   const driver = document.getElementById('groupDriver').value;
   const driverData = (cache.drivers || []).find(d => d.name === driver);
   const driverPhone = driverData?.phone || '';
   const departureTime = document.getElementById('groupDepartureTime').value;
   const notes = document.getElementById('groupNotes').value.trim();
   const orderIds = Array.from(_groupSelectedOrders);
-  if (!orderIds.length) { toast('اختر طلباً واحداً على الأقل', 'warning'); return; }
+  if (!orderIds.length) { toast('اختر طلباً واحداً على الأقل', 'warning'); _groupSubmitLock = 0; return; }
   for (const oid of orderIds) {
-    if (isOrderLockedByGroup(oid, id)) { const other = getOrderGroup(oid); toast(`الطلب موجود في مجموعة "${other?.name || '?'}"`, 'error'); return; }
+    if (isOrderLockedByGroup(oid, id)) { const other = getOrderGroup(oid); toast(`الطلب موجود في مجموعة "${other?.name || '?'}"`, 'error'); _groupSubmitLock = 0; return; }
     const o = cache.orders.find(x => x.id === oid);
-    if (!o || o.status !== ORDER_STATUS.READY) { toast('يمكن اختيار طلبات بحالة "جاهز" فقط', 'error'); return; }
+    if (!o || o.status !== ORDER_STATUS.READY) { toast('يمكن اختيار طلبات بحالة "جاهز" فقط', 'error'); _groupSubmitLock = 0; return; }
   }
   const existing = id ? cache.groups.find(g => g.id === id) : null;
   const groupData = { id: id || uid(), name, driver, driverPhone, departureTime, notes, orderIds, status: existing?.status || 'نشطة', createdAt: existing?.createdAt || fmtDate(), createdBy: existing?.createdBy || currentUser.username, updatedAt: fmtDate(), updatedBy: currentUser.username, archivedAt: existing?.archivedAt || null, archivedBy: existing?.archivedBy || null };
@@ -2919,7 +2840,6 @@ window.deleteGroup = async function (id) {
   try { await persistKeys(['groups', 'activity']); renderGroups(); renderEntry(); toast('تم الحذف بنجاح', 'success'); }
   catch (e) { toast(e.message, 'error'); }
 };
-/* ✅ ترحيل المجموعة → ينتقل طلباتها إلى "الطلبات التي تم نقلها" */
 window.transferGroupToTransferred = async function(groupId) {
   if (!hasPerm('moveToLog')) { toast(MSG.unauthorized, 'error'); return; }
   const g = cache.groups.find(x => x.id === groupId); if (!g) { toast('المجموعة غير موجودة', 'error'); return; }
@@ -2945,7 +2865,7 @@ window.transferGroupToTransferred = async function(groupId) {
 };
 
 /* ══════════════════════════════════════════════════════════════
-   RENDER: READY — بدون فلتر حالة
+   RENDER: READY
    ══════════════════════════════════════════════════════════════ */
 function getReadyFilteredData() {
   const f = pageFilters.ready;
@@ -3050,7 +2970,7 @@ window.deselectAllReady = function() {
 };
 
 /* ══════════════════════════════════════════════════════════════
-   RENDER: TRANSFERRED — بدون فلتر حالة الاستلام
+   RENDER: TRANSFERRED
    ══════════════════════════════════════════════════════════════ */
 function getTransferredFilteredData() {
   const f = pageFilters.transferred;
@@ -3274,12 +3194,15 @@ window.editTask = function (id) {
   openModal('taskModal');
 };
 window.saveTask = async function () {
+  const now = Date.now();
+  if (now - _taskSubmitLock < SUBMIT_LOCK_MS) { toast('جاري الحفظ...', 'warning'); return; }
+  _taskSubmitLock = now;
   const id = document.getElementById('taskId').value;
-  if (id ? !hasPerm('editTask') : !hasPerm('createTask')) { toast(MSG.unauthorized, 'error'); return; }
+  if (id ? !hasPerm('editTask') : !hasPerm('createTask')) { toast(MSG.unauthorized, 'error'); _taskSubmitLock = 0; return; }
   clearAllErrors('taskModal');
   const title = document.getElementById('taskTitle').value.trim();
-  if (!title) { setFieldError('taskTitle', 'عنوان المهمة مطلوب'); focusFirstError('taskModal'); return; }
-  if (id) { const existingTask = cache.tasks.find(t => t.id === id); if (existingTask && existingTask.status === 'مكتملة') { toast(MSG.taskLocked, 'error'); return; } }
+  if (!title) { setFieldError('taskTitle', 'عنوان المهمة مطلوب'); focusFirstError('taskModal'); _taskSubmitLock = 0; return; }
+  if (id) { const existingTask = cache.tasks.find(t => t.id === id); if (existingTask && existingTask.status === 'مكتملة') { toast(MSG.taskLocked, 'error'); _taskSubmitLock = 0; return; } }
   const description = document.getElementById('taskDescription').value.trim();
   const assignee = document.getElementById('taskAssignee').value;
   const priority = document.getElementById('taskPriority').value;
@@ -3342,7 +3265,29 @@ function renderBranchesList() {
 function renderDriversList() {
   const canManage = hasPerm('manageDrivers');
   const el = document.getElementById('driverList'); if (!el) return;
-  el.innerHTML = cache.drivers.length ? cache.drivers.map(d => `<span style="background:var(--brand-50);padding:9px 14px;border-radius:20px;font-size:12.5px;display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(66,102,232,.22);color:var(--brand-700);">${ico('truck', 14)}<b>${esc(d.name)}</b>${d.phone ? `<span style="opacity:.7;font-size:11px;">(${esc(d.phone)})</span>` : ''}${canManage ? `<button onclick="deleteDriver('${d.id}')" style="border:none;background:rgba(239,61,82,.1);color:var(--danger-600);cursor:pointer;width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;padding:0;">${ico('x', 10)}</button>` : ''}</span>`).join('') : '<span style="color:var(--text-muted);padding:20px;">لا يوجد موصلون</span>';
+  if (!cache.drivers.length) {
+    el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12.5px;">لا يوجد موصلون بعد</div>';
+    return;
+  }
+  el.innerHTML = cache.drivers.map(d => {
+    const methods = d.methods || RECEIPT_METHODS;
+    const methodChips = methods.map(m => {
+      const icons = { 'المحل':'store', 'موصل':'truck', 'مكتب':'office' };
+      return `<span class="badge badge-method" style="font-size:10.5px;">${ico(icons[m], 11)} ${esc(m)}</span>`;
+    }).join(' ');
+    return `<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg);border-radius:var(--radius-md);border:1px solid var(--border);">
+      <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--brand-500),var(--brand-700));color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0;">${esc((d.name || '?')[0])}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-weight:700;font-size:13.5px;color:var(--text);margin-bottom:4px;">${esc(d.name)}</div>
+        ${d.phone ? `<div style="font-size:11.5px;color:var(--text-muted);font-family:monospace;direction:ltr;margin-bottom:4px;">${ico('phone', 11)} ${esc(d.phone)}</div>` : ''}
+        <div style="display:flex;gap:5px;flex-wrap:wrap;">${methodChips}</div>
+      </div>
+      ${canManage ? `
+        <button class="btn btn-primary btn-sm" onclick="editDriver('${d.id}')" title="تعديل">${ico('edit', 13)}</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteDriver('${d.id}')" title="حذف">${ico('trash', 13)}</button>
+      ` : ''}
+    </div>`;
+  }).join('');
 }
 function renderUsers() {
   const body = document.getElementById('userBody'); if (!body) return;
@@ -3380,19 +3325,37 @@ function populateAllSelects() {
   const tAssign = document.getElementById('taskAssignee');
   if (tAssign) { const cur = tAssign.value; tAssign.innerHTML = '<option value="">بدون تعيين</option>' + cache.users.map(u => `<option value="${esc(u.username)}">${esc(u.username)}</option>`).join(''); if (cur) tAssign.value = cur; }
 }
-/* ✅ إصلاح: تحديث select الموصل بشكل موثوق */
-function loadDriversIntoSelects() {
-  const sel = document.getElementById('orderDriver'); if (!sel) return;
+
+/* ✅ فلترة الموصلين حسب طريقة الاستلام */
+function getDriversForMethod(method) {
+  const m = method || 'المحل';
+  return (cache.drivers || []).filter(d => (d.methods || RECEIPT_METHODS).includes(m));
+}
+function loadDriversIntoSelects(filterMethod = null) {
+  const sel = document.getElementById('orderDriver');
+  if (!sel) return;
+  const currentMethod = filterMethod || document.getElementById('orderReceiptMethod')?.value || 'المحل';
+  const drivers = getDriversForMethod(currentMethod);
   const cur = sel.value;
-  const drivers = cache.drivers || [];
   if (!drivers.length) {
-    sel.innerHTML = '<option value="">لا يوجد موصلون مضافون</option>';
+    sel.innerHTML = `<option value="">لا يوجد موصلون متاحون لطريقة "${esc(currentMethod)}"</option>`;
+    const phoneInput = document.getElementById('orderDriverPhone');
+    if (phoneInput) phoneInput.value = '';
     return;
   }
   sel.innerHTML = '<option value="">اختر موصل</option>' +
     drivers.map(d => `<option value="${esc(d.name)}" data-phone="${esc(d.phone || '')}">${esc(d.name)}</option>`).join('');
-  if (cur) sel.value = cur;
+  if (cur && drivers.some(d => d.name === cur)) sel.value = cur;
+  else {
+    sel.value = '';
+    const phoneInput = document.getElementById('orderDriverPhone');
+    if (phoneInput) phoneInput.value = '';
+  }
 }
+window.onReceiptMethodChange = function() {
+  const method = document.getElementById('orderReceiptMethod')?.value || 'المحل';
+  loadDriversIntoSelects(method);
+};
 window.onDriverSelect = function () {
   const sel = document.getElementById('orderDriver');
   if (!sel) return;
@@ -4086,6 +4049,48 @@ const Anomaly = (() => {
 })();
 
 /* ══════════════════════════════════════════════════════════════
+   RECEIPT STATUS CHANGE
+   ══════════════════════════════════════════════════════════════ */
+async function changeReceiptStatusWithTransfer(orderId, newStatus) {
+  const order = cache.transferred.find(x => x.id === orderId) || cache.log.find(x => x.id === orderId);
+  if (!order) { toast('الطلب غير موجود', 'error'); return false; }
+  const current = order.receiptStatus || RECEIPT_NOT_RECEIVED;
+  const isOwner = currentUser?.role === ROLE_OWNER;
+  const canRevert = hasPerm('revertReceiptStatus');
+  if (current === newStatus) return true;
+  if (current === RECEIPT_NOT_RECEIVED && newStatus === RECEIPT_RECEIVED) {
+    if (!isOwner && !hasPerm('editReceiptStatus')) { toast(MSG.unauthorized, 'error'); return false; }
+    const ok = await dialog.confirm(`هل تم استلام الطلب "${order.invoice}" للعميل "${order.customer}"؟`, { title: 'تأكيد الاستلام', okText: 'نعم، تم الاستلام', type: 'success', okClass: 'btn-success' });
+    if (!ok) return false;
+    const idx = cache.transferred.findIndex(x => x.id === orderId);
+    if (idx === -1) return false;
+    const movedOrder = { ...cache.transferred[idx], receiptStatus: RECEIPT_RECEIVED, receiptUpdatedAt: fmtDate(), receiptUpdatedBy: currentUser.username, archivedAt: fmtDate(), archivedBy: currentUser.username };
+    cache.log.push(movedOrder);
+    cache.transferred.splice(idx, 1);
+    logActivity('receipt-received', `تأكيد استلام: ${order.invoice}`, `العميل: ${order.customer}`, 'success');
+    addDeliveryNotification('تأكيد استلام', `تم استلام الطلب للعميل ${order.customer}`, 'success', order.id, order.invoice);
+    try { await persistKeys(['transferred', 'log', 'activity', 'notifications']); renderTransferred(); renderLog(); renderDashboard(); toast('تم تأكيد الاستلام وانتقل الطلب إلى السجل', 'success'); return true; }
+    catch (e) { toast(e.message, 'error'); return false; }
+  }
+  if (current === RECEIPT_RECEIVED && newStatus === RECEIPT_NOT_RECEIVED) {
+    if (!isOwner && !canRevert) { toast('لا يمكن التراجع عن تأكيد الاستلام', 'error'); return false; }
+    const ok = await dialog.confirm(`إلغاء تأكيد استلام الطلب "${order.invoice}"؟\nسيُعاد الطلب إلى قسم "الطلبات التي تم نقلها".`, { title: 'إلغاء الاستلام', okText: 'نعم، إلغاء', type: 'warning', okClass: 'btn-warning' });
+    if (!ok) return false;
+    const idx = cache.log.findIndex(x => x.id === orderId);
+    if (idx === -1) return false;
+    const returnedOrder = { ...cache.log[idx], receiptStatus: RECEIPT_NOT_RECEIVED, receiptUpdatedAt: fmtDate(), receiptUpdatedBy: currentUser.username };
+    delete returnedOrder.archivedAt; delete returnedOrder.archivedBy;
+    cache.transferred.push(returnedOrder);
+    cache.log.splice(idx, 1);
+    logActivity('receipt-revert', `إلغاء استلام: ${order.invoice}`, `العميل: ${order.customer}`, 'warning');
+    addDeliveryNotification('إلغاء استلام', `تم إلغاء استلام الطلب للعميل ${order.customer}`, 'warning', order.id, order.invoice);
+    try { await persistKeys(['transferred', 'log', 'activity', 'notifications']); renderTransferred(); renderLog(); renderDashboard(); toast('تم إلغاء الاستلام', 'warning'); return true; }
+    catch (e) { toast(e.message, 'error'); return false; }
+  }
+  return false;
+}
+
+/* ══════════════════════════════════════════════════════════════
    ORDER MODAL
    ══════════════════════════════════════════════════════════════ */
 window.addOrder = function () {
@@ -4093,19 +4098,19 @@ window.addOrder = function () {
   if (document.querySelector('.page.active')?.id !== 'page-entry') go('entry');
   clearAllErrors('orderModal');
   document.getElementById('orderModalTitle').innerHTML = ico('plus', 20) + '<span>طلب جديد</span>';
+  delete document.getElementById('orderModal').dataset.mode;
   ['orderId','orderCustomerId','orderCustomerPhone','orderInvoice','orderLocation','orderDate','orderDriverPhone','orderNotes'].forEach(id => document.getElementById(id).value = '');
   document.getElementById('orderCustomer').value = '';
   document.getElementById('orderStatus').value = ORDER_STATUS.PROGRESS;
   document.getElementById('orderReceiptMethod').value = 'المحل';
   document.getElementById('orderDriver').value = '';
   populateAllSelects();
-  loadDriversIntoSelects();  /* ✅ إعادة تحميل الموصلين */
+  loadDriversIntoSelects('المحل');
   const branchSel = document.getElementById('orderBranch');
   if (branchSel && branchSel.options.length > 0) branchSel.selectedIndex = 0;
   document.getElementById('orderInvoice').value = generateNextInvoice();
   document.getElementById('customerDropdown').classList.remove('show');
   renderCustomFieldsInOrder(null);
-  const sug = document.getElementById('driverSuggestionBox'); if (sug) sug.style.display = 'none';
   openModal('orderModal');
   setTimeout(() => document.getElementById('orderCustomer').focus(), 100);
 };
@@ -4114,52 +4119,51 @@ window.editOrder = function (id) {
   const o = cache.orders.find(x => x.id === id); if (!o) return;
   clearAllErrors('orderModal');
   document.getElementById('orderModalTitle').innerHTML = ico('edit', 20) + '<span>تعديل الطلب</span>';
+  document.getElementById('orderModal').dataset.mode = 'orders';
   document.getElementById('orderId').value = id;
   document.getElementById('orderInvoice').value = o.invoice || '';
   populateAllSelects();
-  loadDriversIntoSelects();  /* ✅ إعادة تحميل الموصلين */
+  const method = o.receiptMethod || 'المحل';
+  document.getElementById('orderReceiptMethod').value = method;
+  loadDriversIntoSelects(method);
   document.getElementById('orderBranch').value = o.branch || DEFAULT_BRANCH_NAME;
   document.getElementById('orderCustomer').value = o.customer || '';
   document.getElementById('orderCustomerPhone').value = o.customerPhone || '';
   document.getElementById('orderLocation').value = o.location || '';
   document.getElementById('orderStatus').value = o.status || ORDER_STATUS.PROGRESS;
   document.getElementById('orderDate').value = o.approvalDate || '';
-  document.getElementById('orderReceiptMethod').value = o.receiptMethod || 'المحل';
   document.getElementById('orderDriver').value = o.driver || '';
   document.getElementById('orderDriverPhone').value = o.driverPhone || '';
   document.getElementById('orderNotes').value = o.notes || '';
   document.getElementById('orderCustomerId').value = o.customerId || '';
   renderCustomFieldsInOrder(o);
-  const sug = document.getElementById('driverSuggestionBox'); if (sug) sug.style.display = 'none';
   openModal('orderModal');
   setTimeout(() => document.getElementById('orderInvoice').focus(), 100);
 };
-/* ✅ تعديل الطلبات التي تم نقلها */
 window.editTransferred = function (id) {
   if (!hasPerm('editTransferred')) { toast(MSG.unauthorized, 'error'); return; }
   const o = cache.transferred.find(x => x.id === id); if (!o) return;
   clearAllErrors('orderModal');
   document.getElementById('orderModalTitle').innerHTML = ico('edit', 20) + '<span>تعديل طلب مُنقل</span>';
+  document.getElementById('orderModal').dataset.mode = 'transferred';
   document.getElementById('orderId').value = id;
   document.getElementById('orderInvoice').value = o.invoice || '';
   populateAllSelects();
-  loadDriversIntoSelects();
+  const method = o.receiptMethod || 'المحل';
+  document.getElementById('orderReceiptMethod').value = method;
+  loadDriversIntoSelects(method);
   document.getElementById('orderBranch').value = o.branch || DEFAULT_BRANCH_NAME;
   document.getElementById('orderCustomer').value = o.customer || '';
   document.getElementById('orderCustomerPhone').value = o.customerPhone || '';
   document.getElementById('orderLocation').value = o.location || '';
   document.getElementById('orderStatus').value = o.status || ORDER_STATUS.PROGRESS;
   document.getElementById('orderDate').value = o.approvalDate || '';
-  document.getElementById('orderReceiptMethod').value = o.receiptMethod || 'المحل';
   document.getElementById('orderDriver').value = o.driver || '';
   document.getElementById('orderDriverPhone').value = o.driverPhone || '';
   document.getElementById('orderNotes').value = o.notes || '';
   document.getElementById('orderCustomerId').value = o.customerId || '';
   renderCustomFieldsInOrder(o);
-  const sug = document.getElementById('driverSuggestionBox'); if (sug) sug.style.display = 'none';
   openModal('orderModal');
-  /* حفظ العلم لمنع الخلط */
-  document.getElementById('orderModal').dataset.mode = 'transferred';
   setTimeout(() => document.getElementById('orderInvoice').focus(), 100);
 };
 function validateOrderForm() {
@@ -4176,11 +4180,8 @@ function validateOrderForm() {
     const inv = String(invoice).trim().toLowerCase();
     const isDup = (list, excludeId) => list.some(o => o.id !== excludeId && (o.invoice || '').trim().toLowerCase() === inv);
     let dup = false;
-    if (mode === 'transferred') {
-      dup = isDup(cache.transferred, id) || isDup(cache.orders, null) || isDup(cache.ready, null) || isDup(cache.log, null);
-    } else {
-      dup = isDup(cache.orders, id) || isDup(cache.ready, null) || isDup(cache.transferred, null) || isDup(cache.log, null);
-    }
+    if (mode === 'transferred') dup = isDup(cache.transferred, id) || isDup(cache.orders, null) || isDup(cache.ready, null) || isDup(cache.log, null);
+    else dup = isDup(cache.orders, id) || isDup(cache.ready, null) || isDup(cache.transferred, null) || isDup(cache.log, null);
     if (dup) { setFieldError('orderInvoice', MSG.invoiceDup); valid = false; }
   }
   if (!branch) { setFieldError('orderBranch', 'الفرع مطلوب'); valid = false; }
@@ -4202,9 +4203,11 @@ function validateOrderForm() {
 }
 window.saveOrder = async function () {
   const now = Date.now();
-  if (now - lastSaveTime < SAVE_COOLDOWN) { const wait = Math.ceil((SAVE_COOLDOWN - (now - lastSaveTime)) / 1000); toast(`يرجى الانتظار ${wait} ثانية`, 'warning'); return; }
-  if (saveInProgress) { toast('جاري الحفظ...', 'info'); return; }
-  if (!validateOrderForm()) return;
+  if (now - _orderSubmitLock < SUBMIT_LOCK_MS) { toast('جاري الحفظ، يرجى الانتظار...', 'warning'); return; }
+  _orderSubmitLock = now;
+  if (now - lastSaveTime < SAVE_COOLDOWN) { const wait = Math.ceil((SAVE_COOLDOWN - (now - lastSaveTime)) / 1000); toast(`يرجى الانتظار ${wait} ثانية`, 'warning'); _orderSubmitLock = 0; return; }
+  if (saveInProgress) { toast('جاري الحفظ...', 'info'); _orderSubmitLock = 0; return; }
+  if (!validateOrderForm()) { _orderSubmitLock = 0; return; }
   const id = document.getElementById('orderId').value;
   const mode = document.getElementById('orderModal').dataset.mode || 'orders';
   saveInProgress = true;
@@ -4228,7 +4231,7 @@ window.saveOrder = async function () {
   };
   if (mode === 'transferred') {
     const idx = cache.transferred.findIndex(x => x.id === id);
-    if (idx === -1) { toast('الطلب غير موجود', 'error'); saveInProgress = false; if (btn) { btn.disabled = false; btn.innerHTML = 'حفظ الطلب'; } return; }
+    if (idx === -1) { toast('الطلب غير موجود', 'error'); saveInProgress = false; _orderSubmitLock = 0; if (btn) { btn.disabled = false; btn.innerHTML = 'حفظ الطلب'; } return; }
     cache.transferred[idx] = { ...cache.transferred[idx], ...data };
     logActivity('edit-transferred', `تعديل مُنقل: ${data.invoice}`, '', 'warning');
     closeModal('orderModal'); clearDraft();
@@ -4270,7 +4273,6 @@ window.deleteOrder = async function (id) {
   try { await persistKeys(['orders', 'activity']); renderEntry(); toast('تم الحذف', 'success'); }
   catch (e) { toast(e.message, 'error'); }
 };
-/* ✅ حذف من الطلبات التي تم نقلها */
 window.deleteTransferred = async function (id) {
   if (!hasPerm('deleteTransferred')) { toast(MSG.unauthorized, 'error'); return; }
   const o = cache.transferred.find(x => x.id === id);
@@ -4362,48 +4364,6 @@ window.returnReadyToEntry = async function (id) {
     toast('تم الإرجاع بنجاح', 'success');
   } catch (e) { cache.orders = backup.orders; cache.ready = backup.ready; toast(e.message, 'error'); }
 };
-
-/* ══════════════════════════════════════════════════════════════
-   DRIVER SUGGESTION
-   ══════════════════════════════════════════════════════════════ */
-const DriverSuggestion = (() => {
-  function getSettings() { return { ...DEFAULT_ANALYTICS_SETTINGS, ...(localMeta?.analyticsSettings || {}) }; }
-  function normalizeLocation(loc) { if (!loc) return ''; return loc.split(/[-–—,]/)[0].trim().toLowerCase(); }
-  function _calcCandidates(customerLocation, excludeDriver = null) {
-    const settings = getSettings();
-    if (!settings.driverSuggestionEnabled) return [];
-    if (!customerLocation) return [];
-    const targetLoc = normalizeLocation(customerLocation);
-    if (!targetLoc) return [];
-    const all = [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log];
-    const stats = {};
-    all.forEach(o => {
-      if (!o.driver) return;
-      if (excludeDriver && o.driver === excludeDriver) return;
-      const oLoc = normalizeLocation(o.location);
-      if (!oLoc) return;
-      let score = 0;
-      if (oLoc === targetLoc) score = 3;
-      else if (oLoc.includes(targetLoc) || targetLoc.includes(oLoc)) score = 2;
-      else { const tWords = targetLoc.split(/\s+/); const oWords = oLoc.split(/\s+/); if (tWords.filter(w => w.length > 2 && oWords.includes(w)).length > 0) score = 1; }
-      if (score === 0) return;
-      if (!stats[o.driver]) stats[o.driver] = { name: o.driver, phone: o.driverPhone || '', score: 0, count: 0, delivered: 0 };
-      stats[o.driver].score += score; stats[o.driver].count++;
-      if (o.receiptStatus === RECEIPT_RECEIVED || o.status === ORDER_STATUS.READY) stats[o.driver].delivered++;
-      if (o.driverPhone) stats[o.driver].phone = o.driverPhone;
-    });
-    return Object.values(stats).filter(s => s.count >= settings.driverSuggestionMinOrders)
-      .map(s => ({ ...s, successRate: s.count > 0 ? Math.round((s.delivered / s.count) * 100) : 0, finalScore: s.score * 10 + s.successRate }))
-      .sort((a, b) => b.finalScore - a.finalScore);
-  }
-  return { getAllSuggestions: (l) => _calcCandidates(l).slice(0, 3) };
-})();
-/* ✅ بدون اقتراح تلقائي في الواجهة - فقط بيانات جاهزة إن احتجت لاحقاً */
-function updateDriverSuggestion() {
-  const box = document.getElementById('driverSuggestionBox');
-  if (box) box.style.display = 'none';
-}
-window.dismissDriverSuggestion = function() { const box = document.getElementById('driverSuggestionBox'); if (box) box.style.display = 'none'; };
 
 /* ══════════════════════════════════════════════════════════════
    WHATSAPP
@@ -4515,9 +4475,6 @@ function initCustomerSearch() {
   input.addEventListener('focus', () => { if (input.value.trim()) input.dispatchEvent(new Event('input')); });
   input.addEventListener('blur', () => setTimeout(() => dropdown.classList.remove('show'), 150));
 }
-function initLocationSuggestion() {
-  /* لا يوجد اقتراح تلقائي */
-}
 
 /* ══════════════════════════════════════════════════════════════
    CUSTOMER MODAL
@@ -4561,8 +4518,11 @@ function validateCustomerForm() {
   return valid;
 }
 window.saveCustomer = async function () {
-  if (!hasPerm('manageCustomers')) { toast(MSG.unauthorized, 'error'); return; }
-  if (!validateCustomerForm()) return;
+  const now = Date.now();
+  if (now - _customerSubmitLock < SUBMIT_LOCK_MS) { toast('جاري الحفظ، يرجى الانتظار...', 'warning'); return; }
+  _customerSubmitLock = now;
+  if (!hasPerm('manageCustomers')) { toast(MSG.unauthorized, 'error'); _customerSubmitLock = 0; return; }
+  if (!validateCustomerForm()) { _customerSubmitLock = 0; return; }
   const id = document.getElementById('custId').value;
   const custData = { id: id || uid(), code: document.getElementById('custCode').value.trim(), name: document.getElementById('custName').value.trim(), location: document.getElementById('custLocation').value.trim(), phone: document.getElementById('custPhone').value.trim() };
   try {
@@ -4745,23 +4705,97 @@ window.deleteUser = async function (id) {
   try { await persistKeys(['users', 'activity']); renderUsers(); toast('تم الحذف بنجاح', 'success'); } catch (e) { toast(e.message, 'error'); }
 };
 
-/* BRANCHES / DRIVERS */
+/* ══════════════════════════════════════════════════════════════
+   BRANCHES / DRIVERS
+   ══════════════════════════════════════════════════════════════ */
 window.addDriver = async function () {
-  if (!hasPerm('manageDrivers')) { toast(MSG.unauthorized, 'error'); return; }
+  const now = Date.now();
+  if (now - _driverSubmitLock < SUBMIT_LOCK_MS) { toast('جاري الحفظ...', 'warning'); return; }
+  _driverSubmitLock = now;
+  if (!hasPerm('manageDrivers')) { toast(MSG.unauthorized, 'error'); _driverSubmitLock = 0; return; }
   const name = document.getElementById('newDriverName').value.trim();
   const phone = document.getElementById('newDriverPhone').value.trim();
-  if (!name) { toast('اسم الموصل مطلوب', 'error'); return; }
-  if (cache.drivers.find(d => d.name === name)) { toast('الاسم موجود مسبقاً', 'error'); return; }
-  cache.drivers.push({ id: uid(), name, phone });
-  logActivity('add-driver', `إضافة موصل: ${name}`, '', 'success');
+  if (!name) { toast('اسم الموصل مطلوب', 'error'); _driverSubmitLock = 0; return; }
+  if (cache.drivers.find(d => d.name === name)) { toast('الاسم موجود مسبقاً', 'error'); _driverSubmitLock = 0; return; }
+  const methods = [];
+  if (document.getElementById('newDriverMethodStore')?.checked) methods.push('المحل');
+  if (document.getElementById('newDriverMethodDriver')?.checked) methods.push('موصل');
+  if (document.getElementById('newDriverMethodOffice')?.checked) methods.push('مكتب');
+  if (!methods.length) { toast('اختر طريقة استلام واحدة على الأقل', 'error'); _driverSubmitLock = 0; return; }
+  cache.drivers.push({ id: uid(), name, phone, methods });
+  logActivity('add-driver', `إضافة موصل: ${name}`, `طرق: ${methods.join(' - ')}`, 'success');
   try {
     await persistKeys(['drivers', 'activity']);
     document.getElementById('newDriverName').value = '';
     document.getElementById('newDriverPhone').value = '';
+    const cbS = document.getElementById('newDriverMethodStore'); if (cbS) cbS.checked = true;
+    const cbD = document.getElementById('newDriverMethodDriver'); if (cbD) cbD.checked = true;
+    const cbO = document.getElementById('newDriverMethodOffice'); if (cbO) cbO.checked = true;
     renderDriversList();
     loadDriversIntoSelects();
     populateAllSelects();
     toast('تمت الإضافة بنجاح', 'success');
+  } catch (e) { toast(e.message, 'error'); }
+};
+window.editDriver = function (id) {
+  if (!hasPerm('manageDrivers')) { toast(MSG.unauthorized, 'error'); return; }
+  const d = cache.drivers.find(x => x.id === id);
+  if (!d) { toast('الموصل غير موجود', 'error'); return; }
+  clearAllErrors('driverModal');
+  document.getElementById('driverModalTitle').innerHTML = ico('edit', 20) + '<span>تعديل الموصل</span>';
+  document.getElementById('editDriverId').value = d.id;
+  document.getElementById('editDriverName').value = d.name || '';
+  document.getElementById('editDriverPhone').value = d.phone || '';
+  const methods = d.methods || RECEIPT_METHODS;
+  document.getElementById('editDriverMethodStore').checked = methods.includes('المحل');
+  document.getElementById('editDriverMethodDriver').checked = methods.includes('موصل');
+  document.getElementById('editDriverMethodOffice').checked = methods.includes('مكتب');
+  openModal('driverModal');
+  setTimeout(() => document.getElementById('editDriverName').focus(), 100);
+};
+window.saveDriverEdit = async function () {
+  const now = Date.now();
+  if (now - _driverSubmitLock < SUBMIT_LOCK_MS) { toast('جاري الحفظ...', 'warning'); return; }
+  _driverSubmitLock = now;
+  if (!hasPerm('manageDrivers')) { toast(MSG.unauthorized, 'error'); _driverSubmitLock = 0; return; }
+  clearAllErrors('driverModal');
+  const id = document.getElementById('editDriverId').value;
+  const name = document.getElementById('editDriverName').value.trim();
+  const phone = document.getElementById('editDriverPhone').value.trim();
+  if (!name) { setFieldError('editDriverName', 'الاسم مطلوب'); _driverSubmitLock = 0; return; }
+  if (cache.drivers.some(d => d.id !== id && d.name === name)) { setFieldError('editDriverName', 'الاسم مستخدم مسبقاً'); _driverSubmitLock = 0; return; }
+  const methods = [];
+  if (document.getElementById('editDriverMethodStore').checked) methods.push('المحل');
+  if (document.getElementById('editDriverMethodDriver').checked) methods.push('موصل');
+  if (document.getElementById('editDriverMethodOffice').checked) methods.push('مكتب');
+  if (!methods.length) { toast('اختر طريقة استلام واحدة على الأقل', 'error'); _driverSubmitLock = 0; return; }
+  const oldDriver = cache.drivers.find(d => d.id === id);
+  const oldName = oldDriver?.name;
+  const idx = cache.drivers.findIndex(d => d.id === id);
+  if (idx === -1) { toast('الموصل غير موجود', 'error'); _driverSubmitLock = 0; return; }
+  cache.drivers[idx] = { ...cache.drivers[idx], name, phone, methods };
+  if (oldName && oldName !== name) {
+    let updatedCount = 0;
+    const updateOrderDriver = (list) => {
+      list.forEach(o => {
+        if (o.driver === oldName) { o.driver = name; if (phone) o.driverPhone = phone; updatedCount++; }
+      });
+    };
+    updateOrderDriver(cache.orders);
+    updateOrderDriver(cache.ready);
+    updateOrderDriver(cache.transferred);
+    updateOrderDriver(cache.log);
+    if (updatedCount > 0) logActivity('update-driver-name', `تحديث اسم الموصل في ${updatedCount} طلب`, `من "${oldName}" إلى "${name}"`, 'info');
+  }
+  logActivity('edit-driver', `تعديل موصل: ${name}`, `طرق: ${methods.join(' - ')}`, 'warning');
+  try {
+    await persistKeys(['drivers', 'orders', 'ready', 'transferred', 'log', 'activity']);
+    closeModal('driverModal');
+    renderDriversList();
+    loadDriversIntoSelects();
+    populateAllSelects();
+    renderActive();
+    toast('تم حفظ التعديلات بنجاح', 'success');
   } catch (e) { toast(e.message, 'error'); }
 };
 window.deleteDriver = async function (id) {
@@ -4947,12 +4981,12 @@ window.exportBackup = async function () {
     dataFolder.file('groups.json', JSON.stringify(cache.groups || [], null, 2));
     dataFolder.file('tasks.json', JSON.stringify(cache.tasks || [], null, 2));
     dataFolder.file('settings.json', JSON.stringify({ users: cache.users || [], drivers: cache.drivers || [], branches: cache.branches || [], customFields: cache.customFields || [], templates: templates || {}, whatsappTemplates: whatsappTemplates || {}, invoiceSettings: invoiceSettings || {} }, null, 2));
-    dataFolder.file('meta.json', JSON.stringify({ lastUpdate: new Date().toISOString(), version: 9, appVersion: APP_VERSION, featureFlags, invoiceSettings, analyticsSettings: localMeta?.analyticsSettings }, null, 2));
+    dataFolder.file('meta.json', JSON.stringify({ lastUpdate: new Date().toISOString(), version: 10, appVersion: APP_VERSION, featureFlags, invoiceSettings, analyticsSettings: localMeta?.analyticsSettings }, null, 2));
     const activityFolder = dataFolder.folder('activity');
     const byMonth = {};
     (cache.activity || []).forEach(a => { const m = a.month || getMonthKey(a.ts ? new Date(a.ts) : new Date()); if (!byMonth[m]) byMonth[m] = []; byMonth[m].push(a); });
     Object.keys(byMonth).forEach(m => { activityFolder.file(`${m}.json`, JSON.stringify(byMonth[m], null, 2)); });
-    const info = { name: 'نظام إدارة الطلبات v4.0', createdAt: stamp.toISOString(), createdBy: currentUser?.username || 'unknown', structure: 'v9' };
+    const info = { name: 'نظام إدارة الطلبات v4.0', createdAt: stamp.toISOString(), createdBy: currentUser?.username || 'unknown', structure: 'v10' };
     zip.file('backup-info.json', JSON.stringify(info, null, 2));
     const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 9 } });
     downloadBlob(blob, `backup_${dateStr}.zip`);
@@ -5086,7 +5120,7 @@ window.logout = async function (silent = false) {
   try { await flushNotificationsSave(); } catch {}
   try { await flushActivitySave(); } catch {}
   try { await SaveQueue.drain(); } catch (_) {}
-  stopPolling(); stopSessionTimer();
+  stopPolling();
   currentUser = null; selectedOrderId = null; selectedReadyIds.clear();
   Storage.resetCache(); localMeta = null;
   currentSyncInterval = SYNC_INTERVAL; lastSyncTime = 0;
@@ -5116,11 +5150,10 @@ function startApp() {
     return true;
   }) || 'dashboard';
   go(firstAvailable);
-  startPolling(); startSessionTimer();
+  startPolling();
   renderNotifications();
   attachVisibilityHandler(); attachOnlineHandlers();
   initBroadcast();
-  setInterval(renderSaveQueueIndicator, 800);
   applyFeatureUI();
   toast(`أهلاً ${currentUser.username}`, 'success');
 }
@@ -5128,11 +5161,11 @@ let _visHandlerAttached = false;
 function attachVisibilityHandler() {
   if (_visHandlerAttached) return; _visHandlerAttached = true;
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { /* لا نوقف المزامنة عند الإخفاء */ }
-    else if (currentUser) {
-      lastSyncTime = 0; localMeta = null;
-      syncPull(true).finally(() => { if (!pollTimer && currentSyncInterval > 0) startPolling(); });
-      resetSessionTimer();
+    if (document.hidden) {
+      startPolling();
+    } else if (currentUser) {
+      lastSyncTime = 0;
+      syncPull(true).finally(() => { if (!pollTimer) startPolling(); });
     }
   });
 }
@@ -5141,19 +5174,6 @@ function attachOnlineHandlers() {
   if (_onlineHandlerAttached) return; _onlineHandlerAttached = true;
   window.addEventListener('online', () => { if (currentUser) { _connectionErrorCount = 0; lastSyncTime = 0; localMeta = null; syncPull(true); } });
   window.addEventListener('offline', () => { setOnline(false); });
-}
-/* ✅ إصلاح مؤشر الحفظ */
-function renderSaveQueueIndicator() {
-  const stats = SaveQueue.getStats();
-  const el = document.getElementById('saveQueueIndicator'); if (!el) return;
-  if (stats.pending === 0) {
-    el.classList.remove('show');
-    el.style.display = 'none';
-    return;
-  }
-  el.classList.add('show');
-  el.style.display = 'inline-flex';
-  el.innerHTML = `${ico('sync', 12)}<span>${stats.pending} حفظ جارٍ...</span>`;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -5175,7 +5195,6 @@ function buildUI() {
   document.getElementById('notifHeaderTitle').innerHTML = ico('bell', 15) + '<span style="margin-right:6px;">الإشعارات</span>';
   document.getElementById('notifClearBtn').innerHTML = ico('trash', 15);
   document.getElementById('notifCloseBtn').innerHTML = ico('x', 15);
-  document.getElementById('sessionTimerIcon').innerHTML = ico('clock', 12);
   document.getElementById('rateIcon').innerHTML = ico('zap', 12);
   updateThemeBtn(); renderRateLimitWidget(); rebuildNav();
   document.getElementById('dashGrid').innerHTML = [
@@ -5220,7 +5239,6 @@ function buildUI() {
   document.getElementById('groupsTitle').innerHTML = ico('layers', 20) + '<span>مجموعات العمل</span>';
   document.getElementById('groupsToolbar').innerHTML = `<button class="btn btn-primary perm-createGroup" onclick="openGroupModal()">${ico('plus', 15)}<span>مجموعة جديدة</span></button>`;
   document.getElementById('readyTitle').innerHTML = ico('box', 20) + '<span>الطلبات الجاهزة للنقل</span>';
-  /* ✅ بدون فلتر حالة */
   document.getElementById('readyFilterBar').innerHTML = `
     <span style="color:var(--brand-700);font-weight:700;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;">${ico('filter', 14)}<span>فلترة:</span></span>
     <input id="readySearch" type="text" placeholder="بحث سريع..." oninput="updateReadyFilter('search', this.value)" style="width:200px;">
@@ -5235,7 +5253,6 @@ function buildUI() {
     <button class="btn btn-ghost btn-sm perm-selectReadyOrders" onclick="deselectAllReady()">${ico('square', 13)}<span>إلغاء التحديد</span></button>
     <span id="readySelectionInfo" class="selection-info" style="display:none;"></span>`;
   document.getElementById('transferredTitle').innerHTML = ico('transfer', 20) + '<span>الطلبات التي تم نقلها</span>';
-  /* ✅ بدون فلتر حالة الاستلام */
   document.getElementById('transferredFilterBar').innerHTML = `
     <span style="color:var(--brand-700);font-weight:700;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;">${ico('filter', 14)}<span>فلترة:</span></span>
     <input id="transferredSearch" type="text" placeholder="بحث سريع..." oninput="updateTransferredFilter('search', this.value)" style="width:200px;">
@@ -5323,8 +5340,32 @@ function buildUI() {
     <div class="toolbar"><input id="newBranchName" placeholder="اسم الفرع الجديد" style="max-width:260px;"><button class="btn btn-success perm-manageBranches" onclick="addBranch()">${ico('plus', 15)}<span>إضافة فرع</span></button></div>
     <div id="branchList" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;"></div>`;
   document.getElementById('tab-drivers').innerHTML = `
-    <div class="toolbar"><input id="newDriverName" placeholder="اسم الموصل" style="max-width:220px;"><input id="newDriverPhone" placeholder="رقم الهاتف" style="max-width:220px;"><button class="btn btn-success perm-manageDrivers" onclick="addDriver()">${ico('plus', 15)}<span>إضافة موصل</span></button></div>
-    <div id="driverList" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;"></div>`;
+    <div class="template-card">
+      <h4>${ico('plus', 17)}<span>إضافة موصل جديد</span></h4>
+      <div class="template-row">
+        <label class="field-required">اسم الموصل</label>
+        <input id="newDriverName" placeholder="مثال: أحمد علي">
+      </div>
+      <div class="template-row">
+        <label>رقم الهاتف</label>
+        <input id="newDriverPhone" placeholder="مثال: 771234567" style="direction:ltr;text-align:left;">
+      </div>
+      <div class="template-row" style="align-items:flex-start;">
+        <label>طرق الاستلام المتاحة</label>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <label class="template-checkbox-label"><input type="checkbox" id="newDriverMethodStore" checked><span>المحل</span></label>
+          <label class="template-checkbox-label"><input type="checkbox" id="newDriverMethodDriver" checked><span>موصل</span></label>
+          <label class="template-checkbox-label"><input type="checkbox" id="newDriverMethodOffice" checked><span>مكتب</span></label>
+        </div>
+      </div>
+      <div class="toolbar" style="margin-top:14px;">
+        <button class="btn btn-success perm-manageDrivers" onclick="addDriver()">${ico('plus', 15)}<span>إضافة الموصل</span></button>
+      </div>
+    </div>
+    <div class="template-card">
+      <h4>${ico('truck', 17)}<span>قائمة الموصلين</span></h4>
+      <div id="driverList" style="display:flex;flex-direction:column;gap:10px;"></div>
+    </div>`;
   document.getElementById('tab-users').innerHTML = `
     <div class="toolbar"><button class="btn btn-primary perm-manageUsers" onclick="openUserModal()">${ico('plus', 15)}<span>مستخدم جديد</span></button></div>
     <div class="table-wrap" style="max-width:1050px;"><table style="min-width:auto;"><thead><tr><th>اسم المستخدم</th><th>الدور</th><th>الصلاحيات</th><th>إجراءات</th></tr></thead><tbody id="userBody"></tbody></table></div>`;
@@ -5349,6 +5390,7 @@ function buildUI() {
   document.getElementById('orderModalTitle').innerHTML = ico('plus', 20) + '<span>طلب جديد</span>';
   document.getElementById('custModalTitle').innerHTML = ico('user', 20) + '<span>عميل جديد</span>';
   document.getElementById('userModalTitle').innerHTML = ico('user', 20) + '<span>مستخدم جديد</span>';
+  document.getElementById('driverModalTitle').innerHTML = ico('edit', 20) + '<span>تعديل الموصل</span>';
   document.getElementById('keyModalTitle').innerHTML = ico('lock', 20) + '<span>تحديث المفتاح</span>';
   document.getElementById('shortcutsTitle').innerHTML = ico('keyboard', 20) + '<span>الاختصارات</span>';
   document.getElementById('customFieldModalTitle').innerHTML = ico('grid', 20) + '<span>حقل جديد</span>';
@@ -5436,18 +5478,18 @@ window.resetTemplates = async function () { if (!hasPerm('editTemplates')) { toa
 function handleEnterNavigation(e) {
   if (e.key !== 'Enter') return;
   const el = e.target;
-  if (el.tagName === 'TEXTAREA') { if (e.ctrlKey || e.metaKey) { e.preventDefault(); const mid = el.closest('.modal-bg')?.id; if (mid === 'orderModal') saveOrder(); else if (mid === 'customerModal') saveCustomer(); else if (mid === 'userModal') saveUser(); } return; }
+  if (el.tagName === 'TEXTAREA') { if (e.ctrlKey || e.metaKey) { e.preventDefault(); const mid = el.closest('.modal-bg')?.id; if (mid === 'orderModal') saveOrder(); else if (mid === 'customerModal') saveCustomer(); else if (mid === 'userModal') saveUser(); else if (mid === 'driverModal') saveDriverEdit(); } return; }
   if (el.tagName !== 'INPUT' && el.tagName !== 'SELECT') return;
-  if (e.ctrlKey || e.metaKey) { e.preventDefault(); const mid = el.closest('.modal-bg')?.id; if (mid === 'orderModal') saveOrder(); else if (mid === 'customerModal') saveCustomer(); else if (mid === 'userModal') saveUser(); else if (mid === 'keyModal') saveNewKey(); else if (mid === 'customFieldModal') saveCustomField(); else if (mid === 'taskModal') saveTask(); else if (mid === 'groupModal') saveGroup(); return; }
+  if (e.ctrlKey || e.metaKey) { e.preventDefault(); const mid = el.closest('.modal-bg')?.id; if (mid === 'orderModal') saveOrder(); else if (mid === 'customerModal') saveCustomer(); else if (mid === 'userModal') saveUser(); else if (mid === 'keyModal') saveNewKey(); else if (mid === 'customFieldModal') saveCustomField(); else if (mid === 'taskModal') saveTask(); else if (mid === 'groupModal') saveGroup(); else if (mid === 'driverModal') saveDriverEdit(); return; }
   e.preventDefault();
   const modal = el.closest('.modal'); if (!modal) return;
   const fields = Array.from(modal.querySelectorAll('input:not([type=hidden]):not([disabled]), select:not([disabled]), textarea')).filter(f => f.offsetParent !== null && !f.readOnly);
   const idx = fields.indexOf(el); if (idx === -1) return;
   const nextIdx = e.shiftKey ? idx - 1 : idx + 1;
   if (nextIdx >= 0 && nextIdx < fields.length) { fields[nextIdx].focus(); if (fields[nextIdx].select) fields[nextIdx].select(); }
-  else if (!e.shiftKey) { const mid = modal.parentElement.id; if (mid === 'orderModal') saveOrder(); else if (mid === 'customerModal') saveCustomer(); else if (mid === 'userModal') saveUser(); else if (mid === 'keyModal') saveNewKey(); else if (mid === 'customFieldModal') saveCustomField(); else if (mid === 'taskModal') saveTask(); else if (mid === 'groupModal') saveGroup(); }
+  else if (!e.shiftKey) { const mid = modal.parentElement.id; if (mid === 'orderModal') saveOrder(); else if (mid === 'customerModal') saveCustomer(); else if (mid === 'userModal') saveUser(); else if (mid === 'keyModal') saveNewKey(); else if (mid === 'customFieldModal') saveCustomField(); else if (mid === 'taskModal') saveTask(); else if (mid === 'groupModal') saveGroup(); else if (mid === 'driverModal') saveDriverEdit(); }
 }
-['orderModal','customerModal','userModal','keyModal','customFieldModal','taskModal','groupModal'].forEach(id => { const m = document.getElementById(id); if (m) m.addEventListener('keydown', handleEnterNavigation); });
+['orderModal','customerModal','userModal','keyModal','customFieldModal','taskModal','groupModal','driverModal'].forEach(id => { const m = document.getElementById(id); if (m) m.addEventListener('keydown', handleEnterNavigation); });
 function isInInput() { const t = document.activeElement?.tagName; return t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT'; }
 window.addEventListener('keydown', e => {
   const inInput = isInInput(); const activeModal = getActiveModal(); const dialogActive = document.getElementById('dialogBg').classList.contains('active');
@@ -5459,7 +5501,7 @@ window.addEventListener('keydown', e => {
     if (c === 'Equal' || c === 'NumpadAdd') { e.preventDefault(); zoomIn(); return; }
     if (c === 'Minus' || c === 'NumpadSubtract') { e.preventDefault(); zoomOut(); return; }
     if (c === 'Digit0' || c === 'Numpad0') { e.preventDefault(); zoomReset(); return; }
-    if (c === 'KeyS') { e.preventDefault(); if (activeModal?.id === 'orderModal') saveOrder(); else if (activeModal?.id === 'customerModal') saveCustomer(); else if (activeModal?.id === 'userModal') saveUser(); else if (activeModal?.id === 'keyModal') saveNewKey(); return; }
+    if (c === 'KeyS') { e.preventDefault(); if (activeModal?.id === 'orderModal') saveOrder(); else if (activeModal?.id === 'customerModal') saveCustomer(); else if (activeModal?.id === 'userModal') saveUser(); else if (activeModal?.id === 'keyModal') saveNewKey(); else if (activeModal?.id === 'driverModal') saveDriverEdit(); return; }
     if (c === 'KeyK') { e.preventDefault(); const p = document.querySelector('.page.active')?.id?.replace('page-', ''); const map = { entry: 'entrySearch', ready: 'readySearch', transferred: 'transferredSearch', log: 'logSearch', customers: 'custSearch', tasks: 'tasksSearch' }; const elId = map[p]; if (elId) document.getElementById(elId)?.focus(); return; }
     if (c === 'KeyP') { e.preventDefault(); if (document.getElementById('page-ready').classList.contains('active')) printReady(); else if (document.getElementById('page-transferred').classList.contains('active')) printTransferred(); else if (document.getElementById('page-log').classList.contains('active')) printLog(); else window.print(); return; }
     return;
@@ -5511,7 +5553,10 @@ window.restoreDraft = function () {
     document.getElementById('orderCustomerPhone').value = d.customerPhone || '';
     document.getElementById('orderLocation').value = d.location || '';
     document.getElementById('orderStatus').value = d.status || ORDER_STATUS.PROGRESS;
-    document.getElementById('orderReceiptMethod').value = d.receiptMethod || 'المحل';
+    if (d.receiptMethod) {
+      document.getElementById('orderReceiptMethod').value = d.receiptMethod;
+      onReceiptMethodChange();
+    }
     document.getElementById('orderDriver').value = d.driver || '';
     document.getElementById('orderDriverPhone').value = d.driverPhone || '';
     document.getElementById('orderNotes').value = d.notes || '';
@@ -5552,7 +5597,7 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 window.addEventListener('beforeunload', (e) => {
   if (!currentUser) return;
-  const stats = SaveQueue.getStats();
+  const stats = SaveQueue.getStats ? SaveQueue.getStats() : { pending: 0 };
   if (stats.pending > 0) { e.preventDefault(); e.returnValue = 'لا يزال هناك حفظ جارٍ...'; }
   try { if (_notifSaveTimer) flushNotificationsSave(); } catch {}
   try { if (_activitySaveTimer) flushActivitySave(); } catch {}

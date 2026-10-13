@@ -8,7 +8,7 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<title>نظام إدارة الطلبات</title>
+<title>نظام إدارة الطلبات v4.0</title>
 <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22%D9%86%D8%B8%D8%A7%D9%85%20%D8%A7%D9%84%D8%B7%D9%84%D8%A8%D8%A7%D8%AA%22%2C%22short_name%22%3A%22%D8%A7%D9%84%D8%B7%D9%84%D8%A8%D8%A7%D8%AA%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%233654d4%22%2C%22theme_color%22%3A%22%233654d4%22%7D">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -110,22 +110,20 @@ kbd{background:rgba(15,23,42,.08);color:var(--text-secondary);padding:2px 6px;bo
 .rate-widget.warn .rate-fill{background:linear-gradient(90deg,#ffd66b,#f5a318)}
 .rate-widget.danger .rate-fill{background:linear-gradient(90deg,#f9717f,#ef3d52);animation:pulseRed 1.5s infinite}
 .rate-widget .rate-text{font-family:'SF Mono','Consolas',monospace;letter-spacing:.3px;white-space:nowrap;font-size:10px;opacity:.95;direction:ltr}
-#saveQueueIndicator{display:none;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;background:rgba(255,193,7,.25);border:1px solid rgba(255,193,7,.4);font-size:10.5px;font-weight:700;color:#fff;animation:pulseBlue 1s infinite}
+#saveQueueIndicator{display:none;align-items:center;gap:6px;padding:5px 12px;border-radius:14px;background:linear-gradient(135deg,rgba(255,193,7,.95),rgba(255,152,0,.95));border:1px solid rgba(255,193,7,.6);font-size:11px;font-weight:700;color:#3d2800;box-shadow:0 2px 8px rgba(255,152,0,.4)}
+#saveQueueIndicator.show{display:inline-flex}
+#saveQueueIndicator .ico{animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 #syncIndicator{display:none;align-items:center;gap:4px;padding:4px 10px;border-radius:12px;background:rgba(12,185,123,.25);border:1px solid rgba(12,185,123,.4);font-size:10.5px;font-weight:700;color:#fff}
 #syncIndicator.show{display:inline-flex}
 .col-toggles{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
 .col-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:20px;background:var(--bg);border:1.5px solid var(--border);cursor:pointer;font-size:11.5px;font-weight:600;transition:var(--transition);color:var(--text-muted);font-family:inherit;user-select:none;line-height:1}
 .col-chip:hover{border-color:var(--brand-500);background:var(--hover-bg);color:var(--text);transform:translateY(-1px)}
-.col-chip.active{background:linear-gradient(135deg,var(--success-50),rgba(12,185,123,.18));border-color:var(--success-500);color:var(--success-700);box-shadow:0 2px 8px rgba(12,185,123,.2)}
-[data-theme="dark"] .col-chip{background:rgba(255,255,255,.04)}
-[data-theme="dark"] .col-chip.active{background:linear-gradient(135deg,rgba(12,185,123,.18),rgba(12,185,123,.08));border-color:var(--success-500);color:#6ee7b7}
+.col-chip.active{background:linear-gradient(135deg,var(--success-50),rgba(12,185,123,.18));border-color:var(--success-500);color:var(--success-700)}
 .col-chip .ico{width:12px;height:12px;opacity:.75}
-.col-chip.active .ico{opacity:1}
 .col-chip .col-chip-status{font-size:9px;font-weight:700;opacity:.75;padding:1.5px 6px;border-radius:6px;background:rgba(15,23,42,.06)}
-.col-chip.active .col-chip-status{background:rgba(4,120,80,.2);color:var(--success-700)}
 .col-toggles-actions{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
 .col-toggles-actions button{padding:5px 11px;font-size:11px;border-radius:14px;border:1px solid var(--border);background:var(--card-bg);color:var(--text-muted);cursor:pointer;font-family:inherit;font-weight:600;transition:var(--transition);display:inline-flex;align-items:center;gap:5px}
-.col-toggles-actions button:hover{border-color:var(--brand-500);color:var(--brand-600);background:var(--hover-bg)}
 .logo-size-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:6px}
 .stats-filter-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:12px 16px;background:var(--card-bg);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--card-border);margin-bottom:16px;border-right:3px solid var(--brand-500)}
 .stats-filter-bar .stats-filter-label{font-size:12px;font-weight:700;color:var(--text-muted);display:inline-flex;align-items:center;gap:5px;margin-left:4px}
@@ -142,7 +140,6 @@ kbd{background:rgba(15,23,42,.08);color:var(--text-secondary);padding:2px 6px;bo
 #loadingOverlay{display:none;position:fixed;inset:0;background:rgba(7,11,21,.85);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:22px;color:#fff;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 #loadingOverlay.show{display:flex}
 .spinner{width:62px;height:62px;border:4px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:15px;font-weight:500;letter-spacing:.3px;text-align:center;max-width:80vw}
 .login-loading-progress{width:220px;height:4px;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}
 .login-loading-progress .bar{height:100%;background:linear-gradient(90deg,var(--brand-300),var(--brand-500));width:0%;transition:width .3s ease;border-radius:2px}
@@ -150,26 +147,24 @@ kbd{background:rgba(15,23,42,.08);color:var(--text-secondary);padding:2px 6px;bo
 [data-theme="light"] #loginScreen{background:radial-gradient(circle at 15% 15%,rgba(104,144,250,.35),transparent 45%),radial-gradient(circle at 85% 85%,rgba(167,139,250,.3),transparent 45%),radial-gradient(circle at 50% 50%,rgba(20,184,166,.12),transparent 60%),linear-gradient(135deg,#dbe7ff 0%,#eef4ff 45%,#f2edfe 100%)}
 [data-theme="dark"] #loginScreen{background:radial-gradient(circle at 15% 15%,rgba(66,102,232,.4),transparent 45%),radial-gradient(circle at 85% 85%,rgba(124,58,237,.35),transparent 45%),radial-gradient(circle at 50% 50%,rgba(20,184,166,.12),transparent 60%),linear-gradient(135deg,#060810 0%,#0d1422 45%,#1a2870 100%)}
 #loginScreen::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(66,102,232,.1) 0%,transparent 60%);animation:scRotate 30s linear infinite;pointer-events:none}
+@keyframes scRotate{to{transform:rotate(360deg)}}
 .login-box{position:relative;background:var(--card-bg);padding:44px 40px;border-radius:var(--radius-xl);width:480px;max-width:92vw;animation:slideUp .4s ease;max-height:92vh;overflow-y:auto;border:1px solid var(--card-border)}
 [data-theme="light"] .login-box{box-shadow:0 30px 80px rgba(31,58,123,.18),0 0 0 1px rgba(255,255,255,.6)}
 [data-theme="dark"] .login-box{box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.05)}
 .login-logo{text-align:center;margin-bottom:8px;display:flex;justify-content:center;color:var(--brand-600)}
-[data-theme="dark"] .login-logo{color:var(--brand-400)}
 .login-logo svg{width:54px;height:54px;display:block}
 .login-box h1{color:var(--text);margin-bottom:6px;font-size:24px;text-align:center;font-weight:700;letter-spacing:-.3px}
 .login-box .subtitle{color:var(--text-muted);margin-bottom:28px;font-size:13px;text-align:center}
 .login-box label{display:block;font-size:13px;color:var(--text-secondary);margin-bottom:6px;margin-top:14px;font-weight:600}
 .login-box input{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-md);font-size:14px;font-family:inherit;transition:var(--transition);background:var(--card-bg);color:var(--text)}
-.login-box input:hover{border-color:var(--border-strong)}
 .login-box input:focus{outline:none;border-color:var(--brand-500);box-shadow:0 0 0 4px var(--focus-ring)}
 .login-box button.primary{width:100%;height:48px;margin-top:22px;background:linear-gradient(180deg,#6890fa 0%,#4266e8 55%,#2d4cd9 100%);color:#fff;border:none;border-radius:var(--radius-md);font-size:15px;font-weight:600;cursor:pointer;transition:var(--transition);letter-spacing:.3px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;box-shadow:0 1px 3px rgba(29,49,147,.35),var(--shadow-inset)}
 .login-box button.primary:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 10px 28px rgba(66,102,232,.5),var(--shadow-inset)}
 .login-box button.primary:disabled{opacity:.6;cursor:not-allowed}
 .admin-toggle-link{text-align:center;margin-top:18px;font-size:12px}
 .admin-toggle-link a{color:var(--text-muted);text-decoration:none;border-bottom:1px dashed var(--border);padding-bottom:2px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:var(--transition)}
-.admin-toggle-link a:hover{color:var(--brand-600);border-bottom-color:var(--brand-500)}
 .admin-token-section{display:none;margin-top:16px;padding-top:16px;border-top:2px dashed var(--border)}
-.admin-token-section.show{display:block;animation:fadeSlide .3s ease}
+.admin-token-section.show{display:block}
 .admin-token-section .admin-header{display:flex;align-items:center;gap:8px;color:var(--brand-700);font-weight:700;font-size:14px;margin-bottom:12px;padding:10px 14px;background:var(--brand-50);border-radius:var(--radius-md);border-right:3px solid var(--brand-500)}
 .key-status{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:var(--radius-md);font-size:13px;margin-top:10px}
 .key-status.saved{background:linear-gradient(135deg,var(--success-50),rgba(12,185,123,.08));color:var(--success-700);border:1px solid rgba(6,148,99,.28)}
@@ -353,11 +348,9 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .badge-method{background:linear-gradient(135deg,var(--violet-50),rgba(124,58,237,.12));color:var(--violet-700);border-color:rgba(124,58,237,.25);font-size:10.5px}
 .badge-whatsapp{background:linear-gradient(135deg,rgba(37,211,102,.15),rgba(37,211,102,.06));color:var(--whatsapp-700);border-color:rgba(37,211,102,.35);font-size:10.5px;font-weight:700}
 .receipt-select{padding:5px 10px;padding-left:26px;font-size:11.5px;font-weight:700;border-radius:10px;border:1.5px solid var(--border);background:var(--card-bg);color:var(--text-secondary);width:auto;min-width:78px;cursor:pointer;line-height:1.2;height:auto;background-position:left 8px center;transition:var(--transition)}
-.receipt-select:hover{border-color:var(--brand-400);box-shadow:0 2px 8px rgba(66,102,232,.12)}
 .receipt-select.is-done{background:linear-gradient(135deg,var(--success-50),rgba(12,185,123,.14));border-color:var(--success-500);color:var(--success-700)}
 .receipt-select.owner-locked{background:linear-gradient(135deg,rgba(240,168,36,.12),rgba(240,168,36,.06));border-color:rgba(240,168,36,.4);color:var(--gold-3)}
 .status-select{padding:5px 10px;padding-left:26px;font-size:11.5px;font-weight:700;border-radius:10px;border:1.5px solid var(--border);background:var(--card-bg);color:var(--text-secondary);width:auto;min-width:110px;cursor:pointer;line-height:1.2;height:auto;background-position:left 8px center;transition:var(--transition)}
-.status-select:hover{border-color:var(--brand-400);box-shadow:0 2px 8px rgba(66,102,232,.12)}
 .status-select.is-ready{background:linear-gradient(135deg,var(--success-50),rgba(12,185,123,.14));border-color:var(--success-500);color:var(--success-700)}
 .status-select.is-progress{background:linear-gradient(135deg,var(--warning-50),rgba(245,163,24,.14));border-color:var(--warning-500);color:var(--warning-700)}
 .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:13px;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:11px}
@@ -368,7 +361,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 @keyframes fadeSlide{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes scRotate{to{transform:rotate(360deg)}}
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(7,11,21,.62);z-index:1000;align-items:center;justify-content:center;padding:20px;overflow-y:auto;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .modal-bg.active{display:flex;animation:fadeIn .15s}
 .modal{background:var(--card-bg);padding:28px;border-radius:var(--radius-xl);width:90%;max-width:620px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow-xl);animation:slideUp .25s ease;color:var(--text);border:1px solid var(--card-border)}
@@ -423,7 +415,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .customer-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-md);max-height:260px;overflow-y:auto;display:none;box-shadow:var(--shadow-lg);z-index:200}
 .customer-dropdown.show{display:block;animation:fadeIn .15s}
 .customer-option{padding:11px 15px;cursor:pointer;border-bottom:1px solid var(--divider);font-size:12.5px;transition:var(--transition)}
-.customer-option:last-child{border-bottom:none}
 .customer-option:hover{background:var(--hover-bg)}
 .customer-option .code{color:var(--text-muted);font-size:10.5px;margin-right:6px}
 .customer-option .loc{color:var(--text-muted);font-size:10.5px;float:left}
@@ -431,7 +422,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .customer-option.create{color:var(--success-600);font-weight:700}
 .customer-option.create:hover{background:var(--success-50)}
 .template-card{background:var(--card-bg);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:15px;transition:var(--transition)}
-.template-card:hover{border-color:var(--brand-400);box-shadow:var(--shadow-md)}
 .template-card h4{color:var(--text);margin-bottom:15px;font-size:14px;display:flex!important;align-items:center;gap:8px;padding-bottom:10px;border-bottom:1px solid var(--border)}
 .template-card h4 .ico{width:17px;height:17px;color:var(--brand-600)}
 .template-row{display:grid;grid-template-columns:170px 1fr;gap:11px;align-items:center;margin-bottom:11px}
@@ -465,10 +455,8 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .notif-panel.show{display:flex;animation:slideUp .25s ease}
 .notif-header{padding:14px 18px;background:linear-gradient(135deg,var(--brand-700),var(--brand-500));color:#fff;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}
 .notif-header button{background:rgba(255,255,255,.15);color:#fff;border:none;cursor:pointer;padding:5px;border-radius:6px;font-family:inherit;transition:var(--transition);display:inline-flex;align-items:center;justify-content:center}
-.notif-header button:hover{background:rgba(255,255,255,.3)}
 .notif-list{overflow-y:auto;flex:1;padding:8px}
 .notif-item{padding:12px 14px;border-radius:var(--radius-sm);background:var(--bg);margin-bottom:6px;transition:var(--transition);border-right:3px solid transparent;cursor:pointer}
-.notif-item:hover{background:var(--hover-bg)}
 .notif-item.info{border-right-color:var(--brand-500)}
 .notif-item.success{border-right-color:var(--success-500)}
 .notif-item.warning{border-right-color:var(--warning-500)}
@@ -481,8 +469,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .notif-empty{padding:40px 20px;text-align:center;color:var(--text-muted);font-size:13px}
 .activity-list{background:var(--card-bg);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);padding:8px;border:1px solid var(--card-border)}
 .activity-item{display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:var(--radius-sm);transition:var(--transition);border-bottom:1px solid var(--divider)}
-.activity-item:last-child{border-bottom:none}
-.activity-item:hover{background:var(--hover-bg)}
 .activity-item .activity-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--brand-50);color:var(--brand-600)}
 .activity-item .activity-icon.success{background:var(--success-50);color:var(--success-600)}
 .activity-item .activity-icon.danger{background:var(--danger-50);color:var(--danger-600)}
@@ -493,10 +479,8 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .activity-item .activity-meta{font-size:10.5px;color:var(--text-muted);margin-top:4px;display:flex;gap:10px;flex-wrap:wrap}
 .activity-item .activity-meta span{display:inline-flex;align-items:center;gap:3px}
 .activity-filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;padding:12px 14px;background:var(--card-bg);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--card-border);border-right:3px solid var(--brand-500)}
-.activity-search-box{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:0 12px;transition:var(--transition)}
-.activity-search-box:focus-within{border-color:var(--brand-500);box-shadow:0 0 0 4px var(--focus-ring)}
+.activity-search-box{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:0 12px}
 .activity-search-box input{border:none;background:transparent;padding:9px 0;box-shadow:none!important;width:100%}
-.activity-search-box input:focus{box-shadow:none!important}
 .activity-filters select{width:auto;padding:8px 12px;font-size:12.5px;min-width:140px}
 .activity-stats{display:flex;gap:18px;flex-wrap:wrap;padding:10px 14px;margin-bottom:12px;background:linear-gradient(135deg,var(--brand-50),rgba(104,144,250,.03));border-radius:var(--radius-md);font-size:12.5px;color:var(--text-muted);border:1px solid rgba(66,102,232,.2)}
 .activity-stats span{display:inline-flex;align-items:center;gap:5px}
@@ -504,25 +488,19 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .activity-pagination{margin-top:14px;padding:14px;background:var(--card-bg);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--card-border)}
 .activity-pagination-inner{display:flex;gap:6px;flex-wrap:wrap;align-items:center;justify-content:center}
 .pg-btn{width:36px;height:36px;border:1.5px solid var(--border);background:var(--card-bg);color:var(--text-secondary);border-radius:var(--radius-sm);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:var(--transition);font-family:inherit}
-.pg-btn:hover:not(:disabled){background:var(--hover-bg);border-color:var(--brand-500);color:var(--brand-600)}
 .pg-btn:disabled{opacity:.35;cursor:not-allowed}
-.pg-btn .ico{width:14px;height:14px}
 .pg-num{min-width:36px;height:36px;padding:0 10px;border:1.5px solid var(--border);background:var(--card-bg);color:var(--text-secondary);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:600;transition:var(--transition);font-family:inherit}
-.pg-num:hover{background:var(--hover-bg);border-color:var(--brand-500);color:var(--brand-600)}
 .pg-num.active{background:linear-gradient(180deg,var(--brand-500),var(--brand-700));color:#fff;border-color:var(--brand-700);font-weight:700}
 .pg-dots{padding:0 6px;color:var(--text-muted);font-weight:700;user-select:none}
 .pg-info{font-size:11.5px;color:var(--text-muted);font-weight:600;padding:0 8px}
 .pg-info b{color:var(--brand-700);font-weight:700}
-.custom-field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;background:var(--bg);border-radius:var(--radius-md);border:1px solid var(--border);margin-bottom:8px;transition:var(--transition);position:relative}
-.custom-field-row:hover{border-color:var(--brand-300);box-shadow:var(--shadow-sm)}
+.custom-field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:12px;background:var(--bg);border-radius:var(--radius-md);border:1px solid var(--border);margin-bottom:8px;position:relative}
 .custom-field-row .cf-label{font-size:12px;color:var(--text-muted);font-weight:600;margin-bottom:4px}
 .custom-field-row .cf-value{font-size:13px;color:var(--text);font-weight:500}
-.custom-field-row .cf-actions{position:absolute;top:8px;left:8px;display:flex;gap:4px;opacity:.5;transition:var(--transition)}
+.custom-field-row .cf-actions{position:absolute;top:8px;left:8px;display:flex;gap:4px;opacity:.5}
 .custom-field-row:hover .cf-actions{opacity:1}
-.task-card{padding:14px;border-radius:var(--radius-md);background:var(--bg);border:1px solid var(--border);margin-bottom:8px;transition:var(--transition);position:relative;border-right:3px solid var(--brand-500)}
-.task-card:hover{border-color:var(--brand-300);box-shadow:var(--shadow-sm);transform:translateY(-1px)}
+.task-card{padding:14px;border-radius:var(--radius-md);background:var(--bg);border:1px solid var(--border);margin-bottom:8px;position:relative;border-right:3px solid var(--brand-500)}
 .task-card.completed{opacity:.9;background:linear-gradient(135deg,rgba(12,185,123,.06),rgba(12,185,123,.02));border-right-color:var(--success-500)}
-.task-card.completed:hover{transform:none;box-shadow:none}
 .task-card.high{border-right-color:var(--danger-500)}
 .task-card.medium{border-right-color:var(--warning-500)}
 .task-card.low{border-right-color:var(--success-500)}
@@ -532,8 +510,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .task-card .task-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:11px;color:var(--text-muted);margin-bottom:8px;align-items:center}
 .task-card .task-actions{display:flex;gap:6px;flex-wrap:wrap}
 .task-locked-note{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:linear-gradient(135deg,rgba(240,168,36,.1),rgba(240,168,36,.04));border:1px solid rgba(240,168,36,.3);border-radius:20px;font-size:11.5px;font-weight:600;color:var(--gold-3)}
-.group-card{padding:14px 16px;border-radius:var(--radius-lg);background:var(--bg);border:1px solid var(--border);margin-bottom:12px;transition:var(--transition);border-right:3px solid var(--brand-500)}
-.group-card:hover{border-color:var(--brand-300);box-shadow:var(--shadow-md)}
+.group-card{padding:14px 16px;border-radius:var(--radius-lg);background:var(--bg);border:1px solid var(--border);margin-bottom:12px;border-right:3px solid var(--brand-500)}
 .group-card .group-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px}
 .group-card .group-title{font-weight:700;font-size:14px;color:var(--text)}
 .group-card .group-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--text-muted);margin-top:4px}
@@ -541,8 +518,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 .wa-send-box{margin-top:14px;padding:14px;background:linear-gradient(135deg,rgba(37,211,102,.06),rgba(37,211,102,.02));border:1.5px solid rgba(37,211,102,.28);border-radius:var(--radius-md)}
 .wa-send-box .wa-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--whatsapp-700);margin-bottom:10px}
 .wa-send-box .wa-preview{background:var(--card-bg);padding:10px 12px;border-radius:var(--radius-sm);font-size:12px;color:var(--text-secondary);line-height:1.6;white-space:pre-line;margin-bottom:10px;max-height:120px;overflow-y:auto;border:1px solid var(--border)}
-.invoice-info-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:linear-gradient(135deg,var(--brand-50),rgba(104,144,250,.03));border:1px solid rgba(66,102,232,.25);border-radius:var(--radius-md);margin-bottom:14px;font-size:12.5px;font-weight:600;color:var(--brand-700)}
-.invoice-info-bar .ii-label{display:flex;align-items:center;gap:6px}
 @media print {
     @page { size: A4 portrait; margin: 10mm; }
     html, body { width: 100%; margin: 0 !important; padding: 0 !important; background: #fff !important; color: #000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -558,7 +533,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 }
 @media(max-width:1000px){.rate-widget .rate-text{display:none}.rate-widget{min-width:auto;padding:5px 8px}}
 @media (max-width: 1100px) { header .rate-widget { display: none; } .analytics-row { grid-template-columns: 1fr 1fr !important; } }
-@media (max-width: 900px) { .session-timer { display: none; } .analytics-row.cols-2 { grid-template-columns: 1fr !important; } .analytics-row { grid-template-columns: 1fr !important; } }
+@media (max-width: 900px) { .analytics-row.cols-2 { grid-template-columns: 1fr !important; } .analytics-row { grid-template-columns: 1fr !important; } }
 @media (max-width: 700px) {
   header { height: auto; padding: 8px 10px; flex-direction: column; gap: 8px; }
   header .brand { width: 100%; justify-content: center; }
@@ -604,7 +579,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 ::-webkit-scrollbar{width:10px;height:10px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--slate-300);border-radius:5px;border:2px solid transparent;background-clip:padding-box}
-::-webkit-scrollbar-thumb:hover{background:var(--slate-400);background-clip:padding-box}
+[data-theme="dark"] ::-webkit-scrollbar-thumb{background:var(--slate-600);background-clip:padding-box}
 </style>
 </head>
 <body oncontextmenu="return false">
@@ -638,7 +613,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 <div id="loginScreen">
   <div class="login-box">
     <div class="login-logo" id="loginLogo"></div>
-    <h1>نظام إدارة الطلبات</h1>
+    <h1>نظام إدارة الطلبات v4.0</h1>
     <p class="subtitle">منصة احترافية لإدارة الطلبات</p>
     <div id="keyStatus"></div>
     <div id="keyField" style="display:none;">
@@ -678,7 +653,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
   <header>
     <div class="brand">
       <span class="brand-logo" id="brandLogo"></span>
-      <h1>نظام إدارة الطلبات</h1>
+      <h1>نظام إدارة الطلبات v4.0</h1>
     </div>
     <div class="user-info">
       <span id="saveQueueIndicator"></span>
@@ -774,6 +749,13 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
       <div class="table-wrap"><table><thead><tr id="entryHead"></tr></thead><tbody id="entryBody"></tbody></table></div>
     </section>
 
+    <!-- مجموعات العمل (قبل الطلبات التي تم نقلها) -->
+    <section id="page-groups" class="page" data-feature="featureWorkGroups">
+      <div class="section-header"><h2 id="groupsTitle"></h2><span id="groupsCount" style="color:var(--text-muted);font-size:12.5px;font-weight:600;"></span></div>
+      <div class="toolbar no-print" id="groupsToolbar"></div>
+      <div id="groupsContainer"></div>
+    </section>
+
     <!-- الطلبات الجاهزة -->
     <section id="page-ready" class="page">
       <div class="section-header"><h2 id="readyTitle"></h2></div>
@@ -788,13 +770,6 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
       <div class="filter-bar no-print" id="transferredFilterBar"></div>
       <div class="toolbar no-print" id="transferredToolbar"></div>
       <div class="table-wrap"><table><thead><tr id="transferredHead"></tr></thead><tbody id="transferredBody"></tbody></table></div>
-    </section>
-
-    <!-- مجموعات العمل -->
-    <section id="page-groups" class="page" data-feature="featureWorkGroups">
-      <div class="section-header"><h2 id="groupsTitle"></h2><span id="groupsCount" style="color:var(--text-muted);font-size:12.5px;font-weight:600;"></span></div>
-      <div class="toolbar no-print" id="groupsToolbar"></div>
-      <div id="groupsContainer"></div>
     </section>
 
     <!-- السجل -->
@@ -842,11 +817,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
 <div id="orderModal" class="modal-bg"><div class="modal">
   <h3 id="orderModalTitle"></h3>
   <input type="hidden" id="orderId"><input type="hidden" id="orderCustomerId">
-  <div class="invoice-info-bar">
-    <span class="ii-label"><span id="invoiceIconSlot"></span><span>رقم الفاتورة التالي (تلقائي):</span></span>
-    <b id="nextInvoicePreview" style="font-family:monospace;font-size:14px;direction:ltr;">—</b>
-  </div>
-  <label class="field-required">رقم الفاتورة</label><input id="orderInvoice" autocomplete="off" placeholder="يُملأ تلقائياً">
+  <label class="field-required">رقم الفاتورة</label><input id="orderInvoice" autocomplete="off" placeholder="أدخل رقم الفاتورة">
   <div class="field-error-msg" id="err-orderInvoice"></div>
   <label class="field-required">الفرع</label><select id="orderBranch"></select>
   <div class="field-error-msg" id="err-orderBranch"></div>
@@ -1011,8 +982,7 @@ tbody tr.row-transferred{background:linear-gradient(90deg,rgba(66,102,232,.08),t
   <input id="groupDepartureTime" type="time">
   <label>ملاحظات</label>
   <textarea id="groupNotes" rows="3" placeholder="ملاحظات حول المجموعة..."></textarea>
-  <label>الطلبات</label>
-  <div style="font-size:11.5px;color:var(--text-muted);margin-bottom:8px;">اختر الطلبات من القائمة أدناه</div>
+  <label>الطلبات المتاحة (حالتها جاهز فقط)</label>
   <div id="groupOrdersList" style="max-height:280px;overflow-y:auto;border:1.5px solid var(--border);border-radius:var(--radius-md);padding:8px;background:var(--bg);"></div>
   <div class="modal-actions">
     <button class="btn btn-ghost" onclick="closeModal('groupModal')">إلغاء</button>
@@ -1068,7 +1038,6 @@ const I = {
   list:'M8 6h13 M8 12h13 M8 18h13 M3 6h0 M3 12h0 M3 18h0',
   box:'M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z M3.27 6.96L12 12.01l8.73-5.05 M12 22.08V12',
   archive:'M21 8v13H3V8 M1 3h22v5H1z M10 12h4',
-  archiveBox:'M3 3h18v5H3z M5 8v13h14V8 M10 12h4 M10 16h4',
   transfer:'M17 1l4 4-4 4 M3 11V9a4 4 0 014-4h14 M7 23l-4-4 4-4 M21 13v2a4 4 0 01-4 4H3',
   users:'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2 M9 11a4 4 0 100-8 4 4 0 000 8z M23 21v-2a4 4 0 00-3-3.87 M16 3.13a4 4 0 010 7.75',
   user:'M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2 M12 11a4 4 0 100-8 4 4 0 000 8z',
@@ -1142,28 +1111,28 @@ const GITHUB_OWNER = 'prizes2000-blip';
 const GITHUB_REPO  = 'test';
 const APP_ID       = 'test';
 const APP_BRANCH   = 'main';
-const APP_VERSION  = '3.8.0';
+const APP_VERSION  = '3.9.0';
 
-const SYNC_INTERVAL = 15000;
+const SYNC_INTERVAL = 20000;
 const SYNC_THROTTLE_MS = 2000;
-const SAVE_COOLDOWN = 1200;
-const SESSION_TIMEOUT = 60 * 60 * 1000;
-const SESSION_WARNING = 5 * 60 * 1000;
+const SAVE_COOLDOWN = 1000;
+const SESSION_TIMEOUT = 60 * 60 * 1000;   // ساعة
+const SESSION_WARNING = 5 * 60 * 1000;     // 5 دقائق
 const DRAFT_KEY = 'oms_draft_order';
 const THEME_KEY = 'oms_theme';
 const ACCESS_KEY = 'oms_access_key';
 const KEY_HIDDEN_FLAG = 'oms_key_hidden';
 const ACTIVITY_PER_PAGE = 30;
-const NOTIF_SAVE_DELAY = 600;
-const ACTIVITY_SAVE_DELAY = 1500;
-const INSTANT_SYNC_DELAY = 300;
-const DEBOUNCE_SYNC_MS = 800;
+const NOTIF_SAVE_DELAY = 800;
+const ACTIVITY_SAVE_DELAY = 2000;
+const INSTANT_SYNC_DELAY = 400;
+const DEBOUNCE_SYNC_MS = 1000;
 
 let _broadcastChannel = null;
 function initBroadcast() {
   if (typeof BroadcastChannel === 'undefined') return;
   try {
-    _broadcastChannel = new BroadcastChannel('oms_sync_v38');
+    _broadcastChannel = new BroadcastChannel('oms_sync_v39');
     _broadcastChannel.onmessage = (e) => {
       if (!currentUser) return;
       if (e.data && e.data.type === 'data-changed') {
@@ -1178,8 +1147,8 @@ function broadcastChange() {
 }
 
 const RATE_LEVELS = [
-  { min: 3000, interval: 15000, label: 'مرتفعة' },
-  { min: 1500, interval: 30000, label: 'جيدة' },
+  { min: 3000, interval: 20000, label: 'مرتفعة' },
+  { min: 1500, interval: 40000, label: 'جيدة' },
   { min: 800,  interval: 60000, label: 'متوسطة' },
   { min: 300,  interval: 120000, label: 'منخفضة' },
   { min: 100,  interval: 240000, label: 'منخفضة جداً' },
@@ -1195,7 +1164,7 @@ const DATA_FILES = {
 const KEY_TO_FILE = {
   orders:'orders', ready:'ready', transferred:'transferred', log:'log', customers:'customers',
   users:'settings', drivers:'settings', branches:'settings', templates:'settings',
-  whatsappTemplates:'settings', customFields:'settings', invoiceSettings:'settings',
+  whatsappTemplates:'settings', customFields:'settings',
   notifications:'notifications', meta:'meta', groups:'groups', tasks:'tasks'
 };
 const LEGACY_FILES = { users:'data/users.json', drivers:'data/drivers.json', branches:'data/branches.json', templates:'data/templates.json', activity:'data/activity.json' };
@@ -1224,11 +1193,11 @@ const PAPER_SIZES = {
 const PERMISSIONS = {
   accessDashboard:{label:'الرئيسية',cat:'pages',icon:'home'},
   accessEntry:{label:'إدخال الطلبات',cat:'pages',icon:'list'},
+  accessGroups:{label:'مجموعات العمل',cat:'pages',icon:'layers'},
   accessReady:{label:'الطلبات الجاهزة',cat:'pages',icon:'box'},
   accessTransferred:{label:'الطلبات التي تم نقلها',cat:'pages',icon:'transfer'},
   accessLog:{label:'السجل',cat:'pages',icon:'archive'},
   accessCustomers:{label:'العملاء',cat:'pages',icon:'users'},
-  accessGroups:{label:'مجموعات العمل',cat:'pages',icon:'layers'},
   accessTasks:{label:'المهام',cat:'pages',icon:'check'},
   accessSettings:{label:'الإعدادات',cat:'pages',icon:'cog'},
   addOrder:{label:'إضافة طلب',cat:'entry',icon:'plus'},
@@ -1242,6 +1211,8 @@ const PERMISSIONS = {
   returnSingle:{label:'إرجاع فردي',cat:'ready',icon:'undo'},
   print:{label:'طباعة وتصدير',cat:'ready',icon:'printer'},
   moveToLog:{label:'ترحيل للسجل',cat:'ready',icon:'archiveBox'},
+  editTransferred:{label:'تعديل الطلبات التي تم نقلها',cat:'transferred',icon:'edit'},
+  deleteTransferred:{label:'حذف الطلبات التي تم نقلها',cat:'transferred',icon:'trash'},
   editReceiptStatus:{label:'تأكيد حالة الاستلام',cat:'transferred',icon:'inbox'},
   revertReceiptStatus:{label:'التراجع عن الاستلام',cat:'transferred',icon:'undo'},
   sendWhatsApp:{label:'إرسال إشعار واتساب',cat:'transferred',icon:'whatsapp'},
@@ -1301,12 +1272,13 @@ const PERM_CATEGORIES = {
 const ALL_PERM_KEYS = Object.keys(PERMISSIONS);
 
 const WORKER_DEFAULTS = {
-  accessDashboard:true, accessEntry:true, accessReady:true, accessTransferred:true, accessLog:true,
-  accessCustomers:false, accessGroups:false, accessTasks:false, accessSettings:false,
+  accessDashboard:true, accessEntry:true, accessGroups:true, accessReady:true, accessTransferred:true, accessLog:true,
+  accessCustomers:false, accessTasks:false, accessSettings:false,
   addOrder:true, editOrder:true, deleteOrder:false, changeOrderStatus:true, transferSingle:true, bulkTransfer:false,
   useCustomFields:false, selectReadyOrders:false, returnSingle:false, print:true, moveToLog:false,
+  editTransferred:false, deleteTransferred:false,
   editReceiptStatus:false, revertReceiptStatus:false, sendWhatsApp:true, viewLog:true,
-  featureFuzzySearch:true, featureCustomFields:false, featureWorkGroups:false, featureTasks:false,
+  featureFuzzySearch:true, featureCustomFields:false, featureWorkGroups:true, featureTasks:false,
   filterByReceiptMethod:false, viewMethodsAll:true, viewMethodStore:true, viewMethodDriver:true, viewMethodOffice:true,
   tabToken:false, tabActivity:false, tabAnalytics:false, tabInvoice:false, tabBranches:false, tabDrivers:false,
   tabUsers:false, tabTemplates:false, tabWhatsApp:false, tabCustomFields:false, tabBackup:false,
@@ -1317,10 +1289,11 @@ const WORKER_DEFAULTS = {
   manageFeatures:false, manageInvoice:false
 };
 const MANAGER_DEFAULTS = {
-  accessDashboard:true, accessEntry:true, accessReady:true, accessTransferred:true, accessLog:true,
-  accessCustomers:true, accessGroups:true, accessTasks:true, accessSettings:true,
+  accessDashboard:true, accessEntry:true, accessGroups:true, accessReady:true, accessTransferred:true, accessLog:true,
+  accessCustomers:true, accessTasks:true, accessSettings:true,
   addOrder:true, editOrder:true, deleteOrder:true, changeOrderStatus:true, transferSingle:true, bulkTransfer:true,
   useCustomFields:true, selectReadyOrders:true, returnSingle:true, print:true, moveToLog:true,
+  editTransferred:true, deleteTransferred:false,
   editReceiptStatus:true, revertReceiptStatus:false, sendWhatsApp:true, viewLog:true,
   featureFuzzySearch:true, featureCustomFields:true, featureWorkGroups:true, featureTasks:true,
   filterByReceiptMethod:false, viewMethodsAll:true, viewMethodStore:true, viewMethodDriver:true, viewMethodOffice:true,
@@ -1399,9 +1372,10 @@ let invoiceSettings = JSON.parse(JSON.stringify(DEFAULT_INVOICE_SETTINGS));
 let localMeta = null;
 let pollTimer = null, syncing = false, selectedOrderId = null;
 let selectedReadyIds = new Set();
+let selectedGroupOrders = new Set();
 let zoomLevel = 1, tempPerms = {}, lastSaveTime = 0, saveInProgress = false;
 let rateLimitInfo = null;
-let prevStats = { orders:0, ready:0, transferred:0, log:0, total:0 };
+let prevStats = { orders:0, groups:0, ready:0, transferred:0, log:0, total:0 };
 let hasLegacyFiles = false;
 let sessionTimer = null, sessionWarningTimer = null, sessionExpireAt = 0;
 let activityCurrentPage = 1;
@@ -1412,18 +1386,19 @@ let _notifSaveTimer = null, _activitySaveTimer = null, _instantSyncTimer = null,
 let statsFilter = 'all', statsFromDate = '', statsToDate = '';
 let featureFlags = { featureFuzzySearch: true, featureCustomFields: true, featureWorkGroups: true, featureTasks: true };
 let _groupSelectedOrders = new Set();
+let _connectionErrorCount = 0;
 
 let pageFilters = {
   entry: { search:'', branch:'', status:'', receiptMethod:'' },
-  ready: { search:'', branch:'', status:'', receiptMethod:'' },
-  transferred: { search:'', branch:'', receipt:'', receiptMethod:'' },
+  ready: { search:'', branch:'', receiptMethod:'' },
+  transferred: { search:'', branch:'', receiptMethod:'' },
   log: { search:'', branch:'', receipt:'', receiptMethod:'', from:'', to:'' },
   customers: { search:'' },
   tasks: { search:'', status:'', priority:'' }
 };
 
 const MSG = {
-  connFail:'تعذر الاتصال بالخدمة، يرجى المحاولة لاحقاً', authFail:'بيانات الدخول غير صحيحة، يرجى التحقق والمحاولة مجدداً',
+  connFail:'تعذر الاتصال بالخدمة', authFail:'بيانات الدخول غير صحيحة',
   loadFail:'تعذر تحميل البيانات', saveFail:'تعذر حفظ التغييرات', createFail:'تعذر إنشاء البيانات',
   readFail:'تعذر قراءة البيانات', parseFail:'تعذر معالجة البيانات', rateExceeded:'تم تجاوز الحد المسموح',
   noPermissions:'لا تملك الصلاحيات الكافية', keyInvalid:'المفتاح غير صالح', keyShort:'المفتاح قصير جداً، 20 حرفاً على الأقل',
@@ -1431,7 +1406,8 @@ const MSG = {
   sessionExpired:'انتهت الجلسة، يرجى تسجيل الدخول مجدداً', sessionWarning:'ستنتهي جلستك قريباً',
   unauthorized:'غير مصرح لك بتنفيذ هذا الإجراء', missingData:'يرجى تعبئة الحقول المطلوبة',
   invoiceDup:'رقم الفاتورة مستخدم مسبقاً', taskLocked:'لا يمكن تعديل أو حذف مهمة مكتملة',
-  customerCodeDup:'رقم العميل مستخدم مسبقاً', customerPhoneDup:'رقم الهاتف مستخدم مسبقاً', customerNameDup:'اسم العميل مستخدم مسبقاً'
+  customerCodeDup:'رقم العميل مستخدم مسبقاً', customerPhoneDup:'رقم الهاتف مستخدم مسبقاً', customerNameDup:'اسم العميل مستخدم مسبقاً',
+  orderInGroup:'الطلب موجود في مجموعة عمل، لا يمكن ترحيله إلى الطلبات الجاهزة'
 };
 
 /* ══════════════════════════════════════════════════════════════
@@ -1648,9 +1624,9 @@ const SaveQueue = (() => {
 })();
 
 async function withRetry(fn, opts = {}) {
-  const maxAttempts = opts.maxAttempts || 3;
-  const baseDelay = opts.baseDelay || 400;
-  const maxDelay = opts.maxDelay || 5000;
+  const maxAttempts = opts.maxAttempts || 4;
+  const baseDelay = opts.baseDelay || 600;
+  const maxDelay = opts.maxDelay || 8000;
   let lastErr;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try { return await fn(); }
@@ -1696,8 +1672,9 @@ const Storage = (() => {
     const url = `${API_BASE}/${path}?ref=${APP_BRANCH}&_=${Date.now()}`;
     let res;
     try { res = await fetch(url, { headers: headers(false, cacheKey) }); }
-    catch { setOnline(false); throw new Error(MSG.connFail); }
+    catch { setOnline(false); _connectionErrorCount++; throw new Error(MSG.connFail); }
     updateRateLimit(res.headers);
+    if (res.ok) _connectionErrorCount = 0;
     if (res.status === 304) return { notModified: true, data: null };
     if (!res.ok) {
       if (res.status === 401) throw new Error(MSG.authFail);
@@ -1728,8 +1705,9 @@ const Storage = (() => {
     if (!isCreate && cacheKey && SHAs[cacheKey]) body.sha = SHAs[cacheKey];
     let res;
     try { res = await fetch(`${API_BASE}/${path}`, { method: 'PUT', headers: headers(true), body: JSON.stringify(body) }); }
-    catch { setOnline(false); throw new Error(MSG.connFail); }
+    catch { setOnline(false); _connectionErrorCount++; throw new Error(MSG.connFail); }
     updateRateLimit(res.headers);
+    if (res.ok) _connectionErrorCount = 0;
     if (!res.ok) {
       if (res.status === 409) throw new Error('CONFLICT');
       if (res.status === 404 && !isCreate) throw new Error('NOT_FOUND');
@@ -1755,13 +1733,14 @@ const Storage = (() => {
     }
   }
   async function saveData(path, data, cacheKey = null) {
-    return SaveQueue.enqueue(cacheKey || path, () => withRetry(() => _saveData(path, data, cacheKey), { maxAttempts: 3, baseDelay: 500 }));
+    return SaveQueue.enqueue(cacheKey || path, () => withRetry(() => _saveData(path, data, cacheKey), { maxAttempts: 4, baseDelay: 600 }));
   }
   async function getTreeShas() {
     if (treeDisabled) return null;
     try {
       const res = await fetch(`${TREE_API}&_=${Date.now()}`, { headers: headers(false) });
       updateRateLimit(res.headers);
+      if (res.ok) _connectionErrorCount = 0;
       if (!res.ok) { if (res.status >= 400 && res.status < 500 && res.status !== 403) treeDisabled = true; return null; }
       const json = await res.json();
       const shas = {};
@@ -1919,7 +1898,7 @@ function renderRateLimitWidget() {
   if (pct < 10) widget.classList.add('danger'); else if (pct < 30) widget.classList.add('warn');
   const resetStr = reset ? reset.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' }) : '—';
   const level = getRateLevel(remaining);
-  widget.title = `استهلاك الحصة\nالمتبقي: ${remaining.toLocaleString('en-US')} من ${limit.toLocaleString('en-US')}\nالنسبة: ${pct.toFixed(1)}%\nالمستوى: ${level.label}\nيتجدد الساعة: ${resetStr}`;
+  widget.title = `الحصة\nالمتبقي: ${remaining.toLocaleString('en-US')} من ${limit.toLocaleString('en-US')}\nالنسبة: ${pct.toFixed(1)}%\nالمستوى: ${level.label}\nيتجدد الساعة: ${resetStr}`;
 }
 function getRateLevel(remaining) { for (const lvl of RATE_LEVELS) { if (remaining >= lvl.min) return lvl; } return RATE_LEVELS[RATE_LEVELS.length - 1]; }
 function adjustSyncInterval() {
@@ -1984,8 +1963,6 @@ function normalizeUser(u) {
   u.permissions = clean;
   return u;
 }
-
-/* ✅ يحدد طرق الاستلام المسموح للمستخدم برؤيتها */
 function getAllowedReceiptMethods() {
   if (!currentUser) return [];
   if (currentUser.role === ROLE_OWNER) return RECEIPT_METHODS.slice();
@@ -2003,7 +1980,6 @@ function filterOrdersByPermission(list) {
   if (!allowed.length) return [];
   return list.filter(o => allowed.includes(o.receiptMethod || 'المحل'));
 }
-
 function applyPermissionsUI() {
   document.querySelectorAll('[class*="perm-"]').forEach(el => {
     const classes = el.className.split(' ');
@@ -2014,14 +1990,15 @@ function applyPermissionsUI() {
   rebuildNav(); rebuildSettingsTabs(); applyFeatureUI();
 }
 
+/* ✅ ترتيب التنقل الجديد: الرئيسية → إدخال → مجموعات → جاهزة → تم نقلها → السجل → المهام → العملاء → الإعدادات */
 function rebuildNav() {
   const navBar = document.getElementById('navBar'); if (!navBar) return;
   const items = [
     { page:'dashboard', icon:'home', label:'الرئيسية', perm:'accessDashboard' },
     { page:'entry', icon:'list', label:'إدخال الطلبات', perm:'accessEntry' },
+    { page:'groups', icon:'layers', label:'مجموعات العمل', perm:'accessGroups', feature:'featureWorkGroups' },
     { page:'ready', icon:'box', label:'الطلبات الجاهزة', perm:'accessReady' },
     { page:'transferred', icon:'transfer', label:'الطلبات التي تم نقلها', perm:'accessTransferred' },
-    { page:'groups', icon:'layers', label:'مجموعات العمل', perm:'accessGroups', feature:'featureWorkGroups' },
     { page:'log', icon:'archive', label:'السجل', perm:'accessLog' },
     { page:'tasks', icon:'check', label:'المهام', perm:'accessTasks', feature:'featureTasks' },
     { page:'customers', icon:'users', label:'العملاء', perm:'accessCustomers' },
@@ -2310,26 +2287,36 @@ function updateThemeBtn() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SESSION TIMER
+   SESSION TIMER — مُصلح
    ══════════════════════════════════════════════════════════════ */
 function startSessionTimer() {
   stopSessionTimer();
   sessionExpireAt = Date.now() + SESSION_TIMEOUT;
   updateSessionTimer();
   sessionTimer = setInterval(updateSessionTimer, 1000);
-  sessionWarningTimer = setInterval(checkSessionWarning, 1000);
+  sessionWarningTimer = setInterval(checkSessionWarning, 5000);
 }
 function stopSessionTimer() {
   if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
   if (sessionWarningTimer) { clearInterval(sessionWarningTimer); sessionWarningTimer = null; }
 }
-function resetSessionTimer() { if (currentUser) sessionExpireAt = Date.now() + SESSION_TIMEOUT; }
+function resetSessionTimer() {
+  if (!currentUser) return;
+  sessionExpireAt = Date.now() + SESSION_TIMEOUT;
+}
 function updateSessionTimer() {
   if (!currentUser) return;
   const el = document.getElementById('sessionTimer'); const txt = document.getElementById('sessionTimerText');
   if (!el || !txt) return;
   const remaining = sessionExpireAt - Date.now();
-  if (remaining <= 0) { txt.textContent = 'منتهية'; el.className = 'session-timer danger'; return; }
+  if (remaining <= 0) {
+    txt.textContent = 'منتهية';
+    el.className = 'session-timer danger';
+    stopSessionTimer();
+    logout(true);
+    toast(MSG.sessionExpired, 'warning');
+    return;
+  }
   const mins = Math.floor(remaining / 60000);
   const secs = Math.floor((remaining % 60000) / 1000);
   txt.textContent = `${mins}:${String(secs).padStart(2, '0')}`;
@@ -2337,12 +2324,22 @@ function updateSessionTimer() {
   else if (remaining < SESSION_WARNING) el.className = 'session-timer warning';
   else el.className = 'session-timer';
 }
+let _lastWarnShown = 0;
 function checkSessionWarning() {
   if (!currentUser) return;
   const remaining = sessionExpireAt - Date.now();
-  if (remaining <= 0) { stopSessionTimer(); logout(true); toast(MSG.sessionExpired, 'warning'); return; }
+  if (remaining <= 0) {
+    if (sessionTimer) { clearInterval(sessionTimer); sessionTimer = null; }
+    logout(true); toast(MSG.sessionExpired, 'warning'); return;
+  }
+  const now = Date.now();
+  if (remaining <= SESSION_WARNING && remaining > SESSION_WARNING - 5000 && now - _lastWarnShown > 60000) {
+    _lastWarnShown = now;
+    toast('ستنتهي جلستك خلال 5 دقائق', 'warning');
+  }
 }
-['mousemove','keydown','click','scroll','touchstart'].forEach(evt => {
+/* إعادة تعيين جلسة عند أي نشاط */
+['mousemove','keydown','click','scroll','touchstart','focus'].forEach(evt => {
   document.addEventListener(evt, () => { if (currentUser) resetSessionTimer(); }, { passive: true });
 });
 
@@ -2392,7 +2389,6 @@ function postProcessData() {
     return { id: b.id || uid(), name: b.name || '' };
   }).filter(b => b.name);
   if (!cache.branches.length) cache.branches = [{ id: uid(), name: DEFAULT_BRANCH_NAME }];
-  /* ✅ تنظيف المستخدمين القدامى - إضافة صلاحيات الفلترة بشكل افتراضي */
   cache.users = (cache.users || []).map(u => {
     const nu = normalizeUser(u);
     if (nu.role !== ROLE_OWNER) {
@@ -2429,7 +2425,10 @@ function postProcessData() {
       ...g,
       status: g.status || 'نشطة',
       driverPhone: g.driverPhone || (cache.drivers.find(d => d.name === g.driver)?.phone || ''),
-      orderIds: Array.isArray(g.orderIds) ? g.orderIds.filter(id => cache.ready.some(o => o.id === id) || cache.transferred.some(o => o.id === id) || cache.log.some(o => o.id === id)) : [],
+      orderIds: Array.isArray(g.orderIds) ? g.orderIds.filter(id =>
+        cache.orders.some(o => o.id === id) || cache.ready.some(o => o.id === id) ||
+        cache.transferred.some(o => o.id === id) || cache.log.some(o => o.id === id)
+      ) : [],
       createdAt: g.createdAt || fmtDate(),
       createdBy: g.createdBy || 'system',
       archivedAt: g.archivedAt || null,
@@ -2489,15 +2488,15 @@ async function readAll(keysToRead = null) {
 async function readMeta() {
   try {
     const r = await Storage.loadData(DATA_FILES.meta, 'meta');
-    if (r.notModified) { const m = localMeta || { lastUpdate: '', version: 8 }; loadFeatureFlags(); return m; }
-    const data = r.data || { lastUpdate: '', version: 8 };
+    if (r.notModified) { const m = localMeta || { lastUpdate: '', version: 9 }; loadFeatureFlags(); return m; }
+    const data = r.data || { lastUpdate: '', version: 9 };
     if (data.featureFlags) featureFlags = { ...featureFlags, ...data.featureFlags };
     if (data.invoiceSettings) invoiceSettings = { ...invoiceSettings, ...data.invoiceSettings };
     return data;
-  } catch { return { lastUpdate: '', version: 8 }; }
+  } catch { return { lastUpdate: '', version: 9 }; }
 }
 async function writeMeta(extra = {}) {
-  const meta = { lastUpdate: new Date().toISOString(), version: 8, appVersion: APP_VERSION, featureFlags, invoiceSettings, ...extra };
+  const meta = { lastUpdate: new Date().toISOString(), version: 9, appVersion: APP_VERSION, featureFlags, invoiceSettings, ...extra };
   if (localMeta?.analyticsSettings && !extra.analyticsSettings) meta.analyticsSettings = localMeta.analyticsSettings;
   try { await Storage.saveData(DATA_FILES.meta, meta, 'meta'); localMeta = meta; }
   catch (e) {
@@ -2517,7 +2516,7 @@ async function persistKeys(keys) {
         if (f === 'settings') {
           data = { users: cache.users || [], drivers: cache.drivers || [], branches: cache.branches || [], customFields: cache.customFields || [], templates: templates || {}, whatsappTemplates: whatsappTemplates || {}, invoiceSettings: invoiceSettings || {} };
         } else if (f === 'meta') {
-          data = localMeta || { lastUpdate: new Date().toISOString(), version: 8, appVersion: APP_VERSION, featureFlags, invoiceSettings };
+          data = localMeta || { lastUpdate: new Date().toISOString(), version: 9, appVersion: APP_VERSION, featureFlags, invoiceSettings };
         } else { data = cache[f] || []; }
         await Storage.saveData(DATA_FILES[f], data, f);
       }));
@@ -2601,11 +2600,11 @@ function renderActive() {
   const a = document.querySelector('.page.active')?.id?.replace('page-', '');
   if (a === 'dashboard') renderDashboard();
   if (a === 'entry') renderEntry();
+  if (a === 'groups') renderGroups();
   if (a === 'ready') renderReady();
   if (a === 'transferred') renderTransferred();
   if (a === 'log') renderLog();
   if (a === 'customers') renderCustomers();
-  if (a === 'groups') renderGroups();
   if (a === 'tasks') renderTasks();
   if (a === 'settings') renderSettings();
 }
@@ -2615,7 +2614,7 @@ function setOnline(ok) {
   const dot = document.getElementById('connDot');
   if (dot) dot.className = 'status-dot' + (ok ? ' online' : '');
   const banner = document.getElementById('connectionBanner');
-  if (banner) banner.classList.toggle('show', !ok && !!currentUser);
+  if (banner) banner.classList.toggle('show', !ok && !!currentUser && _connectionErrorCount >= 2);
 }
 function setSyncing(on) {
   const dot = document.getElementById('connDot');
@@ -2668,265 +2667,36 @@ async function changeReceiptStatusWithTransfer(orderId, newStatus) {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   DRIVER SUGGESTION
+   GROUP HELPERS
    ══════════════════════════════════════════════════════════════ */
-const DriverSuggestion = (() => {
-  function getSettings() { return { ...DEFAULT_ANALYTICS_SETTINGS, ...(localMeta?.analyticsSettings || {}) }; }
-  function normalizeLocation(loc) { if (!loc) return ''; return loc.split(/[-–—,]/)[0].trim().toLowerCase(); }
-  function _calcCandidates(customerLocation, excludeDriver = null) {
-    const settings = getSettings();
-    if (!settings.driverSuggestionEnabled) return [];
-    if (!customerLocation) return [];
-    const targetLoc = normalizeLocation(customerLocation);
-    if (!targetLoc) return [];
-    const all = [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log];
-    const stats = {};
-    all.forEach(o => {
-      if (!o.driver) return;
-      if (excludeDriver && o.driver === excludeDriver) return;
-      const oLoc = normalizeLocation(o.location);
-      if (!oLoc) return;
-      let score = 0;
-      if (oLoc === targetLoc) score = 3;
-      else if (oLoc.includes(targetLoc) || targetLoc.includes(oLoc)) score = 2;
-      else { const tWords = targetLoc.split(/\s+/); const oWords = oLoc.split(/\s+/); if (tWords.filter(w => w.length > 2 && oWords.includes(w)).length > 0) score = 1; }
-      if (score === 0) return;
-      if (!stats[o.driver]) stats[o.driver] = { name: o.driver, phone: o.driverPhone || '', score: 0, count: 0, delivered: 0 };
-      stats[o.driver].score += score; stats[o.driver].count++;
-      if (o.receiptStatus === RECEIPT_RECEIVED || o.status === ORDER_STATUS.READY) stats[o.driver].delivered++;
-      if (o.driverPhone) stats[o.driver].phone = o.driverPhone;
-    });
-    return Object.values(stats).filter(s => s.count >= settings.driverSuggestionMinOrders)
-      .map(s => ({ ...s, successRate: s.count > 0 ? Math.round((s.delivered / s.count) * 100) : 0, finalScore: s.score * 10 + s.successRate }))
-      .sort((a, b) => b.finalScore - a.finalScore);
-  }
-  return { getAllSuggestions: (l) => _calcCandidates(l).slice(0, 3) };
-})();
-function updateDriverSuggestion() {
-  const settings = { ...DEFAULT_ANALYTICS_SETTINGS, ...(localMeta?.analyticsSettings || {}) };
-  if (!settings.driverSuggestionEnabled) { const b = document.getElementById('driverSuggestionBox'); if (b) b.style.display = 'none'; return; }
-  const locationVal = document.getElementById('orderLocation').value.trim();
-  const currentDriver = document.getElementById('orderDriver').value;
-  const box = document.getElementById('driverSuggestionBox'); if (!box) return;
-  if (!locationVal) { box.style.display = 'none'; return; }
-  const suggestions = DriverSuggestion.getAllSuggestions(locationVal);
-  if (!suggestions.length) { box.style.display = 'none'; return; }
-  const top = suggestions[0];
-  if (top.name === currentDriver) { box.style.display = 'none'; return; }
-  box.style.display = 'block';
-  box.innerHTML = `
-    <div style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--brand-50);border:1px solid rgba(66,102,232,.25);border-radius:var(--radius-md);margin-top:8px;">
-      <div style="flex:1;min-width:0;">
-        <div style="font-weight:700;font-size:12.5px;color:var(--brand-700);margin-bottom:4px;">اقتراح تلقائي للموصل</div>
-        <div style="font-size:12px;color:var(--text-secondary);line-height:1.5;margin-bottom:8px;">
-          <b>${esc(top.name)}</b> - جيد في منطقة "${esc(locationVal.split(/[-–—,]/)[0].trim())}"
-          ${top.phone ? `<br><span style="opacity:.85;font-family:monospace;direction:ltr;">${esc(top.phone)}</span>` : ''}
-          <br><span style="opacity:.7;font-size:11px;">${top.count} طلب - نسبة النجاح ${top.successRate}%</span>
-        </div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-          <button type="button" class="btn btn-primary btn-sm" onclick="applyDriverSuggestion('${esc(top.name).replace(/'/g, "&#39;")}', '${esc(top.phone || '').replace(/'/g, "&#39;")}')">تعيين ${esc(top.name)}</button>
-        </div>
-      </div>
-      <button type="button" onclick="dismissDriverSuggestion()" style="border:none;background:transparent;color:var(--text-muted);cursor:pointer;font-size:16px;padding:0 4px;line-height:1;">×</button>
-    </div>`;
+function getOrderGroup(orderId) {
+  return (cache.groups || []).find(g => g.status !== 'مؤرشفة' && (g.orderIds || []).includes(orderId));
 }
-window.applyDriverSuggestion = function(driverName, phone) {
-  const sel = document.getElementById('orderDriver'); if (!sel) return;
-  let found = false;
-  for (let i = 0; i < sel.options.length; i++) { if (sel.options[i].value === driverName) { sel.selectedIndex = i; found = true; break; } }
-  if (!found) { const opt = document.createElement('option'); opt.value = driverName; opt.textContent = driverName; opt.dataset.phone = phone || ''; sel.appendChild(opt); sel.value = driverName; }
-  if (phone) document.getElementById('orderDriverPhone').value = phone;
-  const box = document.getElementById('driverSuggestionBox'); if (box) box.style.display = 'none';
-  toast(`تم تعيين الموصل: ${driverName}`, 'success');
-};
-window.dismissDriverSuggestion = function() { const box = document.getElementById('driverSuggestionBox'); if (box) box.style.display = 'none'; };
-
-/* ══════════════════════════════════════════════════════════════
-   WHATSAPP
-   ══════════════════════════════════════════════════════════════ */
-function buildWhatsAppMessage(order, method) {
-  const m = method || order.receiptMethod || 'المحل';
-  const tpl = whatsappTemplates[m] || DEFAULT_WHATSAPP_TEMPLATES[m] || DEFAULT_WHATSAPP_TEMPLATES['المحل'];
-  return String(tpl.message || '')
-    .replace(/{customer}/g, order.customer || '')
-    .replace(/{invoice}/g, order.invoice || '')
-    .replace(/{driver}/g, order.driver || '—')
-    .replace(/{driverPhone}/g, order.driverPhone || '—')
-    .replace(/{customerPhone}/g, order.customerPhone || '—')
-    .replace(/{date}/g, fmtDate())
-    .replace(/{method}/g, m);
+function isOrderInActiveGroup(orderId) { return !!getOrderGroup(orderId); }
+function getGroupOrders(groupId) {
+  const g = cache.groups.find(x => x.id === groupId); if (!g) return [];
+  const orders = [];
+  (g.orderIds || []).forEach(id => {
+    const o = cache.orders.find(x => x.id === id) || cache.ready.find(x => x.id === id) ||
+              cache.transferred.find(x => x.id === id) || cache.log.find(x => x.id === id);
+    if (o) orders.push(o);
+  });
+  return orders;
 }
-function normalizePhoneForWhatsApp(phone) {
-  if (!phone) return '';
-  let p = String(phone).trim(); p = p.replace(/[^0-9]/g, '');
-  if (/^7\d{8}$/.test(p)) p = '967' + p;
-  else if (/^0\d{9}$/.test(p)) p = '967' + p.substring(1);
-  return p;
+function isOrderLockedByGroup(orderId, excludeGroupId = null) {
+  return (cache.groups || []).some(g => {
+    if (excludeGroupId && g.id === excludeGroupId) return false;
+    if (g.status === 'مؤرشفة') return false;
+    return (g.orderIds || []).includes(orderId);
+  });
 }
-function openWhatsApp(phone, message) {
-  phone = String(phone).replace(/[^\d]/g, '');
-  const text = encodeURIComponent(message);
-  const ua = navigator.userAgent;
-  if (/Android/i.test(ua)) { window.location.href = `intent://send?phone=${phone}&text=${text}#Intent;scheme=whatsapp;package=com.whatsapp;end`; setTimeout(() => { try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 5000); } catch(_){} }, 1800); return; }
-  if (/iPhone|iPad|iPod/i.test(ua)) { window.location.href = `whatsapp://send?phone=${phone}&text=${text}`; setTimeout(() => { try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 5000); } catch(_){} }, 1800); return; }
-  try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 6000); } catch(_){}
+/* ✅ الطلبات المتاحة للمجموعة: من الإدخال بحالة "جاهز" وغير محجوزة */
+function getAvailableOrdersForGroup(excludeGroupId = null) {
+  return cache.orders.filter(o =>
+    o.status === ORDER_STATUS.READY &&
+    !isOrderLockedByGroup(o.id, excludeGroupId)
+  );
 }
-window.openWhatsAppModal = function(orderId, location = 'transferred') {
-  if (!hasPerm('sendWhatsApp')) { toast(MSG.unauthorized, 'error'); return; }
-  const o = (location === 'transferred' ? cache.transferred : location === 'log' ? cache.log : [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log]).find(x => x.id === orderId);
-  if (!o) { toast('الطلب غير موجود', 'error'); return; }
-  document.getElementById('waOrderId').value = orderId;
-  document.getElementById('waReceiptMethod').value = o.receiptMethod || 'المحل';
-  document.getElementById('waCustomerPhone').value = normalizePhoneForWhatsApp(o.customerPhone) || o.customerPhone || '';
-  document.getElementById('whatsappModalTitle').innerHTML = ico('whatsapp', 20) + `<span>إرسال واتساب - ${esc(o.invoice)}</span>`;
-  document.getElementById('waTitleIcon').innerHTML = ico('whatsapp', 16);
-  document.getElementById('waSendIcon').innerHTML = ico('whatsapp', 15);
-  updateWhatsAppPreview();
-  openModal('whatsappModal');
-};
-window.updateWhatsAppPreview = function() {
-  const orderId = document.getElementById('waOrderId').value;
-  const method = document.getElementById('waReceiptMethod').value;
-  const o = [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log].find(x => x.id === orderId);
-  if (!o) return;
-  document.getElementById('waMessagePreview').textContent = buildWhatsAppMessage(o, method);
-};
-window.confirmSendWhatsApp = function() {
-  const orderId = document.getElementById('waOrderId').value;
-  const method = document.getElementById('waReceiptMethod').value;
-  const phone = document.getElementById('waCustomerPhone').value.trim();
-  if (!phone) { toast('يرجى إدخال رقم الواتساب', 'error'); return; }
-  const o = [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log].find(x => x.id === orderId);
-  if (!o) { toast('الطلب غير موجود', 'error'); return; }
-  const normalized = normalizePhoneForWhatsApp(phone);
-  const msg = buildWhatsAppMessage(o, method);
-  logActivity('whatsapp-sent', `إرسال واتساب: ${o.invoice}`, `إلى: ${o.customer} (${method})`, 'success', orderId);
-  renderActive();
-  openWhatsApp(normalized, msg);
-  closeModal('whatsappModal');
-  toast('تم تجهيز رسالة الواتساب', 'success');
-};
-
-/* ══════════════════════════════════════════════════════════════
-   ANALYTICS
-   ══════════════════════════════════════════════════════════════ */
-const Analytics = (() => {
-  function getAllOrders() { return [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log]; }
-  function getOrderDate(o) { return parseDate(o.createdAt) || parseDate(o.transferredAt) || parseDate(o.archivedAt); }
-  function inRange(date, from, to) { if (!date) return false; if (from && date < from) return false; if (to && date >= to) return false; return true; }
-  function getPeriodOrders(period) {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    let from = null, to = null;
-    if (period === 'today') { from = today; to = new Date(today.getTime() + 86400000); }
-    else if (period === 'week') { from = new Date(today.getTime() - 6 * 86400000); to = new Date(today.getTime() + 86400000); }
-    else if (period === 'month') { from = new Date(today.getTime() - 29 * 86400000); to = new Date(today.getTime() + 86400000); }
-    else if (period === 'month-prev') { from = new Date(today.getFullYear(), today.getMonth() - 1, 1); to = new Date(today.getFullYear(), today.getMonth(), 1); }
-    const all = getAllOrders();
-    if (!from && !to) return all;
-    return all.filter(o => inRange(getOrderDate(o), from, to));
-  }
-  function analyzeCustomers(orders = null) {
-    const list = orders || getAllOrders();
-    const stats = {};
-    list.forEach(o => {
-      const key = o.customer || '';
-      if (!key) return;
-      if (!stats[key]) stats[key] = { name: key, count: 0, received: 0, notReceived: 0, firstOrder: null, lastOrder: null, locations: new Set(), drivers: new Set(), methods: {} };
-      const s = stats[key];
-      s.count++;
-      if (o.receiptStatus === RECEIPT_RECEIVED) s.received++;
-      else s.notReceived++;
-      const d = getOrderDate(o);
-      if (d) { if (!s.firstOrder || d < s.firstOrder) s.firstOrder = d; if (!s.lastOrder || d > s.lastOrder) s.lastOrder = d; }
-      if (o.location) s.locations.add(o.location);
-      if (o.driver) s.drivers.add(o.driver);
-      if (o.receiptMethod) s.methods[o.receiptMethod] = (s.methods[o.receiptMethod] || 0) + 1;
-    });
-    const inactiveDays = localMeta?.analyticsSettings?.anomalyInactiveDays || 30;
-    return Object.values(stats).map(s => ({
-      ...s, locations: Array.from(s.locations), drivers: Array.from(s.drivers),
-      daysSinceLastOrder: s.lastOrder ? Math.floor((Date.now() - s.lastOrder.getTime()) / 86400000) : null,
-      loyaltyScore: s.count * 10 + s.received * 5,
-      isInactive: s.lastOrder && Math.floor((Date.now() - s.lastOrder.getTime()) / 86400000) > inactiveDays
-    }));
-  }
-  function analyzeDrivers(orders = null) {
-    const list = orders || getAllOrders();
-    const stats = {};
-    list.forEach(o => {
-      if (!o.driver) return;
-      if (!stats[o.driver]) stats[o.driver] = { name: o.driver, phone: o.driverPhone || '', total: 0, delivered: 0, locations: {}, customers: {} };
-      const s = stats[o.driver];
-      s.total++;
-      if (o.receiptStatus === RECEIPT_RECEIVED) s.delivered++;
-      if (o.location) { const loc = o.location.split(/[-–—,]/)[0].trim(); s.locations[loc] = (s.locations[loc] || 0) + 1; }
-      if (o.customer) s.customers[o.customer] = (s.customers[o.customer] || 0) + 1;
-    });
-    return Object.values(stats).map(s => {
-      const topLocation = Object.entries(s.locations).sort((a,b) => b[1] - a[1])[0];
-      const successRate = s.total > 0 ? Math.round((s.delivered / s.total) * 100) : 0;
-      return { ...s, locations: Object.entries(s.locations).sort((a,b) => b[1] - a[1]).map(([k,v]) => ({ location: k, count: v })), topLocation: topLocation ? topLocation[0] : null, topLocationCount: topLocation ? topLocation[1] : 0, successRate, customersCount: Object.keys(s.customers).length };
-    });
-  }
-  function analyzeLocations(orders = null) {
-    const list = orders || getAllOrders();
-    const stats = {};
-    list.forEach(o => {
-      if (!o.location) return;
-      const loc = o.location.split(/[-–—,]/)[0].trim();
-      if (!loc) return;
-      if (!stats[loc]) stats[loc] = { location: loc, count: 0, customers: new Set(), drivers: new Set() };
-      stats[loc].count++;
-      if (o.customer) stats[loc].customers.add(o.customer);
-      if (o.driver) stats[loc].drivers.add(o.driver);
-    });
-    return Object.values(stats).map(s => ({ ...s, customersCount: s.customers.size, driversCount: s.drivers.size })).sort((a, b) => b.count - a.count);
-  }
-  function comparePeriods(p1, p2) {
-    const d1 = getPeriodOrders(p1); const d2 = getPeriodOrders(p2);
-    const calc = (list) => ({
-      total: list.length,
-      received: list.filter(o => o.receiptStatus === RECEIPT_RECEIVED).length,
-      notReceived: list.filter(o => o.receiptStatus === RECEIPT_NOT_RECEIVED).length,
-      customers: new Set(list.map(o => o.customer).filter(Boolean)).size,
-      drivers: new Set(list.map(o => o.driver).filter(Boolean)).size
-    });
-    const s1 = calc(d1), s2 = calc(d2);
-    const diff = (a, b) => { if (b === 0 && a === 0) return { pct: 0, dir: 'flat' }; if (b === 0) return { pct: 100, dir: 'up' }; const pct = Math.round(((a - b) / b) * 100); return { pct: Math.abs(pct), dir: pct > 0 ? 'up' : pct < 0 ? 'down' : 'flat' }; };
-    return { current: { period: p1, ...s1 }, previous: { period: p2, ...s2 }, changes: { total: diff(s1.total, s2.total), received: diff(s1.received, s2.received), notReceived: diff(s1.notReceived, s2.notReceived), customers: diff(s1.customers, s2.customers), drivers: diff(s1.drivers, s2.drivers) } };
-  }
-  return { getAllOrders, getOrderDate, getPeriodOrders, analyzeCustomers, analyzeDrivers, analyzeLocations, comparePeriods };
-})();
-
-const Anomaly = (() => {
-  function getSettings() { return { ...DEFAULT_ANALYTICS_SETTINGS, ...(localMeta?.analyticsSettings || {}) }; }
-  function detectAll() {
-    const s = getSettings(); const anomalies = []; const all = Analytics.getAllOrders(); const now = Date.now();
-    const windowMs = s.anomalyWindowDays * 86400000;
-    const recent = all.filter(o => { const d = Analytics.getOrderDate(o); return d && (now - d.getTime()) <= windowMs; });
-    const previous = all.filter(o => { const d = Analytics.getOrderDate(o); return d && (now - d.getTime()) > windowMs && (now - d.getTime()) <= windowMs * 2; });
-    if (previous.length >= 5) {
-      const drop = ((previous.length - recent.length) / previous.length) * 100;
-      if (drop >= s.anomalyDropPercent) anomalies.push({ type: 'drop', severity: drop >= 60 ? 'high' : 'medium', icon: 'trendDown', title: 'انخفاض في عدد الطلبات', description: `انخفضت الطلبات بنسبة ${Math.round(drop)}%`, suggestion: 'راجع أسباب انخفاض الطلب' });
-    }
-    if (previous.length >= 5) {
-      const spike = ((recent.length - previous.length) / previous.length) * 100;
-      if (spike >= s.anomalySpikePercent) anomalies.push({ type: 'spike', severity: spike >= 100 ? 'high' : 'medium', icon: 'trendUp', title: 'ارتفاع غير طبيعي', description: `ارتفعت الطلبات بنسبة ${Math.round(spike)}%`, suggestion: 'تأكد من الجاهزية' });
-    }
-    const customers = Analytics.analyzeCustomers();
-    const inactive = customers.filter(c => c.daysSinceLastOrder && c.daysSinceLastOrder >= s.anomalyInactiveDays && c.count >= 3);
-    if (inactive.length > 0) anomalies.push({ type: 'inactive-customers', severity: inactive.length >= 10 ? 'high' : 'medium', icon: 'user', title: `${inactive.length} عميل غير نشط`, description: inactive.slice(0, 5).map(c => `- ${c.name} (${c.daysSinceLastOrder} يوم)`).join('\n'), suggestion: 'تواصل معهم' });
-    const invoiceMap = {};
-    all.forEach(o => { if (!o.invoice) return; const key = String(o.invoice).trim(); if (!invoiceMap[key]) invoiceMap[key] = []; invoiceMap[key].push(o); });
-    const duplicates = Object.entries(invoiceMap).filter(([_, arr]) => arr.length > 1);
-    if (duplicates.length > 0) anomalies.push({ type: 'duplicate-invoice', severity: 'high', icon: 'warning', title: `${duplicates.length} فاتورة مكررة!`, description: duplicates.slice(0, 5).map(([inv, arr]) => `- ${inv} (${arr.length}x)`).join('\n'), suggestion: 'راجعها فوراً' });
-    const staleTransferred = cache.transferred.filter(o => { const d = parseDate(o.transferredAt); if (!d) return false; return Math.floor((now - d.getTime()) / 86400000) >= 14; });
-    if (staleTransferred.length > 0) anomalies.push({ type: 'stale-transferred', severity: staleTransferred.length >= 5 ? 'high' : 'medium', icon: 'clock', title: `${staleTransferred.length} طلب منذ 14+ يوم`, description: staleTransferred.slice(0, 5).map(o => `- ${o.invoice} - ${o.customer}`).join('\n'), suggestion: 'تابع العملاء' });
-    return anomalies.sort((a, b) => { const sev = { high: 3, medium: 2, low: 1 }; return (sev[b.severity] || 0) - (sev[a.severity] || 0); });
-  }
-  return { detectAll };
-})();
 
 /* ══════════════════════════════════════════════════════════════
    RENDER: ENTRY
@@ -2957,18 +2727,25 @@ function renderEntry() {
   body.innerHTML = data.map((o, i) => {
     const cls = o.status === ORDER_STATUS.READY ? 'status-ready' : 'status-progress';
     const sel = selectedOrderId === o.id ? ' selected' : '';
-    const statusCell = canChangeStatus
+    const group = getOrderGroup(o.id);
+    const isLocked = !!group;
+    const statusCell = canChangeStatus && !isLocked
       ? `<select class="status-select ${o.status === ORDER_STATUS.READY ? 'is-ready' : 'is-progress'}" onclick="event.stopPropagation()" onchange="changeOrderStatus('${o.id}', this.value, 'orders')">
           <option value="${ORDER_STATUS.PROGRESS}" ${o.status === ORDER_STATUS.PROGRESS ? 'selected' : ''}>${ORDER_STATUS.PROGRESS}</option>
           <option value="${ORDER_STATUS.READY}" ${o.status === ORDER_STATUS.READY ? 'selected' : ''}>${ORDER_STATUS.READY}</option>
         </select>`
       : badge(o.status);
+    /* ✅ منع تحويل الطلبات المحجوزة في مجموعة */
+    const transferBtn = canTrans && !isLocked
+      ? `<button class="btn btn-success btn-sm" onclick="event.stopPropagation();transferSingle('${o.id}')" title="تحويل">${ico('arrowRight', 13)}</button>`
+      : (isLocked ? `<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;font-size:10px;" title="محجوز في مجموعة: ${esc(group.name)}">${ico('lock', 11)} ${esc(group.name.substring(0, 15))}${group.name.length > 15 ? '…' : ''}</span>` : '');
     const btns = `
-      ${canEdit ? `<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();editOrder('${o.id}')" title="تعديل">${ico('edit', 13)}</button>` : ''}
-      ${canTrans ? `<button class="btn btn-success btn-sm" onclick="event.stopPropagation();transferSingle('${o.id}')" title="تحويل">${ico('arrowRight', 13)}</button>` : ''}
-      ${canDelete ? `<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteOrder('${o.id}')" title="حذف">${ico('trash', 13)}</button>` : ''}
+      ${canEdit && !isLocked ? `<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();editOrder('${o.id}')" title="تعديل">${ico('edit', 13)}</button>` : ''}
+      ${transferBtn}
+      ${canDelete && !isLocked ? `<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteOrder('${o.id}')" title="حذف">${ico('trash', 13)}</button>` : ''}
     `;
-    return `<tr class="${cls}${sel}" data-id="${o.id}" onclick="selectRow('${o.id}', event)" ondblclick="${canEdit ? `editOrder('${o.id}')` : ''}">
+    const rowClass = ((o.status === ORDER_STATUS.READY ? 'status-ready ' : '') + (sel ? 'selected ' : '') + (isLocked ? 'row-locked' : '')).trim();
+    return `<tr class="${rowClass}" data-id="${o.id}" onclick="selectRow('${o.id}', event)" ondblclick="${canEdit && !isLocked ? `editOrder('${o.id}')` : ''}">
       <td>${i+1}</td><td><b>${esc(o.invoice)}</b></td><td>${branchBadge(o.branch)}</td><td>${esc(o.customer)}</td>
       <td>${phoneBadge(o.customerPhone)}</td>
       <td>${esc(o.location)}</td><td>${statusCell}</td>
@@ -3005,23 +2782,184 @@ window.changeOrderStatus = async function(orderId, newStatus, source = 'orders')
 };
 
 /* ══════════════════════════════════════════════════════════════
-   RENDER: READY
+   RENDER: GROUPS (من الإدخال بحالة جاهز)
+   ══════════════════════════════════════════════════════════════ */
+function renderGroups() {
+  const container = document.getElementById('groupsContainer'); if (!container) return;
+  const allGroups = cache.groups || [];
+  const activeGroups = allGroups.filter(g => g.status !== 'مؤرشفة');
+  const archivedGroups = allGroups.filter(g => g.status === 'مؤرشفة');
+  document.getElementById('groupsCount').textContent = `نشطة: ${activeGroups.length} - مؤرشفة: ${archivedGroups.length}`;
+  if (!allGroups.length) { container.innerHTML = `<div class="empty-state"><div class="icon">${ico('layers', 26)}</div><div class="title">لا توجد مجموعات</div><div class="desc">ابدأ بإنشاء مجموعة عمل جديدة</div></div>`; return; }
+  const renderGroupCard = (g, isArchived) => {
+    const orders = getGroupOrders(g.id);
+    const canDelete = hasPerm('deleteGroup');
+    const canEdit = hasPerm('manageGroups');
+    const canMove = hasPerm('moveToLog');
+    const driverPhone = g.driverPhone || (cache.drivers.find(d => d.name === g.driver)?.phone || '');
+    return `<div class="group-card" style="${isArchived ? 'opacity:.75;border-right-color:var(--text-muted);' : ''}">
+      <div class="group-header">
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+            <div class="group-title">${esc(g.name)}</div>
+            ${isArchived ? `<span class="badge" style="background:var(--slate-100);color:var(--slate-600);font-size:10px;">${ico('archive', 11)} مؤرشفة</span>` : `<span class="badge badge-ready" style="font-size:10px;">${ico('check', 11)} نشطة</span>`}
+          </div>
+          <div class="group-meta">
+            ${g.driver ? `<span>${ico('truck', 12)} ${esc(g.driver)}</span>` : ''}
+            ${driverPhone ? `<span>${ico('phone', 12)} ${esc(driverPhone)}</span>` : ''}
+            ${g.departureTime ? `<span>${ico('clock', 12)} ${esc(g.departureTime)}</span>` : ''}
+            <span>${ico('box', 12)} ${orders.length} طلب</span>
+            <span>${ico('user', 12)} ${esc(g.createdBy || '—')}</span>
+          </div>
+        </div>
+        <div class="group-actions">
+          <button class="btn btn-ghost btn-sm" onclick="printGroup('${g.id}')" title="طباعة المجموعة">${ico('printer', 13)}</button>
+          ${!isArchived && canMove ? `<button class="btn btn-purple btn-sm" onclick="transferGroupToTransferred('${g.id}')" title="ترحيل المجموعة">${ico('transfer', 13)}<span>ترحيل</span></button>` : ''}
+          ${!isArchived && canEdit ? `<button class="btn btn-primary btn-sm" onclick="editGroup('${g.id}')" title="تعديل">${ico('edit', 13)}</button>` : ''}
+          ${canDelete ? `<button class="btn btn-danger btn-sm" onclick="deleteGroup('${g.id}')" title="حذف">${ico('trash', 13)}</button>` : ''}
+        </div>
+      </div>
+      ${g.notes ? `<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;padding:6px 10px;background:var(--card-bg);border-radius:var(--radius-sm);">${esc(g.notes)}</div>` : ''}
+      ${orders.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">${orders.slice(0, 20).map(o => `<span style="font-size:11px;padding:3px 8px;background:var(--card-bg);border-radius:10px;border:1px solid var(--border);">${esc(o.invoice)} - ${esc(o.customer)}</span>`).join('')}${orders.length > 20 ? `<span style="font-size:11px;padding:3px 8px;color:var(--text-muted);">+${orders.length - 20}</span>` : ''}</div>` : `<div style="font-size:12px;color:var(--text-muted);">لا توجد طلبات</div>`}
+    </div>`;
+  };
+  let html = '';
+  if (activeGroups.length) { html += `<div style="font-size:13px;font-weight:700;color:var(--text-muted);margin-bottom:10px;">${ico('layers', 14)} المجموعات النشطة (${activeGroups.length})</div>`; html += activeGroups.map(g => renderGroupCard(g, false)).join(''); }
+  if (archivedGroups.length) { html += `<div style="font-size:13px;font-weight:700;color:var(--text-muted);margin:18px 0 10px;">${ico('archive', 14)} المؤرشفة (${archivedGroups.length})</div>`; html += archivedGroups.map(g => renderGroupCard(g, true)).join(''); }
+  container.innerHTML = html;
+}
+function renderGroupOrdersList() {
+  const el = document.getElementById('groupOrdersList'); if (!el) return;
+  const currentGroupId = document.getElementById('groupId').value || null;
+  const available = getAvailableOrdersForGroup(currentGroupId);
+  if (!available.length) { el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;">لا توجد طلبات بحالة "جاهز" متاحة</div>'; return; }
+  el.innerHTML = available.map(o => `
+    <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;background:${_groupSelectedOrders.has(o.id) ? 'rgba(66,102,232,.08)' : 'transparent'};">
+      <input type="checkbox" ${_groupSelectedOrders.has(o.id) ? 'checked' : ''} onchange="toggleGroupOrder('${o.id}', this.checked)" style="width:16px;height:16px;accent-color:var(--brand-500);">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12.5px;font-weight:600;">${esc(o.invoice)} - ${esc(o.customer)}</div>
+        <div style="font-size:11px;color:var(--text-muted);">${esc(o.location || '—')} - ${esc(o.driver || 'بدون موصل')}</div>
+      </div>
+    </label>`).join('');
+}
+window.toggleGroupOrder = function(id, checked) {
+  if (checked && isOrderLockedByGroup(id, document.getElementById('groupId').value)) { toast('الطلب محجوز في مجموعة أخرى', 'error'); renderGroupOrdersList(); return; }
+  if (checked) _groupSelectedOrders.add(id); else _groupSelectedOrders.delete(id);
+  renderGroupOrdersList();
+};
+window.openGroupModal = function () {
+  if (!hasPerm('createGroup')) { toast(MSG.unauthorized, 'error'); return; }
+  if (!isFeatureEnabled('featureWorkGroups')) { toast('الميزة معطّلة', 'error'); return; }
+  clearAllErrors('groupModal');
+  document.getElementById('groupModalTitle').innerHTML = ico('layers', 20) + '<span>مجموعة جديدة</span>';
+  document.getElementById('groupId').value = '';
+  document.getElementById('groupName').value = '';
+  document.getElementById('groupDepartureTime').value = '';
+  document.getElementById('groupNotes').value = '';
+  _groupSelectedOrders = new Set();
+  populateAllSelects();
+  document.getElementById('groupDriver').value = '';
+  renderGroupOrdersList();
+  openModal('groupModal');
+  setTimeout(() => document.getElementById('groupName').focus(), 100);
+};
+window.editGroup = function (id) {
+  if (!hasPerm('manageGroups')) { toast(MSG.unauthorized, 'error'); return; }
+  const g = cache.groups.find(x => x.id === id); if (!g) return;
+  clearAllErrors('groupModal');
+  document.getElementById('groupModalTitle').innerHTML = ico('edit', 20) + '<span>تعديل مجموعة</span>';
+  document.getElementById('groupId').value = id;
+  document.getElementById('groupName').value = g.name || '';
+  document.getElementById('groupDepartureTime').value = g.departureTime || '';
+  document.getElementById('groupNotes').value = g.notes || '';
+  _groupSelectedOrders = new Set(g.orderIds || []);
+  populateAllSelects();
+  document.getElementById('groupDriver').value = g.driver || '';
+  renderGroupOrdersList();
+  openModal('groupModal');
+};
+window.saveGroup = async function () {
+  const id = document.getElementById('groupId').value;
+  if (id ? !hasPerm('manageGroups') : !hasPerm('createGroup')) { toast(MSG.unauthorized, 'error'); return; }
+  clearAllErrors('groupModal');
+  const name = document.getElementById('groupName').value.trim();
+  if (!name) { setFieldError('groupName', 'اسم المجموعة مطلوب'); focusFirstError('groupModal'); return; }
+  if (cache.groups.some(g => g.name === name && g.id !== id)) { setFieldError('groupName', 'الاسم مستخدم مسبقاً'); focusFirstError('groupModal'); return; }
+  const driver = document.getElementById('groupDriver').value;
+  const driverData = (cache.drivers || []).find(d => d.name === driver);
+  const driverPhone = driverData?.phone || '';
+  const departureTime = document.getElementById('groupDepartureTime').value;
+  const notes = document.getElementById('groupNotes').value.trim();
+  const orderIds = Array.from(_groupSelectedOrders);
+  if (!orderIds.length) { toast('اختر طلباً واحداً على الأقل', 'warning'); return; }
+  for (const oid of orderIds) {
+    if (isOrderLockedByGroup(oid, id)) { const other = getOrderGroup(oid); toast(`الطلب موجود في مجموعة "${other?.name || '?'}"`, 'error'); return; }
+    const o = cache.orders.find(x => x.id === oid);
+    if (!o || o.status !== ORDER_STATUS.READY) { toast('يمكن اختيار طلبات بحالة "جاهز" فقط', 'error'); return; }
+  }
+  const existing = id ? cache.groups.find(g => g.id === id) : null;
+  const groupData = { id: id || uid(), name, driver, driverPhone, departureTime, notes, orderIds, status: existing?.status || 'نشطة', createdAt: existing?.createdAt || fmtDate(), createdBy: existing?.createdBy || currentUser.username, updatedAt: fmtDate(), updatedBy: currentUser.username, archivedAt: existing?.archivedAt || null, archivedBy: existing?.archivedBy || null };
+  const isNew = !id;
+  if (id) { const idx = cache.groups.findIndex(g => g.id === id); if (idx > -1) cache.groups[idx] = groupData; logActivity('edit-group', `تعديل مجموعة: ${name}`, '', 'warning'); }
+  else { cache.groups.push(groupData); logActivity('add-group', `إضافة مجموعة: ${name}`, `${orderIds.length} طلب`, 'success'); }
+  try {
+    await persistKeys(['groups', 'activity', 'notifications']);
+    closeModal('groupModal'); renderGroups(); renderEntry();
+    if (isNew) addTaskNotification('مجموعة جديدة', `تم إنشاء المجموعة "${name}" بـ ${orderIds.length} طلب`);
+    toast(id ? 'تم التعديل بنجاح' : 'تم الإضافة بنجاح', 'success');
+  }
+  catch (e) { toast(e.message, 'error'); }
+};
+window.deleteGroup = async function (id) {
+  if (!hasPerm('deleteGroup')) { toast(MSG.unauthorized, 'error'); return; }
+  const g = cache.groups.find(x => x.id === id); if (!g) return;
+  const ok = await dialog.danger(`حذف المجموعة "${g.name}"؟`); if (!ok) return;
+  cache.groups = cache.groups.filter(x => x.id !== id);
+  logActivity('delete-group', `حذف مجموعة: ${g.name}`, '', 'danger');
+  try { await persistKeys(['groups', 'activity']); renderGroups(); renderEntry(); toast('تم الحذف بنجاح', 'success'); }
+  catch (e) { toast(e.message, 'error'); }
+};
+/* ✅ ترحيل المجموعة → ينتقل طلباتها إلى "الطلبات التي تم نقلها" */
+window.transferGroupToTransferred = async function(groupId) {
+  if (!hasPerm('moveToLog')) { toast(MSG.unauthorized, 'error'); return; }
+  const g = cache.groups.find(x => x.id === groupId); if (!g) { toast('المجموعة غير موجودة', 'error'); return; }
+  if (g.status === 'مؤرشفة') { toast('المجموعة مؤرشفة مسبقاً', 'warning'); return; }
+  const orders = getGroupOrders(groupId).filter(o => cache.orders.some(r => r.id === o.id));
+  if (!orders.length) { toast('لا توجد طلبات في هذه المجموعة', 'warning'); return; }
+  const ok = await dialog.confirm(`سيتم ترحيل ${orders.length} طلب من "${g.name}" إلى قسم "الطلبات التي تم نقلها".`, { title: 'ترحيل المجموعة', okText: 'نعم، رحّل', okClass: 'btn-purple' });
+  if (!ok) return;
+  const backup = { orders: [...cache.orders], transferred: [...cache.transferred], groups: JSON.parse(JSON.stringify(cache.groups)) };
+  try {
+    const now = fmtDate(); const user = currentUser.username;
+    const idsToMove = new Set(orders.map(o => o.id));
+    orders.forEach(o => { cache.transferred.push({ ...o, transferredAt: now, transferredBy: user, receiptStatus: RECEIPT_NOT_RECEIVED, receiptMethod: o.receiptMethod || 'المحل', groupId: g.id, groupName: g.name }); });
+    cache.orders = cache.orders.filter(o => !idsToMove.has(o.id));
+    const gi = cache.groups.findIndex(x => x.id === groupId);
+    if (gi > -1) { cache.groups[gi].status = 'مؤرشفة'; cache.groups[gi].archivedAt = now; cache.groups[gi].archivedBy = user; }
+    logActivity('move-group-transferred', `ترحيل مجموعة: ${g.name}`, `${orders.length} طلب`, 'success');
+    addDeliveryNotification('ترحيل مجموعة', `تم ترحيل ${orders.length} طلب من المجموعة "${g.name}"`, 'info');
+    await persistKeys(['orders', 'transferred', 'groups', 'activity', 'notifications']);
+    renderGroups(); renderEntry(); renderTransferred(); renderDashboard();
+    toast(`تم ترحيل ${orders.length} طلب`, 'success');
+  } catch (e) { cache.orders = backup.orders; cache.transferred = backup.transferred; cache.groups = backup.groups; toast(e.message, 'error'); }
+};
+
+/* ══════════════════════════════════════════════════════════════
+   RENDER: READY — بدون فلتر حالة
    ══════════════════════════════════════════════════════════════ */
 function getReadyFilteredData() {
   const f = pageFilters.ready;
   let data = filterOrdersByPermission(cache.ready);
   if (f.branch) data = data.filter(o => (o.branch || DEFAULT_BRANCH_NAME) === f.branch);
-  if (f.status) data = data.filter(o => o.status === f.status);
   if (f.receiptMethod) data = data.filter(o => (o.receiptMethod || 'المحل') === f.receiptMethod);
   if (f.search) data = searchOrdersList(data, f.search);
   return data;
 }
 window.updateReadyFilter = function(field, value) { pageFilters.ready[field] = value; renderReady(); };
 window.resetReadyFilters = function() {
-  pageFilters.ready = { search:'', branch:'', status:'', receiptMethod:'' };
+  pageFilters.ready = { search:'', branch:'', receiptMethod:'' };
   document.getElementById('readySearch').value = '';
   document.getElementById('readyBranchFilter').value = '';
-  document.getElementById('readyStatusFilter').value = '';
   document.getElementById('readyMethodFilter').value = '';
   renderReady();
 };
@@ -3056,7 +2994,6 @@ function renderReady() {
   if (!data.length) { body.innerHTML = emptyState('box', 'لا توجد طلبات جاهزة', 'قم بتحويل الطلبات من الإدخال', 14); updateReadyHeaderUI(); updateReadySelectionInfo(); return; }
   const canSelect = hasPerm('selectReadyOrders');
   const canReturn = hasPerm('returnSingle');
-  const canChangeStatus = hasPerm('changeOrderStatus');
   body.innerHTML = data.map((o, i) => {
     const group = getOrderGroup(o.id);
     const isLocked = !!group;
@@ -3069,18 +3006,12 @@ function renderReady() {
     if (isLocked) returnBtn = `<span class="badge" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);color:#fff;font-size:10px;">${ico('lock', 11)} ${esc(group.name.substring(0, 15))}${group.name.length > 15 ? '…' : ''}</span>`;
     else if (canReturn) returnBtn = `<button class="btn btn-warning btn-sm" onclick="event.stopPropagation();returnReadyToEntry('${o.id}')" title="إرجاع">${ico('undo', 13)}<span>إرجاع</span></button>`;
     else returnBtn = '—';
-    const statusCell = canChangeStatus && !isLocked
-      ? `<select class="status-select ${o.status === ORDER_STATUS.READY ? 'is-ready' : 'is-progress'}" onclick="event.stopPropagation()" onchange="changeOrderStatus('${o.id}', this.value, 'ready')">
-          <option value="${ORDER_STATUS.PROGRESS}" ${o.status === ORDER_STATUS.PROGRESS ? 'selected' : ''}>${ORDER_STATUS.PROGRESS}</option>
-          <option value="${ORDER_STATUS.READY}" ${o.status === ORDER_STATUS.READY ? 'selected' : ''}>${ORDER_STATUS.READY}</option>
-        </select>`
-      : badge(o.status);
     const rowClass = ((o.status === ORDER_STATUS.READY ? 'status-ready ' : '') + (isSelected ? 'row-selected ' : '') + (isLocked ? 'row-locked' : '')).trim();
     return `<tr class="${rowClass}">
       ${checkboxCell}
       <td>${i+1}</td><td><b>${esc(o.invoice)}</b></td><td>${branchBadge(o.branch)}</td><td>${esc(o.customer)}</td>
       <td>${phoneBadge(o.customerPhone)}</td>
-      <td>${esc(o.location)}</td><td>${statusCell}</td>
+      <td>${esc(o.location)}</td><td>${badge(o.status)}</td>
       <td style="font-size:11.5px;color:var(--text-muted);">${esc(o.approvalDate || '—')}</td>
       <td>${receiptMethodBadge(o.receiptMethod)}</td><td>${esc(o.driver || '—')}</td><td>${esc(o.driverPhone || '—')}</td>
       <td class="note-cell"><div class="note-text" title="${esc(o.notes)}">${esc(o.notes) || '—'}</div></td>
@@ -3119,23 +3050,21 @@ window.deselectAllReady = function() {
 };
 
 /* ══════════════════════════════════════════════════════════════
-   RENDER: TRANSFERRED
+   RENDER: TRANSFERRED — بدون فلتر حالة الاستلام
    ══════════════════════════════════════════════════════════════ */
 function getTransferredFilteredData() {
   const f = pageFilters.transferred;
   let data = filterOrdersByPermission(cache.transferred);
   if (f.branch) data = data.filter(o => (o.branch || DEFAULT_BRANCH_NAME) === f.branch);
-  if (f.receipt) data = data.filter(o => (o.receiptStatus || RECEIPT_NOT_RECEIVED) === f.receipt);
   if (f.receiptMethod) data = data.filter(o => (o.receiptMethod || 'المحل') === f.receiptMethod);
   if (f.search) data = searchOrdersList(data, f.search);
   return data;
 }
 window.updateTransferredFilter = function(field, value) { pageFilters.transferred[field] = value; renderTransferred(); };
 window.resetTransferredFilters = function() {
-  pageFilters.transferred = { search:'', branch:'', receipt:'', receiptMethod:'' };
+  pageFilters.transferred = { search:'', branch:'', receiptMethod:'' };
   document.getElementById('transferredSearch').value = '';
   document.getElementById('transferredBranchFilter').value = '';
-  document.getElementById('transferredReceiptFilter').value = '';
   document.getElementById('transferredMethodFilter').value = '';
   renderTransferred();
 };
@@ -3144,9 +3073,11 @@ function renderTransferred() {
   const total = filterOrdersByPermission(cache.transferred).length;
   document.getElementById('transferredCount').textContent = `الإجمالي: ${data.length} من ${total}`;
   const body = document.getElementById('transferredBody');
-  if (!data.length) { body.innerHTML = emptyState('transfer', 'لا توجد طلبات منقولة', 'الطلبات المرحَّلة من "الجاهزة" تظهر هنا', 16); return; }
+  if (!data.length) { body.innerHTML = emptyState('transfer', 'لا توجد طلبات منقولة', 'الطلبات المرحَّلة من "الجاهزة" أو من المجموعات تظهر هنا', 16); return; }
   const canReceive = hasPerm('editReceiptStatus');
   const canSendWA = hasPerm('sendWhatsApp');
+  const canEdit = hasPerm('editTransferred');
+  const canDelete = hasPerm('deleteTransferred');
   const isOwner = currentUser?.role === ROLE_OWNER;
   body.innerHTML = data.map((o, i) => {
     const receipt = o.receiptStatus || RECEIPT_NOT_RECEIVED;
@@ -3156,6 +3087,10 @@ function renderTransferred() {
     else receiptCell = `<span class="badge badge-not-received">لا</span>`;
     const waBtn = canSendWA ? `<button class="btn btn-whatsapp btn-sm" onclick="event.stopPropagation();openWhatsAppModal('${o.id}', 'transferred')" title="إرسال واتساب">${ico('whatsapp', 13)}</button>` : '';
     const waCount = getWaCount(o.id);
+    const btns = `
+      ${canEdit ? `<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();editTransferred('${o.id}')" title="تعديل">${ico('edit', 13)}</button>` : ''}
+      ${canDelete ? `<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteTransferred('${o.id}')" title="حذف">${ico('trash', 13)}</button>` : ''}
+    `;
     return `<tr class="row-transferred">
       <td>${i+1}</td><td><b>${esc(o.invoice)}</b></td><td>${branchBadge(o.branch)}</td><td>${esc(o.customer)}</td>
       <td>${phoneBadge(o.customerPhone)}</td>
@@ -3166,7 +3101,7 @@ function renderTransferred() {
       <td class="note-cell"><div class="note-text" title="${esc(o.notes)}">${esc(o.notes) || '—'}</div></td>
       <td style="font-size:11.5px;color:var(--text-muted);">${esc(o.transferredAt || '—')}</td>
       <td class="no-print" style="text-align:center;">${receiptCell}</td>
-      <td class="no-print" style="white-space:nowrap;">${waBtn} ${waCountBadge(waCount)}</td>
+      <td class="no-print" style="white-space:nowrap;">${btns} ${waBtn} ${waCountBadge(waCount)}</td>
     </tr>`;
   }).join('');
 }
@@ -3254,186 +3189,6 @@ function renderCustomers() {
     <td>${canManage ? `<button class="btn btn-primary btn-sm" onclick="editCustomer('${c.id}')" title="تعديل">${ico('edit', 13)}</button><button class="btn btn-danger btn-sm" onclick="deleteCustomer('${c.id}')" title="حذف">${ico('trash', 13)}</button>` : '—'}</td>
   </tr>`).join('');
 }
-
-/* ══════════════════════════════════════════════════════════════
-   GROUP HELPERS
-   ══════════════════════════════════════════════════════════════ */
-function getOrderGroup(orderId) {
-  return (cache.groups || []).find(g => g.status !== 'مؤرشفة' && (g.orderIds || []).includes(orderId));
-}
-function isOrderInActiveGroup(orderId) { return !!getOrderGroup(orderId); }
-function getGroupOrders(groupId) {
-  const g = cache.groups.find(x => x.id === groupId); if (!g) return [];
-  const orders = [];
-  (g.orderIds || []).forEach(id => {
-    const o = cache.ready.find(x => x.id === id) || cache.transferred.find(x => x.id === id) || cache.log.find(x => x.id === id);
-    if (o) orders.push(o);
-  });
-  return orders;
-}
-function isOrderLockedByGroup(orderId, excludeGroupId = null) {
-  return (cache.groups || []).some(g => {
-    if (excludeGroupId && g.id === excludeGroupId) return false;
-    if (g.status === 'مؤرشفة') return false;
-    return (g.orderIds || []).includes(orderId);
-  });
-}
-function renderGroups() {
-  const container = document.getElementById('groupsContainer'); if (!container) return;
-  const allGroups = cache.groups || [];
-  const activeGroups = allGroups.filter(g => g.status !== 'مؤرشفة');
-  const archivedGroups = allGroups.filter(g => g.status === 'مؤرشفة');
-  document.getElementById('groupsCount').textContent = `نشطة: ${activeGroups.length} - مؤرشفة: ${archivedGroups.length}`;
-  if (!allGroups.length) { container.innerHTML = `<div class="empty-state"><div class="icon">${ico('layers', 26)}</div><div class="title">لا توجد مجموعات</div><div class="desc">ابدأ بإنشاء مجموعة عمل جديدة</div></div>`; return; }
-  const renderGroupCard = (g, isArchived) => {
-    const orders = getGroupOrders(g.id);
-    const canDelete = hasPerm('deleteGroup');
-    const canEdit = hasPerm('manageGroups');
-    const canMove = hasPerm('moveToLog');
-    const driverPhone = g.driverPhone || (cache.drivers.find(d => d.name === g.driver)?.phone || '');
-    return `<div class="group-card" style="${isArchived ? 'opacity:.75;border-right-color:var(--text-muted);' : ''}">
-      <div class="group-header">
-        <div style="flex:1;min-width:0;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
-            <div class="group-title">${esc(g.name)}</div>
-            ${isArchived ? `<span class="badge" style="background:var(--slate-100);color:var(--slate-600);font-size:10px;">${ico('archive', 11)} مؤرشفة</span>` : `<span class="badge badge-ready" style="font-size:10px;">${ico('check', 11)} نشطة</span>`}
-          </div>
-          <div class="group-meta">
-            ${g.driver ? `<span>${ico('truck', 12)} ${esc(g.driver)}</span>` : ''}
-            ${driverPhone ? `<span>${ico('phone', 12)} ${esc(driverPhone)}</span>` : ''}
-            ${g.departureTime ? `<span>${ico('clock', 12)} ${esc(g.departureTime)}</span>` : ''}
-            <span>${ico('box', 12)} ${orders.length} طلب</span>
-            <span>${ico('user', 12)} ${esc(g.createdBy || '—')}</span>
-          </div>
-        </div>
-        <div class="group-actions">
-          <button class="btn btn-ghost btn-sm" onclick="printGroup('${g.id}')" title="طباعة المجموعة">${ico('printer', 13)}</button>
-          ${!isArchived && canMove ? `<button class="btn btn-purple btn-sm" onclick="transferGroupToLog('${g.id}')" title="ترحيل المجموعة">${ico('transfer', 13)}<span>ترحيل</span></button>` : ''}
-          ${!isArchived && canEdit ? `<button class="btn btn-primary btn-sm" onclick="editGroup('${g.id}')" title="تعديل">${ico('edit', 13)}</button>` : ''}
-          ${canDelete ? `<button class="btn btn-danger btn-sm" onclick="deleteGroup('${g.id}')" title="حذف">${ico('trash', 13)}</button>` : ''}
-        </div>
-      </div>
-      ${g.notes ? `<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;padding:6px 10px;background:var(--card-bg);border-radius:var(--radius-sm);">${esc(g.notes)}</div>` : ''}
-      ${orders.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">${orders.slice(0, 20).map(o => `<span style="font-size:11px;padding:3px 8px;background:var(--card-bg);border-radius:10px;border:1px solid var(--border);">${esc(o.invoice)} - ${esc(o.customer)}</span>`).join('')}${orders.length > 20 ? `<span style="font-size:11px;padding:3px 8px;color:var(--text-muted);">+${orders.length - 20}</span>` : ''}</div>` : `<div style="font-size:12px;color:var(--text-muted);">لا توجد طلبات</div>`}
-    </div>`;
-  };
-  let html = '';
-  if (activeGroups.length) { html += `<div style="font-size:13px;font-weight:700;color:var(--text-muted);margin-bottom:10px;">${ico('layers', 14)} المجموعات النشطة (${activeGroups.length})</div>`; html += activeGroups.map(g => renderGroupCard(g, false)).join(''); }
-  if (archivedGroups.length) { html += `<div style="font-size:13px;font-weight:700;color:var(--text-muted);margin:18px 0 10px;">${ico('archive', 14)} المؤرشفة (${archivedGroups.length})</div>`; html += archivedGroups.map(g => renderGroupCard(g, true)).join(''); }
-  container.innerHTML = html;
-}
-function renderGroupOrdersList() {
-  const el = document.getElementById('groupOrdersList'); if (!el) return;
-  const currentGroupId = document.getElementById('groupId').value || null;
-  let available = [...cache.ready].filter(o => !isOrderLockedByGroup(o.id, currentGroupId));
-  if (!available.length) { el.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:12px;">لا توجد طلبات متاحة</div>'; return; }
-  el.innerHTML = available.map(o => `
-    <label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius-sm);cursor:pointer;background:${_groupSelectedOrders.has(o.id) ? 'rgba(66,102,232,.08)' : 'transparent'};">
-      <input type="checkbox" ${_groupSelectedOrders.has(o.id) ? 'checked' : ''} onchange="toggleGroupOrder('${o.id}', this.checked)" style="width:16px;height:16px;accent-color:var(--brand-500);">
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:12.5px;font-weight:600;">${esc(o.invoice)} - ${esc(o.customer)}</div>
-        <div style="font-size:11px;color:var(--text-muted);">${esc(o.location || '—')} - ${esc(o.driver || 'بدون موصل')}</div>
-      </div>
-    </label>`).join('');
-}
-window.toggleGroupOrder = function(id, checked) {
-  if (checked && isOrderLockedByGroup(id, document.getElementById('groupId').value)) { toast('الطلب محجوز في مجموعة أخرى', 'error'); renderGroupOrdersList(); return; }
-  if (checked) _groupSelectedOrders.add(id); else _groupSelectedOrders.delete(id);
-  renderGroupOrdersList();
-};
-window.openGroupModal = function () {
-  if (!hasPerm('createGroup')) { toast(MSG.unauthorized, 'error'); return; }
-  if (!isFeatureEnabled('featureWorkGroups')) { toast('الميزة معطّلة', 'error'); return; }
-  clearAllErrors('groupModal');
-  document.getElementById('groupModalTitle').innerHTML = ico('layers', 20) + '<span>مجموعة جديدة</span>';
-  document.getElementById('groupId').value = '';
-  document.getElementById('groupName').value = '';
-  document.getElementById('groupDepartureTime').value = '';
-  document.getElementById('groupNotes').value = '';
-  _groupSelectedOrders = new Set();
-  populateAllSelects();
-  document.getElementById('groupDriver').value = '';
-  renderGroupOrdersList();
-  openModal('groupModal');
-  setTimeout(() => document.getElementById('groupName').focus(), 100);
-};
-window.editGroup = function (id) {
-  if (!hasPerm('manageGroups')) { toast(MSG.unauthorized, 'error'); return; }
-  const g = cache.groups.find(x => x.id === id); if (!g) return;
-  clearAllErrors('groupModal');
-  document.getElementById('groupModalTitle').innerHTML = ico('edit', 20) + '<span>تعديل مجموعة</span>';
-  document.getElementById('groupId').value = id;
-  document.getElementById('groupName').value = g.name || '';
-  document.getElementById('groupDepartureTime').value = g.departureTime || '';
-  document.getElementById('groupNotes').value = g.notes || '';
-  _groupSelectedOrders = new Set(g.orderIds || []);
-  populateAllSelects();
-  document.getElementById('groupDriver').value = g.driver || '';
-  renderGroupOrdersList();
-  openModal('groupModal');
-};
-window.saveGroup = async function () {
-  const id = document.getElementById('groupId').value;
-  if (id ? !hasPerm('manageGroups') : !hasPerm('createGroup')) { toast(MSG.unauthorized, 'error'); return; }
-  clearAllErrors('groupModal');
-  const name = document.getElementById('groupName').value.trim();
-  if (!name) { setFieldError('groupName', 'اسم المجموعة مطلوب'); focusFirstError('groupModal'); return; }
-  if (cache.groups.some(g => g.name === name && g.id !== id)) { setFieldError('groupName', 'الاسم مستخدم مسبقاً'); focusFirstError('groupModal'); return; }
-  const driver = document.getElementById('groupDriver').value;
-  const driverData = (cache.drivers || []).find(d => d.name === driver);
-  const driverPhone = driverData?.phone || '';
-  const departureTime = document.getElementById('groupDepartureTime').value;
-  const notes = document.getElementById('groupNotes').value.trim();
-  const orderIds = Array.from(_groupSelectedOrders);
-  if (!orderIds.length) { toast('اختر طلباً واحداً على الأقل', 'warning'); return; }
-  for (const oid of orderIds) {
-    if (isOrderLockedByGroup(oid, id)) { const other = getOrderGroup(oid); toast(`الطلب موجود في مجموعة "${other?.name || '?'}"`, 'error'); return; }
-  }
-  const existing = id ? cache.groups.find(g => g.id === id) : null;
-  const groupData = { id: id || uid(), name, driver, driverPhone, departureTime, notes, orderIds, status: existing?.status || 'نشطة', createdAt: existing?.createdAt || fmtDate(), createdBy: existing?.createdBy || currentUser.username, updatedAt: fmtDate(), updatedBy: currentUser.username, archivedAt: existing?.archivedAt || null, archivedBy: existing?.archivedBy || null };
-  const isNew = !id;
-  if (id) { const idx = cache.groups.findIndex(g => g.id === id); if (idx > -1) cache.groups[idx] = groupData; logActivity('edit-group', `تعديل مجموعة: ${name}`, '', 'warning'); }
-  else { cache.groups.push(groupData); logActivity('add-group', `إضافة مجموعة: ${name}`, `${orderIds.length} طلب`, 'success'); }
-  try {
-    await persistKeys(['groups', 'activity', 'notifications']);
-    closeModal('groupModal'); renderGroups(); renderReady();
-    if (isNew) addTaskNotification('مجموعة جديدة', `تم إنشاء المجموعة "${name}" بـ ${orderIds.length} طلب`);
-    toast(id ? 'تم التعديل بنجاح' : 'تم الإضافة بنجاح', 'success');
-  }
-  catch (e) { toast(e.message, 'error'); }
-};
-window.deleteGroup = async function (id) {
-  if (!hasPerm('deleteGroup')) { toast(MSG.unauthorized, 'error'); return; }
-  const g = cache.groups.find(x => x.id === id); if (!g) return;
-  const ok = await dialog.danger(`حذف المجموعة "${g.name}"؟`); if (!ok) return;
-  cache.groups = cache.groups.filter(x => x.id !== id);
-  logActivity('delete-group', `حذف مجموعة: ${g.name}`, '', 'danger');
-  try { await persistKeys(['groups', 'activity']); renderGroups(); renderReady(); toast('تم الحذف بنجاح', 'success'); }
-  catch (e) { toast(e.message, 'error'); }
-};
-window.transferGroupToLog = async function(groupId) {
-  if (!hasPerm('moveToLog')) { toast(MSG.unauthorized, 'error'); return; }
-  const g = cache.groups.find(x => x.id === groupId); if (!g) { toast('المجموعة غير موجودة', 'error'); return; }
-  if (g.status === 'مؤرشفة') { toast('المجموعة مؤرشفة مسبقاً', 'warning'); return; }
-  const orders = getGroupOrders(groupId).filter(o => cache.ready.some(r => r.id === o.id));
-  if (!orders.length) { toast('لا توجد طلبات جاهزة في هذه المجموعة', 'warning'); return; }
-  const ok = await dialog.confirm(`سيتم ترحيل ${orders.length} طلب من "${g.name}" إلى قسم "الطلبات التي تم نقلها".`, { title: 'ترحيل المجموعة', okText: 'نعم، رحّل', okClass: 'btn-purple' });
-  if (!ok) return;
-  const backup = { ready: [...cache.ready], transferred: [...cache.transferred], groups: JSON.parse(JSON.stringify(cache.groups)) };
-  try {
-    const now = fmtDate(); const user = currentUser.username;
-    const idsToMove = new Set(orders.map(o => o.id));
-    orders.forEach(o => { cache.transferred.push({ ...o, transferredAt: now, transferredBy: user, receiptStatus: RECEIPT_NOT_RECEIVED, receiptMethod: o.receiptMethod || 'المحل', groupId: g.id, groupName: g.name }); });
-    cache.ready = cache.ready.filter(o => !idsToMove.has(o.id));
-    const gi = cache.groups.findIndex(x => x.id === groupId);
-    if (gi > -1) { cache.groups[gi].status = 'مؤرشفة'; cache.groups[gi].archivedAt = now; cache.groups[gi].archivedBy = user; }
-    logActivity('move-group-transferred', `ترحيل مجموعة: ${g.name}`, `${orders.length} طلب`, 'success');
-    addDeliveryNotification('ترحيل مجموعة', `تم ترحيل ${orders.length} طلب من المجموعة "${g.name}"`, 'info');
-    await persistKeys(['ready', 'transferred', 'groups', 'activity', 'notifications']);
-    renderGroups(); renderReady(); renderTransferred(); renderDashboard();
-    toast(`تم ترحيل ${orders.length} طلب`, 'success');
-  } catch (e) { cache.ready = backup.ready; cache.transferred = backup.transferred; cache.groups = backup.groups; toast(e.message, 'error'); }
-};
 
 /* ══════════════════════════════════════════════════════════════
    RENDER: TASKS
@@ -3625,18 +3380,27 @@ function populateAllSelects() {
   const tAssign = document.getElementById('taskAssignee');
   if (tAssign) { const cur = tAssign.value; tAssign.innerHTML = '<option value="">بدون تعيين</option>' + cache.users.map(u => `<option value="${esc(u.username)}">${esc(u.username)}</option>`).join(''); if (cur) tAssign.value = cur; }
 }
+/* ✅ إصلاح: تحديث select الموصل بشكل موثوق */
 function loadDriversIntoSelects() {
   const sel = document.getElementById('orderDriver'); if (!sel) return;
   const cur = sel.value;
-  sel.innerHTML = '<option value="">اختر موصل</option>' + cache.drivers.map(d => `<option value="${esc(d.name)}" data-phone="${esc(d.phone)}">${esc(d.name)}</option>`).join('');
+  const drivers = cache.drivers || [];
+  if (!drivers.length) {
+    sel.innerHTML = '<option value="">لا يوجد موصلون مضافون</option>';
+    return;
+  }
+  sel.innerHTML = '<option value="">اختر موصل</option>' +
+    drivers.map(d => `<option value="${esc(d.name)}" data-phone="${esc(d.phone || '')}">${esc(d.name)}</option>`).join('');
   if (cur) sel.value = cur;
 }
 window.onDriverSelect = function () {
   const sel = document.getElementById('orderDriver');
+  if (!sel) return;
   const opt = sel.options[sel.selectedIndex];
   const phone = opt?.dataset?.phone || '';
   if (phone) document.getElementById('orderDriverPhone').value = phone;
 };
+
 function renderCustomFieldsList() {
   const el = document.getElementById('customFieldsList'); if (!el) return;
   const fields = cache.customFields || [];
@@ -4201,6 +3965,127 @@ function renderTopCustomersAnalytics() {
 function renderAdvancedAnalytics() { renderAnomalies(); renderComparison(); renderTopLocations(); renderTopDriversAnalytics(); renderTopCustomersAnalytics(); }
 
 /* ══════════════════════════════════════════════════════════════
+   ANALYTICS ENGINE
+   ══════════════════════════════════════════════════════════════ */
+const Analytics = (() => {
+  function getAllOrders() { return filterOrdersByPermission([...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log]); }
+  function getOrderDate(o) { return parseDate(o.createdAt) || parseDate(o.transferredAt) || parseDate(o.archivedAt); }
+  function inRange(date, from, to) { if (!date) return false; if (from && date < from) return false; if (to && date >= to) return false; return true; }
+  function getPeriodOrders(period) {
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    let from = null, to = null;
+    if (period === 'today') { from = today; to = new Date(today.getTime() + 86400000); }
+    else if (period === 'week') { from = new Date(today.getTime() - 6 * 86400000); to = new Date(today.getTime() + 86400000); }
+    else if (period === 'month') { from = new Date(today.getTime() - 29 * 86400000); to = new Date(today.getTime() + 86400000); }
+    else if (period === 'month-prev') { from = new Date(today.getFullYear(), today.getMonth() - 1, 1); to = new Date(today.getFullYear(), today.getMonth(), 1); }
+    const all = getAllOrders();
+    if (!from && !to) return all;
+    return all.filter(o => inRange(getOrderDate(o), from, to));
+  }
+  function analyzeCustomers(orders = null) {
+    const list = orders || getAllOrders();
+    const stats = {};
+    list.forEach(o => {
+      const key = o.customer || '';
+      if (!key) return;
+      if (!stats[key]) stats[key] = { name: key, count: 0, received: 0, notReceived: 0, firstOrder: null, lastOrder: null, locations: new Set(), drivers: new Set(), methods: {} };
+      const s = stats[key];
+      s.count++;
+      if (o.receiptStatus === RECEIPT_RECEIVED) s.received++;
+      else s.notReceived++;
+      const d = getOrderDate(o);
+      if (d) { if (!s.firstOrder || d < s.firstOrder) s.firstOrder = d; if (!s.lastOrder || d > s.lastOrder) s.lastOrder = d; }
+      if (o.location) s.locations.add(o.location);
+      if (o.driver) s.drivers.add(o.driver);
+      if (o.receiptMethod) s.methods[o.receiptMethod] = (s.methods[o.receiptMethod] || 0) + 1;
+    });
+    const inactiveDays = localMeta?.analyticsSettings?.anomalyInactiveDays || 30;
+    return Object.values(stats).map(s => ({
+      ...s, locations: Array.from(s.locations), drivers: Array.from(s.drivers),
+      daysSinceLastOrder: s.lastOrder ? Math.floor((Date.now() - s.lastOrder.getTime()) / 86400000) : null,
+      loyaltyScore: s.count * 10 + s.received * 5,
+      isInactive: s.lastOrder && Math.floor((Date.now() - s.lastOrder.getTime()) / 86400000) > inactiveDays
+    }));
+  }
+  function analyzeDrivers(orders = null) {
+    const list = orders || getAllOrders();
+    const stats = {};
+    list.forEach(o => {
+      if (!o.driver) return;
+      if (!stats[o.driver]) stats[o.driver] = { name: o.driver, phone: o.driverPhone || '', total: 0, delivered: 0, locations: {}, customers: {} };
+      const s = stats[o.driver];
+      s.total++;
+      if (o.receiptStatus === RECEIPT_RECEIVED) s.delivered++;
+      if (o.location) { const loc = o.location.split(/[-–—,]/)[0].trim(); s.locations[loc] = (s.locations[loc] || 0) + 1; }
+      if (o.customer) s.customers[o.customer] = (s.customers[o.customer] || 0) + 1;
+    });
+    return Object.values(stats).map(s => {
+      const topLocation = Object.entries(s.locations).sort((a,b) => b[1] - a[1])[0];
+      const successRate = s.total > 0 ? Math.round((s.delivered / s.total) * 100) : 0;
+      return { ...s, locations: Object.entries(s.locations).sort((a,b) => b[1] - a[1]).map(([k,v]) => ({ location: k, count: v })), topLocation: topLocation ? topLocation[0] : null, topLocationCount: topLocation ? topLocation[1] : 0, successRate, customersCount: Object.keys(s.customers).length };
+    });
+  }
+  function analyzeLocations(orders = null) {
+    const list = orders || getAllOrders();
+    const stats = {};
+    list.forEach(o => {
+      if (!o.location) return;
+      const loc = o.location.split(/[-–—,]/)[0].trim();
+      if (!loc) return;
+      if (!stats[loc]) stats[loc] = { location: loc, count: 0, customers: new Set(), drivers: new Set() };
+      stats[loc].count++;
+      if (o.customer) stats[loc].customers.add(o.customer);
+      if (o.driver) stats[loc].drivers.add(o.driver);
+    });
+    return Object.values(stats).map(s => ({ ...s, customersCount: s.customers.size, driversCount: s.drivers.size })).sort((a, b) => b.count - a.count);
+  }
+  function comparePeriods(p1, p2) {
+    const d1 = getPeriodOrders(p1); const d2 = getPeriodOrders(p2);
+    const calc = (list) => ({
+      total: list.length,
+      received: list.filter(o => o.receiptStatus === RECEIPT_RECEIVED).length,
+      notReceived: list.filter(o => o.receiptStatus === RECEIPT_NOT_RECEIVED).length,
+      customers: new Set(list.map(o => o.customer).filter(Boolean)).size,
+      drivers: new Set(list.map(o => o.driver).filter(Boolean)).size
+    });
+    const s1 = calc(d1), s2 = calc(d2);
+    const diff = (a, b) => { if (b === 0 && a === 0) return { pct: 0, dir: 'flat' }; if (b === 0) return { pct: 100, dir: 'up' }; const pct = Math.round(((a - b) / b) * 100); return { pct: Math.abs(pct), dir: pct > 0 ? 'up' : pct < 0 ? 'down' : 'flat' }; };
+    return { current: { period: p1, ...s1 }, previous: { period: p2, ...s2 }, changes: { total: diff(s1.total, s2.total), received: diff(s1.received, s2.received), notReceived: diff(s1.notReceived, s2.notReceived), customers: diff(s1.customers, s2.customers), drivers: diff(s1.drivers, s2.drivers) } };
+  }
+  return { getAllOrders, getOrderDate, getPeriodOrders, analyzeCustomers, analyzeDrivers, analyzeLocations, comparePeriods };
+})();
+
+const Anomaly = (() => {
+  function getSettings() { return { ...DEFAULT_ANALYTICS_SETTINGS, ...(localMeta?.analyticsSettings || {}) }; }
+  function detectAll() {
+    const s = getSettings(); const anomalies = []; const all = Analytics.getAllOrders(); const now = Date.now();
+    const windowMs = s.anomalyWindowDays * 86400000;
+    const recent = all.filter(o => { const d = Analytics.getOrderDate(o); return d && (now - d.getTime()) <= windowMs; });
+    const previous = all.filter(o => { const d = Analytics.getOrderDate(o); return d && (now - d.getTime()) > windowMs && (now - d.getTime()) <= windowMs * 2; });
+    if (previous.length >= 5) {
+      const drop = ((previous.length - recent.length) / previous.length) * 100;
+      if (drop >= s.anomalyDropPercent) anomalies.push({ type: 'drop', severity: drop >= 60 ? 'high' : 'medium', icon: 'trendDown', title: 'انخفاض في عدد الطلبات', description: `انخفضت الطلبات بنسبة ${Math.round(drop)}%`, suggestion: 'راجع أسباب انخفاض الطلب' });
+    }
+    if (previous.length >= 5) {
+      const spike = ((recent.length - previous.length) / previous.length) * 100;
+      if (spike >= s.anomalySpikePercent) anomalies.push({ type: 'spike', severity: spike >= 100 ? 'high' : 'medium', icon: 'trendUp', title: 'ارتفاع غير طبيعي', description: `ارتفعت الطلبات بنسبة ${Math.round(spike)}%`, suggestion: 'تأكد من الجاهزية' });
+    }
+    const customers = Analytics.analyzeCustomers();
+    const inactive = customers.filter(c => c.daysSinceLastOrder && c.daysSinceLastOrder >= s.anomalyInactiveDays && c.count >= 3);
+    if (inactive.length > 0) anomalies.push({ type: 'inactive-customers', severity: inactive.length >= 10 ? 'high' : 'medium', icon: 'user', title: `${inactive.length} عميل غير نشط`, description: inactive.slice(0, 5).map(c => `- ${c.name} (${c.daysSinceLastOrder} يوم)`).join('\n'), suggestion: 'تواصل معهم' });
+    const invoiceMap = {};
+    all.forEach(o => { if (!o.invoice) return; const key = String(o.invoice).trim(); if (!invoiceMap[key]) invoiceMap[key] = []; invoiceMap[key].push(o); });
+    const duplicates = Object.entries(invoiceMap).filter(([_, arr]) => arr.length > 1);
+    if (duplicates.length > 0) anomalies.push({ type: 'duplicate-invoice', severity: 'high', icon: 'warning', title: `${duplicates.length} فاتورة مكررة!`, description: duplicates.slice(0, 5).map(([inv, arr]) => `- ${inv} (${arr.length}x)`).join('\n'), suggestion: 'راجعها فوراً' });
+    const staleTransferred = cache.transferred.filter(o => { const d = parseDate(o.transferredAt); if (!d) return false; return Math.floor((now - d.getTime()) / 86400000) >= 14; });
+    if (staleTransferred.length > 0) anomalies.push({ type: 'stale-transferred', severity: staleTransferred.length >= 5 ? 'high' : 'medium', icon: 'clock', title: `${staleTransferred.length} طلب منذ 14+ يوم`, description: staleTransferred.slice(0, 5).map(o => `- ${o.invoice} - ${o.customer}`).join('\n'), suggestion: 'تابع العملاء' });
+    return anomalies.sort((a, b) => { const sev = { high: 3, medium: 2, low: 1 }; return (sev[b.severity] || 0) - (sev[a.severity] || 0); });
+  }
+  return { detectAll };
+})();
+
+/* ══════════════════════════════════════════════════════════════
    ORDER MODAL
    ══════════════════════════════════════════════════════════════ */
 window.addOrder = function () {
@@ -4214,10 +4099,10 @@ window.addOrder = function () {
   document.getElementById('orderReceiptMethod').value = 'المحل';
   document.getElementById('orderDriver').value = '';
   populateAllSelects();
+  loadDriversIntoSelects();  /* ✅ إعادة تحميل الموصلين */
   const branchSel = document.getElementById('orderBranch');
   if (branchSel && branchSel.options.length > 0) branchSel.selectedIndex = 0;
   document.getElementById('orderInvoice').value = generateNextInvoice();
-  previewNextInvoice();
   document.getElementById('customerDropdown').classList.remove('show');
   renderCustomFieldsInOrder(null);
   const sug = document.getElementById('driverSuggestionBox'); if (sug) sug.style.display = 'none';
@@ -4232,6 +4117,7 @@ window.editOrder = function (id) {
   document.getElementById('orderId').value = id;
   document.getElementById('orderInvoice').value = o.invoice || '';
   populateAllSelects();
+  loadDriversIntoSelects();  /* ✅ إعادة تحميل الموصلين */
   document.getElementById('orderBranch').value = o.branch || DEFAULT_BRANCH_NAME;
   document.getElementById('orderCustomer').value = o.customer || '';
   document.getElementById('orderCustomerPhone').value = o.customerPhone || '';
@@ -4245,8 +4131,35 @@ window.editOrder = function (id) {
   document.getElementById('orderCustomerId').value = o.customerId || '';
   renderCustomFieldsInOrder(o);
   const sug = document.getElementById('driverSuggestionBox'); if (sug) sug.style.display = 'none';
-  previewNextInvoice();
   openModal('orderModal');
+  setTimeout(() => document.getElementById('orderInvoice').focus(), 100);
+};
+/* ✅ تعديل الطلبات التي تم نقلها */
+window.editTransferred = function (id) {
+  if (!hasPerm('editTransferred')) { toast(MSG.unauthorized, 'error'); return; }
+  const o = cache.transferred.find(x => x.id === id); if (!o) return;
+  clearAllErrors('orderModal');
+  document.getElementById('orderModalTitle').innerHTML = ico('edit', 20) + '<span>تعديل طلب مُنقل</span>';
+  document.getElementById('orderId').value = id;
+  document.getElementById('orderInvoice').value = o.invoice || '';
+  populateAllSelects();
+  loadDriversIntoSelects();
+  document.getElementById('orderBranch').value = o.branch || DEFAULT_BRANCH_NAME;
+  document.getElementById('orderCustomer').value = o.customer || '';
+  document.getElementById('orderCustomerPhone').value = o.customerPhone || '';
+  document.getElementById('orderLocation').value = o.location || '';
+  document.getElementById('orderStatus').value = o.status || ORDER_STATUS.PROGRESS;
+  document.getElementById('orderDate').value = o.approvalDate || '';
+  document.getElementById('orderReceiptMethod').value = o.receiptMethod || 'المحل';
+  document.getElementById('orderDriver').value = o.driver || '';
+  document.getElementById('orderDriverPhone').value = o.driverPhone || '';
+  document.getElementById('orderNotes').value = o.notes || '';
+  document.getElementById('orderCustomerId').value = o.customerId || '';
+  renderCustomFieldsInOrder(o);
+  const sug = document.getElementById('driverSuggestionBox'); if (sug) sug.style.display = 'none';
+  openModal('orderModal');
+  /* حفظ العلم لمنع الخلط */
+  document.getElementById('orderModal').dataset.mode = 'transferred';
   setTimeout(() => document.getElementById('orderInvoice').focus(), 100);
 };
 function validateOrderForm() {
@@ -4257,8 +4170,19 @@ function validateOrderForm() {
   const customerId = document.getElementById('orderCustomerId').value;
   const branch = document.getElementById('orderBranch').value;
   const id = document.getElementById('orderId').value;
+  const mode = document.getElementById('orderModal').dataset.mode || 'orders';
   if (!invoice) { setFieldError('orderInvoice', 'رقم الفاتورة مطلوب'); valid = false; }
-  else if (isInvoiceDuplicate(invoice, id)) { setFieldError('orderInvoice', MSG.invoiceDup); valid = false; }
+  else {
+    const inv = String(invoice).trim().toLowerCase();
+    const isDup = (list, excludeId) => list.some(o => o.id !== excludeId && (o.invoice || '').trim().toLowerCase() === inv);
+    let dup = false;
+    if (mode === 'transferred') {
+      dup = isDup(cache.transferred, id) || isDup(cache.orders, null) || isDup(cache.ready, null) || isDup(cache.log, null);
+    } else {
+      dup = isDup(cache.orders, id) || isDup(cache.ready, null) || isDup(cache.transferred, null) || isDup(cache.log, null);
+    }
+    if (dup) { setFieldError('orderInvoice', MSG.invoiceDup); valid = false; }
+  }
   if (!branch) { setFieldError('orderBranch', 'الفرع مطلوب'); valid = false; }
   if (!customer) { setFieldError('orderCustomer', 'العميل مطلوب'); valid = false; }
   else {
@@ -4276,19 +4200,13 @@ function validateOrderForm() {
   if (!valid) { focusFirstError('orderModal'); toast('يرجى تعبئة الحقول المطلوبة', 'error'); }
   return valid;
 }
-function isInvoiceDuplicate(invoice, excludeId) {
-  if (!invoice) return false;
-  const inv = String(invoice).trim().toLowerCase();
-  if (!inv) return false;
-  const check = (list) => list.some(o => o.id !== excludeId && (o.invoice || '').trim().toLowerCase() === inv);
-  return check(cache.orders) || check(cache.ready) || check(cache.transferred) || check(cache.log);
-}
 window.saveOrder = async function () {
   const now = Date.now();
   if (now - lastSaveTime < SAVE_COOLDOWN) { const wait = Math.ceil((SAVE_COOLDOWN - (now - lastSaveTime)) / 1000); toast(`يرجى الانتظار ${wait} ثانية`, 'warning'); return; }
   if (saveInProgress) { toast('جاري الحفظ...', 'info'); return; }
   if (!validateOrderForm()) return;
   const id = document.getElementById('orderId').value;
+  const mode = document.getElementById('orderModal').dataset.mode || 'orders';
   saveInProgress = true;
   const btn = document.getElementById('saveOrderBtn');
   if (btn) { btn.disabled = true; btn.textContent = 'جاري الحفظ...'; }
@@ -4308,6 +4226,18 @@ window.saveOrder = async function () {
     lastEditBy: currentUser.username,
     updatedAt: fmtDate()
   };
+  if (mode === 'transferred') {
+    const idx = cache.transferred.findIndex(x => x.id === id);
+    if (idx === -1) { toast('الطلب غير موجود', 'error'); saveInProgress = false; if (btn) { btn.disabled = false; btn.innerHTML = 'حفظ الطلب'; } return; }
+    cache.transferred[idx] = { ...cache.transferred[idx], ...data };
+    logActivity('edit-transferred', `تعديل مُنقل: ${data.invoice}`, '', 'warning');
+    closeModal('orderModal'); clearDraft();
+    delete document.getElementById('orderModal').dataset.mode;
+    try { await persistKeys(['transferred', 'activity']); renderTransferred(); toast('تم التحديث بنجاح', 'success'); lastSaveTime = Date.now(); }
+    catch (e) { toast(e.message, 'error'); }
+    finally { saveInProgress = false; if (btn) { btn.disabled = false; btn.innerHTML = 'حفظ الطلب'; } }
+    return;
+  }
   const existing = id ? cache.orders.find(x => x.id === id) : null;
   let approvalDate = document.getElementById('orderDate').value || (existing?.approvalDate || '');
   if (data.status === ORDER_STATUS.READY && !approvalDate) approvalDate = fmtDate();
@@ -4324,18 +4254,30 @@ window.saveOrder = async function () {
     logActivity('add-order', `طلب جديد: ${data.invoice}`, '', 'success');
   }
   closeModal('orderModal'); clearDraft();
-  try { await persistKeys(['orders', 'activity']); renderEntry(); previewNextInvoice(); toast('تم الحفظ بنجاح', 'success'); lastSaveTime = Date.now(); }
+  delete document.getElementById('orderModal').dataset.mode;
+  try { await persistKeys(['orders', 'activity']); renderEntry(); toast('تم الحفظ بنجاح', 'success'); lastSaveTime = Date.now(); }
   catch (e) { toast(e.message, 'error'); }
   finally { saveInProgress = false; if (btn) { btn.disabled = false; btn.innerHTML = 'حفظ الطلب'; } }
 };
 window.deleteOrder = async function (id) {
   if (!hasPerm('deleteOrder')) { toast(MSG.unauthorized, 'error'); return; }
   const o = cache.orders.find(x => x.id === id);
+  if (isOrderLockedByGroup(id)) { toast('لا يمكن حذف طلب محجوز في مجموعة', 'warning'); return; }
   const ok = await dialog.danger(`حذف "${o?.invoice || ''}"؟`); if (!ok) return;
   cache.orders = cache.orders.filter(x => x.id !== id);
   if (selectedOrderId === id) selectedOrderId = null;
   logActivity('delete-order', `حذف: ${o?.invoice}`, '', 'danger');
   try { await persistKeys(['orders', 'activity']); renderEntry(); toast('تم الحذف', 'success'); }
+  catch (e) { toast(e.message, 'error'); }
+};
+/* ✅ حذف من الطلبات التي تم نقلها */
+window.deleteTransferred = async function (id) {
+  if (!hasPerm('deleteTransferred')) { toast(MSG.unauthorized, 'error'); return; }
+  const o = cache.transferred.find(x => x.id === id);
+  const ok = await dialog.danger(`حذف "${o?.invoice || ''}" من الطلبات التي تم نقلها؟`); if (!ok) return;
+  cache.transferred = cache.transferred.filter(x => x.id !== id);
+  logActivity('delete-transferred', `حذف مُنقل: ${o?.invoice}`, '', 'danger');
+  try { await persistKeys(['transferred', 'activity']); renderTransferred(); toast('تم الحذف بنجاح', 'success'); }
   catch (e) { toast(e.message, 'error'); }
 };
 
@@ -4345,7 +4287,8 @@ window.deleteOrder = async function (id) {
 window.transferSingle = async function (id) {
   if (!hasPerm('transferSingle')) { toast(MSG.unauthorized, 'error'); return; }
   const order = cache.orders.find(x => x.id === id); if (!order) return;
-  const ok = await dialog.confirm(`تحويل "${order.invoice}"؟`, { title: 'تحويل الطلب' }); if (!ok) return;
+  if (isOrderLockedByGroup(id)) { toast(MSG.orderInGroup, 'warning'); return; }
+  const ok = await dialog.confirm(`تحويل "${order.invoice}" إلى "الطلبات الجاهزة"؟`, { title: 'تحويل الطلب' }); if (!ok) return;
   const backup = { orders: [...cache.orders], ready: [...cache.ready] };
   try {
     cache.ready.push({ ...order, transferredAt: fmtDate(), transferredBy: currentUser.username });
@@ -4359,13 +4302,14 @@ window.transferSingle = async function (id) {
 };
 window.bulkTransfer = async function () {
   if (!hasPerm('bulkTransfer')) { toast(MSG.unauthorized, 'error'); return; }
-  const eligible = cache.orders.filter(o => o.status === ORDER_STATUS.READY);
-  if (!eligible.length) { toast('لا توجد طلبات مستوفية (حالتها "جاهز")', 'error'); return; }
+  const eligible = cache.orders.filter(o => o.status === ORDER_STATUS.READY && !isOrderLockedByGroup(o.id));
+  if (!eligible.length) { toast('لا توجد طلبات مستوفية (حالتها "جاهز" وغير محجوزة)', 'error'); return; }
   const ok = await dialog.confirm(`تحويل ${eligible.length} طلب إلى "الجاهزة"؟`, { title: 'تحويل جماعي' }); if (!ok) return;
   const backup = { orders: [...cache.orders], ready: [...cache.ready] };
   try {
     eligible.forEach(o => cache.ready.push({ ...o, transferredAt: fmtDate(), transferredBy: currentUser.username }));
-    cache.orders = cache.orders.filter(o => !(o.status === ORDER_STATUS.READY));
+    const ids = new Set(eligible.map(o => o.id));
+    cache.orders = cache.orders.filter(o => !ids.has(o.id));
     selectedOrderId = null;
     logActivity('bulk-transfer', `تحويل جماعي: ${eligible.length}`, '', 'success');
     await persistKeys(['orders', 'ready', 'activity']);
@@ -4420,6 +4364,114 @@ window.returnReadyToEntry = async function (id) {
 };
 
 /* ══════════════════════════════════════════════════════════════
+   DRIVER SUGGESTION
+   ══════════════════════════════════════════════════════════════ */
+const DriverSuggestion = (() => {
+  function getSettings() { return { ...DEFAULT_ANALYTICS_SETTINGS, ...(localMeta?.analyticsSettings || {}) }; }
+  function normalizeLocation(loc) { if (!loc) return ''; return loc.split(/[-–—,]/)[0].trim().toLowerCase(); }
+  function _calcCandidates(customerLocation, excludeDriver = null) {
+    const settings = getSettings();
+    if (!settings.driverSuggestionEnabled) return [];
+    if (!customerLocation) return [];
+    const targetLoc = normalizeLocation(customerLocation);
+    if (!targetLoc) return [];
+    const all = [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log];
+    const stats = {};
+    all.forEach(o => {
+      if (!o.driver) return;
+      if (excludeDriver && o.driver === excludeDriver) return;
+      const oLoc = normalizeLocation(o.location);
+      if (!oLoc) return;
+      let score = 0;
+      if (oLoc === targetLoc) score = 3;
+      else if (oLoc.includes(targetLoc) || targetLoc.includes(oLoc)) score = 2;
+      else { const tWords = targetLoc.split(/\s+/); const oWords = oLoc.split(/\s+/); if (tWords.filter(w => w.length > 2 && oWords.includes(w)).length > 0) score = 1; }
+      if (score === 0) return;
+      if (!stats[o.driver]) stats[o.driver] = { name: o.driver, phone: o.driverPhone || '', score: 0, count: 0, delivered: 0 };
+      stats[o.driver].score += score; stats[o.driver].count++;
+      if (o.receiptStatus === RECEIPT_RECEIVED || o.status === ORDER_STATUS.READY) stats[o.driver].delivered++;
+      if (o.driverPhone) stats[o.driver].phone = o.driverPhone;
+    });
+    return Object.values(stats).filter(s => s.count >= settings.driverSuggestionMinOrders)
+      .map(s => ({ ...s, successRate: s.count > 0 ? Math.round((s.delivered / s.count) * 100) : 0, finalScore: s.score * 10 + s.successRate }))
+      .sort((a, b) => b.finalScore - a.finalScore);
+  }
+  return { getAllSuggestions: (l) => _calcCandidates(l).slice(0, 3) };
+})();
+/* ✅ بدون اقتراح تلقائي في الواجهة - فقط بيانات جاهزة إن احتجت لاحقاً */
+function updateDriverSuggestion() {
+  const box = document.getElementById('driverSuggestionBox');
+  if (box) box.style.display = 'none';
+}
+window.dismissDriverSuggestion = function() { const box = document.getElementById('driverSuggestionBox'); if (box) box.style.display = 'none'; };
+
+/* ══════════════════════════════════════════════════════════════
+   WHATSAPP
+   ══════════════════════════════════════════════════════════════ */
+function buildWhatsAppMessage(order, method) {
+  const m = method || order.receiptMethod || 'المحل';
+  const tpl = whatsappTemplates[m] || DEFAULT_WHATSAPP_TEMPLATES[m] || DEFAULT_WHATSAPP_TEMPLATES['المحل'];
+  return String(tpl.message || '')
+    .replace(/{customer}/g, order.customer || '')
+    .replace(/{invoice}/g, order.invoice || '')
+    .replace(/{driver}/g, order.driver || '—')
+    .replace(/{driverPhone}/g, order.driverPhone || '—')
+    .replace(/{customerPhone}/g, order.customerPhone || '—')
+    .replace(/{date}/g, fmtDate())
+    .replace(/{method}/g, m);
+}
+function normalizePhoneForWhatsApp(phone) {
+  if (!phone) return '';
+  let p = String(phone).trim(); p = p.replace(/[^0-9]/g, '');
+  if (/^7\d{8}$/.test(p)) p = '967' + p;
+  else if (/^0\d{9}$/.test(p)) p = '967' + p.substring(1);
+  return p;
+}
+function openWhatsApp(phone, message) {
+  phone = String(phone).replace(/[^\d]/g, '');
+  const text = encodeURIComponent(message);
+  const ua = navigator.userAgent;
+  if (/Android/i.test(ua)) { window.location.href = `intent://send?phone=${phone}&text=${text}#Intent;scheme=whatsapp;package=com.whatsapp;end`; setTimeout(() => { try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 5000); } catch(_){} }, 1800); return; }
+  if (/iPhone|iPad|iPod/i.test(ua)) { window.location.href = `whatsapp://send?phone=${phone}&text=${text}`; setTimeout(() => { try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 5000); } catch(_){} }, 1800); return; }
+  try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 6000); } catch(_){}
+}
+window.openWhatsAppModal = function(orderId, location = 'transferred') {
+  if (!hasPerm('sendWhatsApp')) { toast(MSG.unauthorized, 'error'); return; }
+  const o = (location === 'transferred' ? cache.transferred : location === 'log' ? cache.log : [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log]).find(x => x.id === orderId);
+  if (!o) { toast('الطلب غير موجود', 'error'); return; }
+  document.getElementById('waOrderId').value = orderId;
+  document.getElementById('waReceiptMethod').value = o.receiptMethod || 'المحل';
+  document.getElementById('waCustomerPhone').value = normalizePhoneForWhatsApp(o.customerPhone) || o.customerPhone || '';
+  document.getElementById('whatsappModalTitle').innerHTML = ico('whatsapp', 20) + `<span>إرسال واتساب - ${esc(o.invoice)}</span>`;
+  document.getElementById('waTitleIcon').innerHTML = ico('whatsapp', 16);
+  document.getElementById('waSendIcon').innerHTML = ico('whatsapp', 15);
+  updateWhatsAppPreview();
+  openModal('whatsappModal');
+};
+window.updateWhatsAppPreview = function() {
+  const orderId = document.getElementById('waOrderId').value;
+  const method = document.getElementById('waReceiptMethod').value;
+  const o = [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log].find(x => x.id === orderId);
+  if (!o) return;
+  document.getElementById('waMessagePreview').textContent = buildWhatsAppMessage(o, method);
+};
+window.confirmSendWhatsApp = function() {
+  const orderId = document.getElementById('waOrderId').value;
+  const method = document.getElementById('waReceiptMethod').value;
+  const phone = document.getElementById('waCustomerPhone').value.trim();
+  if (!phone) { toast('يرجى إدخال رقم الواتساب', 'error'); return; }
+  const o = [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log].find(x => x.id === orderId);
+  if (!o) { toast('الطلب غير موجود', 'error'); return; }
+  const normalized = normalizePhoneForWhatsApp(phone);
+  const msg = buildWhatsAppMessage(o, method);
+  logActivity('whatsapp-sent', `إرسال واتساب: ${o.invoice}`, `إلى: ${o.customer} (${method})`, 'success', orderId);
+  renderActive();
+  openWhatsApp(normalized, msg);
+  closeModal('whatsappModal');
+  toast('تم تجهيز رسالة الواتساب', 'success');
+};
+
+/* ══════════════════════════════════════════════════════════════
    CUSTOMER SEARCH
    ══════════════════════════════════════════════════════════════ */
 function initCustomerSearch() {
@@ -4456,7 +4508,6 @@ function initCustomerSearch() {
           document.getElementById('orderCustomerPhone').value = opt.dataset.phone || '';
           document.getElementById('orderLocation').value = opt.dataset.loc || '';
           dropdown.classList.remove('show');
-          setTimeout(() => updateDriverSuggestion(), 300);
         }
       });
     });
@@ -4465,8 +4516,7 @@ function initCustomerSearch() {
   input.addEventListener('blur', () => setTimeout(() => dropdown.classList.remove('show'), 150));
 }
 function initLocationSuggestion() {
-  const locInput = document.getElementById('orderLocation'); if (!locInput) return;
-  locInput.addEventListener('input', () => { clearTimeout(locInput._sugTimer); locInput._sugTimer = setTimeout(() => updateDriverSuggestion(), 400); });
+  /* لا يوجد اقتراح تلقائي */
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -4525,7 +4575,6 @@ window.saveCustomer = async function () {
       document.getElementById('orderCustomer').value = custData.name;
       document.getElementById('orderCustomerPhone').value = custData.phone || '';
       document.getElementById('orderLocation').value = custData.location;
-      setTimeout(() => updateDriverSuggestion(), 300);
     }
     toast('تم الحفظ بنجاح', 'success');
   } catch (e) { toast(e.message, 'error'); }
@@ -4705,8 +4754,15 @@ window.addDriver = async function () {
   if (cache.drivers.find(d => d.name === name)) { toast('الاسم موجود مسبقاً', 'error'); return; }
   cache.drivers.push({ id: uid(), name, phone });
   logActivity('add-driver', `إضافة موصل: ${name}`, '', 'success');
-  try { await persistKeys(['drivers', 'activity']); document.getElementById('newDriverName').value = ''; document.getElementById('newDriverPhone').value = ''; renderDriversList(); loadDriversIntoSelects(); populateAllSelects(); toast('تمت الإضافة بنجاح', 'success'); }
-  catch (e) { toast(e.message, 'error'); }
+  try {
+    await persistKeys(['drivers', 'activity']);
+    document.getElementById('newDriverName').value = '';
+    document.getElementById('newDriverPhone').value = '';
+    renderDriversList();
+    loadDriversIntoSelects();
+    populateAllSelects();
+    toast('تمت الإضافة بنجاح', 'success');
+  } catch (e) { toast(e.message, 'error'); }
 };
 window.deleteDriver = async function (id) {
   if (!hasPerm('manageDrivers')) { toast(MSG.unauthorized, 'error'); return; }
@@ -4891,12 +4947,12 @@ window.exportBackup = async function () {
     dataFolder.file('groups.json', JSON.stringify(cache.groups || [], null, 2));
     dataFolder.file('tasks.json', JSON.stringify(cache.tasks || [], null, 2));
     dataFolder.file('settings.json', JSON.stringify({ users: cache.users || [], drivers: cache.drivers || [], branches: cache.branches || [], customFields: cache.customFields || [], templates: templates || {}, whatsappTemplates: whatsappTemplates || {}, invoiceSettings: invoiceSettings || {} }, null, 2));
-    dataFolder.file('meta.json', JSON.stringify({ lastUpdate: new Date().toISOString(), version: 8, appVersion: APP_VERSION, featureFlags, invoiceSettings, analyticsSettings: localMeta?.analyticsSettings }, null, 2));
+    dataFolder.file('meta.json', JSON.stringify({ lastUpdate: new Date().toISOString(), version: 9, appVersion: APP_VERSION, featureFlags, invoiceSettings, analyticsSettings: localMeta?.analyticsSettings }, null, 2));
     const activityFolder = dataFolder.folder('activity');
     const byMonth = {};
     (cache.activity || []).forEach(a => { const m = a.month || getMonthKey(a.ts ? new Date(a.ts) : new Date()); if (!byMonth[m]) byMonth[m] = []; byMonth[m].push(a); });
     Object.keys(byMonth).forEach(m => { activityFolder.file(`${m}.json`, JSON.stringify(byMonth[m], null, 2)); });
-    const info = { name: 'نظام إدارة الطلبات', createdAt: stamp.toISOString(), createdBy: currentUser?.username || 'unknown', structure: 'v8' };
+    const info = { name: 'نظام إدارة الطلبات v4.0', createdAt: stamp.toISOString(), createdBy: currentUser?.username || 'unknown', structure: 'v9' };
     zip.file('backup-info.json', JSON.stringify(info, null, 2));
     const blob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 9 } });
     downloadBlob(blob, `backup_${dateStr}.zip`);
@@ -4933,7 +4989,7 @@ window.resetAll = async function () {
    NAVIGATION
    ══════════════════════════════════════════════════════════════ */
 window.go = function (page) {
-  const pagePerm = { dashboard:'accessDashboard', entry:'accessEntry', ready:'accessReady', transferred:'accessTransferred', log:'accessLog', customers:'accessCustomers', groups:'accessGroups', tasks:'accessTasks', settings:'accessSettings' };
+  const pagePerm = { dashboard:'accessDashboard', entry:'accessEntry', groups:'accessGroups', ready:'accessReady', transferred:'accessTransferred', log:'accessLog', customers:'accessCustomers', tasks:'accessTasks', settings:'accessSettings' };
   if (pagePerm[page] && !hasPerm(pagePerm[page])) { toast(MSG.unauthorized, 'error'); return; }
   if (page === 'groups' && !isFeatureEnabled('featureWorkGroups')) { toast('الميزة معطّلة', 'error'); return; }
   if (page === 'tasks' && !isFeatureEnabled('featureTasks')) { toast('الميزة معطّلة', 'error'); return; }
@@ -4942,12 +4998,12 @@ window.go = function (page) {
   document.getElementById('page-' + page)?.classList.add('active');
   document.querySelector(`nav button[data-page="${page}"]`)?.classList.add('active');
   if (page === 'dashboard') renderDashboard();
-  if (page === 'entry') { populateAllSelects(); renderEntry(); }
+  if (page === 'entry') { populateAllSelects(); loadDriversIntoSelects(); renderEntry(); }
+  if (page === 'groups') { populateAllSelects(); renderGroups(); }
   if (page === 'ready') { populateAllSelects(); renderReady(); }
   if (page === 'transferred') { populateAllSelects(); renderTransferred(); }
   if (page === 'log') { populateAllSelects(); renderLog(); }
   if (page === 'customers') renderCustomers();
-  if (page === 'groups') { populateAllSelects(); renderGroups(); }
   if (page === 'tasks') { populateAllSelects(); renderTasks(); }
   if (page === 'settings') { rebuildSettingsTabs(); renderSettings(); updateCurrentKeyInfo(); renderWhatsAppTemplates(); }
 };
@@ -5052,8 +5108,8 @@ function startApp() {
   document.getElementById('currentUserName').innerHTML = `${esc(currentUser.username)} <span style="opacity:.75;font-size:11px;margin-right:4px;">${rl.label}</span>`;
   buildUI(); applyPermissionsUI(); populateAllSelects(); loadDriversIntoSelects();
   renderRateLimitWidget();
-  const firstAvailable = ['dashboard','entry','ready','transferred','groups','log','tasks','customers','settings'].find(p => {
-    const pp = { dashboard:'accessDashboard', entry:'accessEntry', ready:'accessReady', transferred:'accessTransferred', log:'accessLog', customers:'accessCustomers', groups:'accessGroups', tasks:'accessTasks', settings:'accessSettings' };
+  const firstAvailable = ['dashboard','entry','groups','ready','transferred','log','tasks','customers','settings'].find(p => {
+    const pp = { dashboard:'accessDashboard', entry:'accessEntry', groups:'accessGroups', ready:'accessReady', transferred:'accessTransferred', log:'accessLog', customers:'accessCustomers', tasks:'accessTasks', settings:'accessSettings' };
     if (!hasPerm(pp[p])) return false;
     if (p === 'groups' && !isFeatureEnabled('featureWorkGroups')) return false;
     if (p === 'tasks' && !isFeatureEnabled('featureTasks')) return false;
@@ -5064,7 +5120,7 @@ function startApp() {
   renderNotifications();
   attachVisibilityHandler(); attachOnlineHandlers();
   initBroadcast();
-  setInterval(renderSaveQueueIndicator, 1000);
+  setInterval(renderSaveQueueIndicator, 800);
   applyFeatureUI();
   toast(`أهلاً ${currentUser.username}`, 'success');
 }
@@ -5072,22 +5128,32 @@ let _visHandlerAttached = false;
 function attachVisibilityHandler() {
   if (_visHandlerAttached) return; _visHandlerAttached = true;
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) stopPolling();
-    else if (currentUser) { lastSyncTime = 0; localMeta = null; syncPull(true).finally(() => { if (!pollTimer && currentSyncInterval > 0) startPolling(); }); resetSessionTimer(); }
+    if (document.hidden) { /* لا نوقف المزامنة عند الإخفاء */ }
+    else if (currentUser) {
+      lastSyncTime = 0; localMeta = null;
+      syncPull(true).finally(() => { if (!pollTimer && currentSyncInterval > 0) startPolling(); });
+      resetSessionTimer();
+    }
   });
 }
 let _onlineHandlerAttached = false;
 function attachOnlineHandlers() {
   if (_onlineHandlerAttached) return; _onlineHandlerAttached = true;
-  window.addEventListener('online', () => { if (currentUser) { lastSyncTime = 0; localMeta = null; syncPull(true); } });
+  window.addEventListener('online', () => { if (currentUser) { _connectionErrorCount = 0; lastSyncTime = 0; localMeta = null; syncPull(true); } });
   window.addEventListener('offline', () => { setOnline(false); });
 }
+/* ✅ إصلاح مؤشر الحفظ */
 function renderSaveQueueIndicator() {
   const stats = SaveQueue.getStats();
   const el = document.getElementById('saveQueueIndicator'); if (!el) return;
-  if (stats.pending === 0) { el.style.display = 'none'; return; }
+  if (stats.pending === 0) {
+    el.classList.remove('show');
+    el.style.display = 'none';
+    return;
+  }
+  el.classList.add('show');
   el.style.display = 'inline-flex';
-  el.innerHTML = `${ico('sync', 12)}<span>${stats.pending} حفظ</span>`;
+  el.innerHTML = `${ico('sync', 12)}<span>${stats.pending} حفظ جارٍ...</span>`;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -5111,13 +5177,12 @@ function buildUI() {
   document.getElementById('notifCloseBtn').innerHTML = ico('x', 15);
   document.getElementById('sessionTimerIcon').innerHTML = ico('clock', 12);
   document.getElementById('rateIcon').innerHTML = ico('zap', 12);
-  document.getElementById('invoiceIconSlot').innerHTML = ico('hash', 14);
   updateThemeBtn(); renderRateLimitWidget(); rebuildNav();
   document.getElementById('dashGrid').innerHTML = [
     { page:'entry', cls:'', icon:'list', title:'إدخال الطلبات', desc:'تسجيل ومتابعة الطلبات', perm:'accessEntry' },
+    { page:'groups', cls:'', icon:'layers', title:'مجموعات العمل', desc:'تجميع الطلبات لموصل', perm:'accessGroups', feature:'featureWorkGroups' },
     { page:'ready', cls:'green', icon:'box', title:'الطلبات الجاهزة', desc:'جاهزة للنقل', perm:'accessReady' },
     { page:'transferred', cls:'teal', icon:'transfer', title:'الطلبات التي تم نقلها', desc:'بانتظار تأكيد الاستلام', perm:'accessTransferred' },
-    { page:'groups', cls:'', icon:'layers', title:'مجموعات العمل', desc:'تجميع الطلبات لموصل', perm:'accessGroups', feature:'featureWorkGroups' },
     { page:'log', cls:'purple', icon:'archive', title:'السجل', desc:'الأرشيف النهائي', perm:'accessLog' },
     { page:'tasks', cls:'green', icon:'check', title:'المهام', desc:'إدارة المهام الداخلية', perm:'accessTasks', feature:'featureTasks' },
     { page:'customers', cls:'orange', icon:'users', title:'العملاء', desc:'قاعدة بيانات العملاء', perm:'accessCustomers' }
@@ -5152,12 +5217,14 @@ function buildUI() {
     <button class="btn btn-primary perm-addOrder" onclick="addOrder()">${ico('plus', 15)}<span>طلب جديد</span></button>
     <button class="btn btn-success perm-bulkTransfer" onclick="bulkTransfer()">${ico('truck', 15)}<span>تحويل المستوفية</span></button>`;
   document.getElementById('entryHead').innerHTML = ['#','رقم الفاتورة','الفرع','العميل','هاتف العميل','الموقع','حالة الطلب','تاريخ الاعتماد','طريقة الاستلام','الموصل','رقم الموصل','ملاحظات','إجراءات'].map(h => `<th>${h}</th>`).join('');
+  document.getElementById('groupsTitle').innerHTML = ico('layers', 20) + '<span>مجموعات العمل</span>';
+  document.getElementById('groupsToolbar').innerHTML = `<button class="btn btn-primary perm-createGroup" onclick="openGroupModal()">${ico('plus', 15)}<span>مجموعة جديدة</span></button>`;
   document.getElementById('readyTitle').innerHTML = ico('box', 20) + '<span>الطلبات الجاهزة للنقل</span>';
+  /* ✅ بدون فلتر حالة */
   document.getElementById('readyFilterBar').innerHTML = `
     <span style="color:var(--brand-700);font-weight:700;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;">${ico('filter', 14)}<span>فلترة:</span></span>
     <input id="readySearch" type="text" placeholder="بحث سريع..." oninput="updateReadyFilter('search', this.value)" style="width:200px;">
     <select id="readyBranchFilter" onchange="updateReadyFilter('branch', this.value)" style="width:160px;"></select>
-    <select id="readyStatusFilter" onchange="updateReadyFilter('status', this.value)" style="width:140px;"><option value="">كل الحالات</option><option value="قيد التجهيز">قيد التجهيز</option><option value="جاهز">جاهز</option></select>
     <select id="readyMethodFilter" onchange="updateReadyFilter('receiptMethod', this.value)" style="width:140px;"><option value="">كل الطرق</option><option value="المحل">المحل</option><option value="موصل">موصل</option><option value="مكتب">مكتب</option></select>
     <button class="btn btn-ghost btn-sm" onclick="resetReadyFilters()">${ico('refresh', 13)}<span>مسح</span></button>`;
   document.getElementById('readyToolbar').innerHTML = `
@@ -5168,11 +5235,11 @@ function buildUI() {
     <button class="btn btn-ghost btn-sm perm-selectReadyOrders" onclick="deselectAllReady()">${ico('square', 13)}<span>إلغاء التحديد</span></button>
     <span id="readySelectionInfo" class="selection-info" style="display:none;"></span>`;
   document.getElementById('transferredTitle').innerHTML = ico('transfer', 20) + '<span>الطلبات التي تم نقلها</span>';
+  /* ✅ بدون فلتر حالة الاستلام */
   document.getElementById('transferredFilterBar').innerHTML = `
     <span style="color:var(--brand-700);font-weight:700;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;">${ico('filter', 14)}<span>فلترة:</span></span>
     <input id="transferredSearch" type="text" placeholder="بحث سريع..." oninput="updateTransferredFilter('search', this.value)" style="width:200px;">
     <select id="transferredBranchFilter" onchange="updateTransferredFilter('branch', this.value)" style="width:160px;"></select>
-    <select id="transferredReceiptFilter" onchange="updateTransferredFilter('receipt', this.value)" style="width:140px;"><option value="">كل حالات الاستلام</option><option value="لا">لا</option><option value="تم">تم</option></select>
     <select id="transferredMethodFilter" onchange="updateTransferredFilter('receiptMethod', this.value)" style="width:140px;"><option value="">كل الطرق</option><option value="المحل">المحل</option><option value="موصل">موصل</option><option value="مكتب">مكتب</option></select>
     <button class="btn btn-ghost btn-sm" onclick="resetTransferredFilters()">${ico('refresh', 13)}<span>مسح</span></button>`;
   document.getElementById('transferredToolbar').innerHTML = `
@@ -5199,8 +5266,6 @@ function buildUI() {
     <input id="custSearch" type="text" placeholder="بحث..." oninput="updateCustomersFilter('search', this.value)" style="max-width:300px;">
     <button class="btn btn-primary perm-manageCustomers" onclick="openCustomerModal()">${ico('plus', 15)}<span>عميل جديد</span></button>`;
   document.getElementById('custHead').innerHTML = ['#','رقم العميل','الاسم','الموقع','الهاتف','إجراءات'].map(h => `<th>${h}</th>`).join('');
-  document.getElementById('groupsTitle').innerHTML = ico('layers', 20) + '<span>مجموعات العمل</span>';
-  document.getElementById('groupsToolbar').innerHTML = `<button class="btn btn-primary perm-createGroup" onclick="openGroupModal()">${ico('plus', 15)}<span>مجموعة جديدة</span></button>`;
   document.getElementById('tasksTitle').innerHTML = ico('check', 20) + '<span>المهام الداخلية</span>';
   document.getElementById('tasksToolbar').innerHTML = `
     <input id="tasksSearch" type="text" placeholder="بحث..." oninput="updateTasksFilter('search', this.value)" style="max-width:200px;">
@@ -5290,13 +5355,12 @@ function buildUI() {
   document.getElementById('taskModalTitle').innerHTML = ico('check', 20) + '<span>مهمة جديدة</span>';
   document.getElementById('groupModalTitle').innerHTML = ico('layers', 20) + '<span>مجموعة جديدة</span>';
   document.getElementById('shortcutsGrid').innerHTML = [
-    { title:'التنقل', icon:'home', items: [['الرئيسية',['Alt','1']],['إدخال الطلبات',['Alt','2']],['الجاهزة',['Alt','3']],['تم نقلها',['Alt','4']],['السجل',['Alt','5']]]},
+    { title:'التنقل', icon:'home', items: [['الرئيسية',['Alt','1']],['إدخال الطلبات',['Alt','2']],['المجموعات',['Alt','3']],['الجاهزة',['Alt','4']],['تم نقلها',['Alt','5']],['السجل',['Alt','6']]]},
     { title:'العمليات', icon:'check', items: [['بحث سريع',['Ctrl','K']],['طلب جديد',['Alt','N']],['حفظ',['Ctrl','Enter']],['طباعة',['Ctrl','P']],['تحويل جماعي',['Alt','B']],['نقل للـ"تم نقلها"',['Alt','M']]]},
     { title:'النموذج', icon:'list', items: [['التالي',['Enter']],['السابق',['Shift','Enter']],['إغلاق',['Esc']]]},
     { title:'العرض', icon:'eye', items: [['تكبير',['Ctrl','=']],['تصغير',['Ctrl','-']],['100%',['Ctrl','0']],['ليلي',['Alt','D']],['إشعارات',['Alt','I']]]}
   ].map(g => `<div class="shortcut-group"><h4>${ico(g.icon, 15)}<span>${g.title}</span></h4>${g.items.map(([d, keys]) => `<div class="shortcut-row"><span class="desc">${d}</span><span class="keys">${keys.map(k => `<kbd>${k}</kbd>`).join('')}</span></div>`).join('')}</div>`).join('');
   loadAnalyticsSettingsToForm(); loadInvoiceSettingsToForm();
-  initLocationSuggestion();
   renderWhatsAppTemplates();
 }
 
@@ -5405,9 +5469,10 @@ window.addEventListener('keydown', e => {
     if (!activeModal) {
       if (c === 'Digit1' || c === 'Numpad1') { e.preventDefault(); if (hasPerm('accessDashboard')) go('dashboard'); return; }
       if (c === 'Digit2' || c === 'Numpad2') { e.preventDefault(); if (hasPerm('accessEntry')) go('entry'); return; }
-      if (c === 'Digit3' || c === 'Numpad3') { e.preventDefault(); if (hasPerm('accessReady')) go('ready'); return; }
-      if (c === 'Digit4' || c === 'Numpad4') { e.preventDefault(); if (hasPerm('accessTransferred')) go('transferred'); return; }
-      if (c === 'Digit5' || c === 'Numpad5') { e.preventDefault(); if (hasPerm('accessLog')) go('log'); return; }
+      if (c === 'Digit3' || c === 'Numpad3') { e.preventDefault(); if (hasPerm('accessGroups')) go('groups'); return; }
+      if (c === 'Digit4' || c === 'Numpad4') { e.preventDefault(); if (hasPerm('accessReady')) go('ready'); return; }
+      if (c === 'Digit5' || c === 'Numpad5') { e.preventDefault(); if (hasPerm('accessTransferred')) go('transferred'); return; }
+      if (c === 'Digit6' || c === 'Numpad6') { e.preventDefault(); if (hasPerm('accessLog')) go('log'); return; }
       if (c === 'KeyN') { e.preventDefault(); if (hasPerm('addOrder')) addOrder(); return; }
       if (c === 'KeyB' && document.getElementById('page-entry').classList.contains('active')) { e.preventDefault(); bulkTransfer(); return; }
       if (c === 'KeyM' && document.getElementById('page-ready').classList.contains('active')) { e.preventDefault(); moveReadyToLog(); return; }
@@ -5462,7 +5527,6 @@ window.addEventListener('DOMContentLoaded', () => {
   updateKeyStatus();
   loadLastUser();
   initCustomerSearch();
-  initLocationSuggestion();
   initBroadcast();
   document.getElementById('loginLogo').innerHTML = ico('package', 54);
   document.getElementById('adminToggleIcon').innerHTML = ico('shield2', 13);

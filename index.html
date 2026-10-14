@@ -1100,14 +1100,14 @@ const APP_ID       = 'test';
 const APP_BRANCH   = 'main';
 const APP_VERSION  = '4.0.0';
 
-const SYNC_INTERVAL = 5000;
-const SYNC_INTERVAL_HIDDEN = 30000;
-const SYNC_THROTTLE_MS = 1500;
-const INSTANT_SYNC_DELAY = 1500;   /* ✅ أُلغيت فعليًا — لا يُستخدم */
-const DEBOUNCE_SYNC_MS = 1000;
+/* ✅ مزامنة دورية كل 60 ثانية (الوضع النشط) و5 دقائق (الخلفية) */
+const SYNC_INTERVAL = 60000;
+const SYNC_INTERVAL_HIDDEN = 300000;
+const SYNC_THROTTLE_MS = 2000;
+const DEBOUNCE_SYNC_MS = 1500;
+
 /* ✅ فترة حماية ضد Race Condition */
 const SYNC_GRACE_MS = 10000;
-/* ✅ أقصى عدد من SHAs السابقة المحفوظة لكل ملف */
 const PREV_SHA_HISTORY = 20;
 
 const SAVE_COOLDOWN = 800;
@@ -1128,10 +1128,11 @@ function initBroadcast() {
     _broadcastChannel = new BroadcastChannel('oms_sync_v40');
     _broadcastChannel.onmessage = (e) => {
       if (!currentUser) return;
-      if (e.data && e.data.type === 'data-changed') {
-        lastSyncTime = 0;
-        syncPull(true).catch(() => {});
-      }
+      if (!e.data || e.data.type !== 'data-changed') return;
+      // ✅ تجاهل الرسائل الصادرة من هذا المستخدم نفسه
+      if (e.data.by === currentUser.username) return;
+      lastSyncTime = 0;
+      syncPull(true).catch(() => {});
     };
   } catch (_) {}
 }
@@ -1148,12 +1149,12 @@ function broadcastChange() {
 }
 
 const RATE_LEVELS = [
-  { min: 3000, interval: 5000,  label: 'مرتفعة' },
-  { min: 1500, interval: 8000,  label: 'جيدة' },
-  { min: 800,  interval: 15000, label: 'متوسطة' },
-  { min: 300,  interval: 30000, label: 'منخفضة' },
-  { min: 100,  interval: 60000, label: 'منخفضة جداً' },
-  { min: 0,    interval: 0,     label: 'حرجة - موقوفة' }
+  { min: 3000, interval: 60000,  label: 'مرتفعة' },
+  { min: 1500, interval: 90000,  label: 'جيدة' },
+  { min: 800,  interval: 120000, label: 'متوسطة' },
+  { min: 300,  interval: 180000, label: 'منخفضة' },
+  { min: 100,  interval: 300000, label: 'منخفضة جداً' },
+  { min: 0,    interval: 0,      label: 'حرجة - موقوفة' }
 ];
 
 const DATA_FILES = {
@@ -1381,7 +1382,7 @@ let activityCurrentPage = 1;
 let activityFilterUser = '', activityFilterType = '', activitySearchQuery = '';
 let currentSyncInterval = SYNC_INTERVAL;
 let lastSyncTime = 0, lastRateNotificationAt = 0;
-let _notifSaveTimer = null, _activitySaveTimer = null, _instantSyncTimer = null, _debounceSyncTimer = null;
+let _notifSaveTimer = null, _activitySaveTimer = null, _debounceSyncTimer = null;
 let statsFilter = 'all', statsFromDate = '', statsToDate = '';
 let featureFlags = { featureFuzzySearch: true, featureCustomFields: true, featureWorkGroups: true, featureTasks: true };
 let _groupSelectedOrders = new Set();
@@ -1465,11 +1466,37 @@ function zoomReset() { zoomLevel = 1; applyZoom(); }
 function encodeBase64(str) { return btoa(unescape(encodeURIComponent(str))); }
 function decodeBase64(b64) { return decodeURIComponent(escape(atob(b64.replace(/\s/g, '')))); }
 
+/* ══════════════════════════════════════════════════════════════
+   ✅ generateNextInvoice — اشتقاق من أعلى فاتورة فعلية
+   ══════════════════════════════════════════════════════════════ */
 function generateNextInvoice() {
   const s = invoiceSettings;
-  const n = String(s.nextNumber || 1).padStart(s.digits || 4, '0');
-  return `${s.prefix || ''}${n}`;
+  const prefix = s.prefix || '';
+  const digits = s.digits || 4;
+
+  // ✅ اشتق الرقم من أعلى فاتورة فعلية في كل القوائم
+  let maxNum = 0;
+  const allLists = [cache.orders, cache.ready, cache.transferred, cache.log];
+  for (const list of allLists) {
+    if (!Array.isArray(list)) continue;
+    for (const o of list) {
+      if (!o || !o.invoice) continue;
+      const inv = String(o.invoice).trim();
+      let numPart = inv;
+      if (prefix) {
+        if (!inv.startsWith(prefix)) continue;
+        numPart = inv.substring(prefix.length);
+      }
+      const num = parseInt(numPart, 10);
+      if (!isNaN(num) && num > maxNum) maxNum = num;
+    }
+  }
+
+  const storedNext = parseInt(s.nextNumber) || 1;
+  const next = Math.max(maxNum + 1, storedNext);
+  return `${prefix}${String(next).padStart(digits, '0')}`;
 }
+
 function getWaCount(orderId) {
   const list = cache.activity || [];
   let count = 0;
@@ -1659,9 +1686,7 @@ const Storage = (() => {
   const API_BASE = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
   const TREE_API = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/git/trees/${APP_BRANCH}?recursive=1`;
   const SHAs = {}, ETags = {};
-  /* ✅ سجل SHAs السابقة (لتجاهل Tree المتأخر) */
   const PREV_SHAS = {};
-  /* ✅ وقت آخر حفظ لكل ملف (فترة حماية) */
   const RECENTLY_SAVED = {};
   let treeDisabled = false;
 
@@ -1720,7 +1745,6 @@ const Storage = (() => {
     }
     const json = await res.json();
     if (cacheKey) {
-      /* ✅ احفظ SHA السابق في السجل قبل التحديث */
       if (SHAs[cacheKey]) {
         if (!PREV_SHAS[cacheKey]) PREV_SHAS[cacheKey] = [];
         PREV_SHAS[cacheKey].push(SHAs[cacheKey]);
@@ -1756,7 +1780,7 @@ const Storage = (() => {
   async function getTreeShas() {
     if (treeDisabled) return null;
     try {
-      const res = await fetch(TREE_API, { headers: headers(false, 'tree') });
+      const res = await fetch(`${TREE_API}&_=${Date.now()}`, { headers: headers(false, 'tree') });
       updateRateLimit(res.headers);
       if (res.status === 304) return null;
       if (!res.ok) { if (res.status >= 400 && res.status < 500 && res.status !== 403) treeDisabled = true; return null; }
@@ -1773,7 +1797,6 @@ const Storage = (() => {
     } catch { return null; }
   }
 
-  /* ✅ فحص ما إذا كان SHA قادماً من Tree متأخر (SHA قديم عرفناه) */
   function isStaleSha(cacheKey, remoteSha) {
     if (!remoteSha) return false;
     if (remoteSha === SHAs[cacheKey]) return true;
@@ -1781,7 +1804,6 @@ const Storage = (() => {
     return false;
   }
 
-  /* ✅ فحص ما إذا كان الملف حُفظ مؤخراً (فترة حماية) */
   function isRecentlySaved(cacheKey) {
     const t = RECENTLY_SAVED[cacheKey];
     return t && (Date.now() - t) < SYNC_GRACE_MS;
@@ -2021,7 +2043,6 @@ function filterOrdersByPermission(list) {
   return list.filter(o => allowed.includes(o.receiptMethod || 'المحل'));
 }
 
-/* ✅ دالة كانت مفقودة تماماً — السبب الجذري لمشكلة الرئيسية الفارغة */
 function applyFeatureUI() {
   try {
     document.querySelectorAll('[data-feature]').forEach(el => {
@@ -2033,7 +2054,6 @@ function applyFeatureUI() {
   } catch (e) { console.warn('applyFeatureUI:', e); }
 }
 
-/* ✅ نسخة محمية بـ try/catch لضمان عدم توقف التنفيذ */
 function applyPermissionsUI() {
   try {
     document.querySelectorAll('[class*="perm-"]').forEach(el => {
@@ -2513,7 +2533,6 @@ async function writeMeta(extra = {}) {
   }
 }
 
-/* ✅ persistKeys بدون scheduleInstantSync — تجنب Race Condition */
 async function persistKeys(keys) {
   setSyncing(true);
   try {
@@ -2541,16 +2560,10 @@ async function persistKeys(keys) {
     }
     if (activityRequested) scheduleActivitySave();
     broadcastChange();
-    /* ✅ لا نُشغّل syncPull فوراً بعد الحفظ */
-    /* scheduleInstantSync(); ← معطّل */
     renderActive();
   } finally { setSyncing(false); }
 }
 
-function scheduleInstantSync() {
-  /* ✅ معطّلة — كانت تسبب Race Condition */
-  /* لم نعد نستدعيها بعد الحفظ */
-}
 function scheduleSync() {
   if (_debounceSyncTimer) clearTimeout(_debounceSyncTimer);
   _debounceSyncTimer = setTimeout(() => {
@@ -2583,7 +2596,6 @@ async function syncPull(force = false) {
     const treeShas = await Storage.getTreeShas();
     if (treeShas) {
       const fileKeys = Object.keys(DATA_FILES);
-      /* ✅ تجاهل SHA المتطابق أو القديم أو حديث الحفظ */
       const changedFiles = fileKeys.filter(f => {
         const remoteSha = treeShas[f];
         if (!remoteSha) return false;
@@ -2632,7 +2644,6 @@ async function syncPull(force = false) {
 }
 
 function renderActive() {
-  /* لا نُحدّث الواجهة إذا كان هناك نافذة مفتوحة */
   if (document.querySelector('.modal-bg.active')) return;
   const a = document.querySelector('.page.active')?.id?.replace('page-', '');
   try {
@@ -2647,11 +2658,22 @@ function renderActive() {
     if (a === 'settings') renderSettings();
   } catch (e) { console.warn('renderActive:', e); }
 }
+
+/* ✅ getCurrentInterval + startPolling */
+function getCurrentInterval() {
+  if (currentSyncInterval <= 0) return 0;
+  return document.hidden ? SYNC_INTERVAL_HIDDEN : currentSyncInterval;
+}
+
 function startPolling() {
   stopPolling();
-  const interval = document.hidden ? SYNC_INTERVAL_HIDDEN : (currentSyncInterval || SYNC_INTERVAL);
+  if (!currentUser) return;
+  const interval = getCurrentInterval();
   if (interval <= 0) return;
-  pollTimer = setInterval(() => syncPull(false), interval);
+  pollTimer = setInterval(() => {
+    if (!currentUser) return;
+    syncPull(false).catch(() => {});
+  }, interval);
 }
 function stopPolling() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
 function setOnline(ok) {
@@ -4179,7 +4201,8 @@ async function changeReceiptStatusWithTransfer(orderId, newStatus) {
 /* ══════════════════════════════════════════════════════════════
    ORDER MODAL
    ══════════════════════════════════════════════════════════════ */
-window.addOrder = function () {
+/* ✅ addOrder — async + syncPull قبل توليد رقم الفاتورة */
+window.addOrder = async function (skipSync = false) {
   if (!hasPerm('addOrder')) { toast(MSG.unauthorized, 'error'); return; }
   if (document.querySelector('.page.active')?.id !== 'page-entry') go('entry');
   clearAllErrors('orderModal');
@@ -4194,6 +4217,12 @@ window.addOrder = function () {
   loadDriversIntoSelects('المحل');
   const branchSel = document.getElementById('orderBranch');
   if (branchSel && branchSel.options.length > 0) branchSel.selectedIndex = 0;
+
+  // ✅ مزامنة سريعة قبل توليد الرقم لضمان رؤية أحدث الفواتير
+  if (!skipSync && currentUser) {
+    try { await syncPull(true); } catch (_) {}
+  }
+
   document.getElementById('orderInvoice').value = generateNextInvoice();
   document.getElementById('customerDropdown').classList.remove('show');
   renderCustomFieldsInOrder(null);
@@ -4287,6 +4316,7 @@ function validateOrderForm() {
   if (!valid) { focusFirstError('orderModal'); toast('يرجى تعبئة الحقول المطلوبة', 'error'); }
   return valid;
 }
+/* ✅ saveOrder — إعادة حساب nextNumber من البيانات الفعلية */
 window.saveOrder = async function () {
   const now = Date.now();
   if (now - _orderSubmitLock < SUBMIT_LOCK_MS) { toast('جاري الحفظ، يرجى الانتظار...', 'warning'); return; }
@@ -4335,12 +4365,34 @@ window.saveOrder = async function () {
   else {
     data.id = uid(); data.createdAt = fmtDate();
     cache.orders.push(data);
-    if (invoiceSettings.autoIncrement) {
-      const currentNum = parseInt(invoiceSettings.nextNumber) || 1;
-      invoiceSettings.nextNumber = currentNum + 1;
-      try { await writeMeta({ invoiceSettings }); localMeta = { ...localMeta, invoiceSettings }; } catch (_) {}
-    }
     logActivity('add-order', `طلب جديد: ${data.invoice}`, '', 'success');
+  }
+  // ✅ إعادة حساب nextNumber من أعلى فاتورة فعلية (بعد إضافة الطلب الجديد)
+  if (invoiceSettings.autoIncrement) {
+    const prefix = invoiceSettings.prefix || '';
+    let maxNum = 0;
+    const allLists = [cache.orders, cache.ready, cache.transferred, cache.log];
+    for (const list of allLists) {
+      if (!Array.isArray(list)) continue;
+      for (const o of list) {
+        if (!o || !o.invoice) continue;
+        let numPart = String(o.invoice).trim();
+        if (prefix) {
+          if (!numPart.startsWith(prefix)) continue;
+          numPart = numPart.substring(prefix.length);
+        }
+        const n = parseInt(numPart, 10);
+        if (!isNaN(n) && n > maxNum) maxNum = n;
+      }
+    }
+    const newNext = maxNum + 1;
+    if (newNext > (invoiceSettings.nextNumber || 1)) {
+      invoiceSettings.nextNumber = newNext;
+      try {
+        await writeMeta({ invoiceSettings });
+        localMeta = { ...localMeta, invoiceSettings };
+      } catch (_) {}
+    }
   }
   closeModal('orderModal'); clearDraft();
   delete document.getElementById('orderModal').dataset.mode;
@@ -5219,7 +5271,6 @@ function loadLastUser() {
   if (last) { document.getElementById('loginUser').value = last; setTimeout(() => document.getElementById('loginPass').focus(), 150); }
 }
 
-/* ✅ startApp محمية بالكامل — إصلاح مشكلة الرئيسية الفارغة */
 function startApp() {
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
@@ -5242,7 +5293,6 @@ function startApp() {
 
   try { go(firstAvailable); } catch (e) { console.error('go:', e); }
 
-  /* ✅ ضمان مزدوج: إعادة الرسم بعد بدء المزامنة */
   setTimeout(() => { try { renderActive(); } catch (_) {} }, 500);
 
   startPolling();
@@ -5252,22 +5302,33 @@ function startApp() {
   try { applyFeatureUI(); } catch (_) {}
   toast(`أهلاً ${currentUser.username}`, 'success');
 }
+
+/* ✅ Visibility + Online handlers محسّنة */
 let _visHandlerAttached = false;
 function attachVisibilityHandler() {
-  if (_visHandlerAttached) return; _visHandlerAttached = true;
+  if (_visHandlerAttached) return;
+  _visHandlerAttached = true;
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      startPolling();
-    } else if (currentUser) {
+    if (!currentUser) return;
+    startPolling();
+    if (!document.hidden) {
       lastSyncTime = 0;
-      syncPull(true).finally(() => { if (!pollTimer) startPolling(); });
+      syncPull(true).catch(() => {});
     }
   });
 }
+
 let _onlineHandlerAttached = false;
 function attachOnlineHandlers() {
-  if (_onlineHandlerAttached) return; _onlineHandlerAttached = true;
-  window.addEventListener('online', () => { if (currentUser) { lastSyncTime = 0; localMeta = null; syncPull(true); } });
+  if (_onlineHandlerAttached) return;
+  _onlineHandlerAttached = true;
+  window.addEventListener('online', () => {
+    if (!currentUser) return;
+    lastSyncTime = 0;
+    localMeta = null;
+    setOnline(true);
+    syncPull(true).catch(() => {});
+  });
   window.addEventListener('offline', () => { setOnline(false); });
 }
 
@@ -5640,7 +5701,7 @@ window.restoreDraft = function () {
   const raw = localStorage.getItem(DRAFT_KEY); if (!raw) return;
   try {
     const d = JSON.parse(raw);
-    addOrder();
+    addOrder(true);  // ✅ skipSync لتجنب مزامنة مزدوجة
     document.getElementById('orderInvoice').value = d.invoice || '';
     if (d.branch) document.getElementById('orderBranch').value = d.branch;
     document.getElementById('orderCustomer').value = d.customer || '';

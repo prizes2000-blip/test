@@ -1084,7 +1084,9 @@ const I = {
   office:'M4 21V5a2 2 0 012-2h8a2 2 0 012 2v16 M8 7h2 M8 11h2 M8 15h2 M14 21v-4h4v4 M16 21h5V9h-5',
   hash:'M4 9h16 M4 15h16 M10 3L8 21 M16 3l-2 18',
   undo:'M3 7v6h6 M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13',
-  archiveBox:'M21 8v13H3V8 M1 3h22v5H1z M10 12h4'
+  archiveBox:'M21 8v13H3V8 M1 3h22v5H1z M10 12h4',
+  sortAsc:'M11 5h10 M11 9h7 M11 13h4 M3 17l3 3 3-3 M6 18V4',
+  sortDesc:'M11 5h4 M11 9h7 M11 13h10 M3 17l3 3 3-3 M6 18V4'
 };
 function ico(name, size = 16) {
   const p = I[name] || '';
@@ -1100,13 +1102,11 @@ const APP_ID       = 'test';
 const APP_BRANCH   = 'main';
 const APP_VERSION  = '4.0.0';
 
-/* ✅ مزامنة دورية كل 60 ثانية (الوضع النشط) و5 دقائق (الخلفية) */
 const SYNC_INTERVAL = 60000;
 const SYNC_INTERVAL_HIDDEN = 300000;
 const SYNC_THROTTLE_MS = 2000;
 const DEBOUNCE_SYNC_MS = 1500;
 
-/* ✅ فترة حماية ضد Race Condition */
 const SYNC_GRACE_MS = 10000;
 const PREV_SHA_HISTORY = 20;
 
@@ -1129,7 +1129,6 @@ function initBroadcast() {
     _broadcastChannel.onmessage = (e) => {
       if (!currentUser) return;
       if (!e.data || e.data.type !== 'data-changed') return;
-      // ✅ تجاهل الرسائل الصادرة من هذا المستخدم نفسه
       if (e.data.by === currentUser.username) return;
       lastSyncTime = 0;
       syncPull(true).catch(() => {});
@@ -1387,17 +1386,20 @@ let statsFilter = 'all', statsFromDate = '', statsToDate = '';
 let featureFlags = { featureFuzzySearch: true, featureCustomFields: true, featureWorkGroups: true, featureTasks: true };
 let _groupSelectedOrders = new Set();
 
+let _logNormalizationPending = false;
+
 let _orderSubmitLock = 0;
 let _customerSubmitLock = 0;
 let _driverSubmitLock = 0;
 let _taskSubmitLock = 0;
 let _groupSubmitLock = 0;
 
+/* ✅ فلاتر الصفحات — تم تحديث فلتر السجل */
 let pageFilters = {
   entry: { search:'', branch:'', status:'', receiptMethod:'' },
   ready: { search:'', branch:'', receiptMethod:'' },
   transferred: { search:'', branch:'', receiptMethod:'' },
-  log: { search:'', branch:'', receipt:'', receiptMethod:'', from:'', to:'' },
+  log: { search:'', branch:'', receiptMethod:'', from:'', to:'', sort:'date-desc' },
   customers: { search:'' },
   tasks: { search:'', status:'', priority:'' }
 };
@@ -1452,10 +1454,13 @@ function phoneBadge(val) {
   if (!val) return '<span style="color:var(--text-muted);">—</span>';
   return `<span class="badge badge-phone">${ico('phone', 10)}${esc(val)}</span>`;
 }
+
+/* ✅ عداد الواتساب — يُخزَّن على الطلب نفسه */
 function waCountBadge(count) {
   if (!count || count <= 0) return '';
   return `<span class="badge badge-whatsapp" title="عدد رسائل الواتساب المرسلة"><span style="display:inline-flex;">${ico('whatsapp', 10)}</span><b style="margin-right:2px;">${count}</b></span>`;
 }
+
 function emptyState(icon, title, desc, cols) {
   return `<tr class="empty-row"><td colspan="${cols}"><div class="empty-state"><div class="icon">${ico(icon, 26)}</div><div class="title">${title}</div><div class="desc">${desc}</div></div></td></tr>`;
 }
@@ -1466,15 +1471,11 @@ function zoomReset() { zoomLevel = 1; applyZoom(); }
 function encodeBase64(str) { return btoa(unescape(encodeURIComponent(str))); }
 function decodeBase64(b64) { return decodeURIComponent(escape(atob(b64.replace(/\s/g, '')))); }
 
-/* ══════════════════════════════════════════════════════════════
-   ✅ generateNextInvoice — اشتقاق من أعلى فاتورة فعلية
-   ══════════════════════════════════════════════════════════════ */
 function generateNextInvoice() {
   const s = invoiceSettings;
   const prefix = s.prefix || '';
   const digits = s.digits || 4;
 
-  // ✅ اشتق الرقم من أعلى فاتورة فعلية في كل القوائم
   let maxNum = 0;
   const allLists = [cache.orders, cache.ready, cache.transferred, cache.log];
   for (const list of allLists) {
@@ -1497,14 +1498,10 @@ function generateNextInvoice() {
   return `${prefix}${String(next).padStart(digits, '0')}`;
 }
 
-function getWaCount(orderId) {
-  const list = cache.activity || [];
-  let count = 0;
-  for (let i = 0; i < list.length; i++) {
-    const a = list[i];
-    if (a.action === 'whatsapp-sent' && a.orderId === orderId) count++;
-  }
-  return count;
+/* ✅ عداد الواتساب — يُقرأ مباشرة من بيانات الطلب */
+function getWaCount(order) {
+  if (!order) return 0;
+  return Number(order.waSentCount) || 0;
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -1680,7 +1677,7 @@ const InFlight = (() => {
 })();
 
 /* ══════════════════════════════════════════════════════════════
-   STORAGE LAYER — مع حماية Race Condition
+   STORAGE LAYER
    ══════════════════════════════════════════════════════════════ */
 const Storage = (() => {
   const API_BASE = `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents`;
@@ -2402,6 +2399,59 @@ function applyFileData(k, data, wasPlain) {
     cache[k] = Array.isArray(data) ? data : [];
   }
 }
+
+function normalizeLogStatuses() {
+  if (!Array.isArray(cache.log) || !cache.log.length) return false;
+  const toReturn = cache.log.filter(o => (o.receiptStatus || RECEIPT_NOT_RECEIVED) === RECEIPT_NOT_RECEIVED);
+  if (!toReturn.length) return false;
+  const idsToReturn = new Set(toReturn.map(o => o.id));
+  const now = fmtDate();
+  const user = currentUser?.username || 'system';
+  toReturn.forEach(o => {
+    const returned = { ...o };
+    returned.receiptStatus = RECEIPT_NOT_RECEIVED;
+    returned.returnedFromLogAt = now;
+    returned.returnedFromLogBy = user;
+    delete returned.archivedAt;
+    delete returned.archivedBy;
+    cache.transferred.push(returned);
+  });
+  cache.log = cache.log.filter(o => !idsToReturn.has(o.id));
+  _logNormalizationPending = true;
+  return true;
+}
+function scheduleLogNormalizationSave() {
+  setTimeout(async () => {
+    if (!currentUser) return;
+    try { await persistKeys(['log', 'transferred']); } catch (_) {}
+  }, 800);
+}
+
+/* ✅ تهيئة waSentCount من سجل النشاط للطلبات القديمة (مرة واحدة) */
+function initWaSentCounts() {
+  const allLists = [cache.orders, cache.ready, cache.transferred, cache.log];
+  const needsInit = allLists.some(list =>
+    Array.isArray(list) && list.some(o => o && o.waSentCount === undefined)
+  );
+  if (!needsInit) return;
+
+  const byOrder = {};
+  (cache.activity || []).forEach(a => {
+    if (a && a.action === 'whatsapp-sent' && a.orderId) {
+      byOrder[a.orderId] = (byOrder[a.orderId] || 0) + 1;
+    }
+  });
+
+  allLists.forEach(list => {
+    if (!Array.isArray(list)) return;
+    list.forEach(o => {
+      if (o && o.waSentCount === undefined) {
+        o.waSentCount = byOrder[o.id] || 0;
+      }
+    });
+  });
+}
+
 function postProcessData() {
   cache.drivers = (cache.drivers || []).map(d => {
     if (typeof d === 'string') return { id: uid(), name: d, phone: '', methods: [...RECEIPT_METHODS] };
@@ -2478,6 +2528,9 @@ function postProcessData() {
     .map(f => ({ ...f, type: f.type || 'text', required: f.required === true, showInPrint: f.showInPrint !== false, options: Array.isArray(f.options) ? f.options : [] }));
   const validIds = new Set(cache.ready.map(o => o.id));
   Array.from(selectedReadyIds).forEach(id => { if (!validIds.has(id)) selectedReadyIds.delete(id); });
+
+  try { initWaSentCounts(); } catch (e) { console.warn('initWaSentCounts:', e); }
+  try { normalizeLogStatuses(); } catch (e) { console.warn('normalizeLogStatuses:', e); }
 }
 
 /* ══════════════════════════════════════════════════════════════
@@ -2583,7 +2636,7 @@ async function flushActivitySave() {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   SYNC — مع حماية Race Condition
+   SYNC
    ══════════════════════════════════════════════════════════════ */
 async function syncPull(force = false) {
   if (syncing || !currentUser) return;
@@ -2623,11 +2676,21 @@ async function syncPull(force = false) {
         }
       }
       if (changedActivity.length) { await loadActivity(); didChange = true; }
-      if (didChange) postProcessData();
+      if (didChange) {
+        postProcessData();
+        if (_logNormalizationPending) {
+          _logNormalizationPending = false;
+          scheduleLogNormalizationSave();
+        }
+      }
     } else {
       const meta = await readMeta();
       if (!localMeta || meta.lastUpdate !== localMeta.lastUpdate) {
         localMeta = meta; await readAll(); await loadActivity(); didChange = true;
+        if (_logNormalizationPending) {
+          _logNormalizationPending = false;
+          scheduleLogNormalizationSave();
+        }
       }
     }
     if (didChange) {
@@ -2659,7 +2722,6 @@ function renderActive() {
   } catch (e) { console.warn('renderActive:', e); }
 }
 
-/* ✅ getCurrentInterval + startPolling */
 function getCurrentInterval() {
   if (currentSyncInterval <= 0) return 0;
   return document.hidden ? SYNC_INTERVAL_HIDDEN : currentSyncInterval;
@@ -3117,7 +3179,8 @@ function renderTransferred() {
     else if (canReceive || isOwner) receiptCell = `<select class="receipt-select" onclick="event.stopPropagation()" onchange="changeReceiptStatusWithTransfer('${o.id}', this.value)"><option value="${RECEIPT_NOT_RECEIVED}" selected>لا</option><option value="${RECEIPT_RECEIVED}">تم</option></select>`;
     else receiptCell = `<span class="badge badge-not-received">لا</span>`;
     const waBtn = canSendWA ? `<button class="btn btn-whatsapp btn-sm" onclick="event.stopPropagation();openWhatsAppModal('${o.id}', 'transferred')" title="إرسال واتساب">${ico('whatsapp', 13)}</button>` : '';
-    const waCount = getWaCount(o.id);
+    /* ✅ عداد الواتساب من الطلب نفسه */
+    const waCount = getWaCount(o);
     const btns = `
       ${canEdit ? `<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();editTransferred('${o.id}')" title="تعديل">${ico('edit', 13)}</button>` : ''}
       ${canDelete ? `<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteTransferred('${o.id}')" title="حذف">${ico('trash', 13)}</button>` : ''}
@@ -3140,15 +3203,15 @@ function renderTransferred() {
 /* ══════════════════════════════════════════════════════════════
    RENDER: LOG
    ══════════════════════════════════════════════════════════════ */
+/* ✅ تم حذف فلتر حالة الاستلام + إضافة فلتر الترتيب */
 function getLogFilteredData() {
   const f = pageFilters.log;
   const allowed = getAllowedReceiptMethods();
   const fromDate = f.from ? new Date(f.from) : null;
   const toDate = f.to ? new Date(f.to + 'T23:59:59') : null;
-  return cache.log.filter(o => {
+  const filtered = cache.log.filter(o => {
     if (!allowed.includes(o.receiptMethod || 'المحل')) return false;
     if (f.branch && (o.branch || DEFAULT_BRANCH_NAME) !== f.branch) return false;
-    if (f.receipt && (o.receiptStatus || RECEIPT_NOT_RECEIVED) !== f.receipt) return false;
     if (f.receiptMethod && (o.receiptMethod || 'المحل') !== f.receiptMethod) return false;
     const d = parseDate(o.approvalDate) || parseDate(o.archivedAt);
     if (fromDate && d && d < fromDate) return false;
@@ -3157,20 +3220,57 @@ function getLogFilteredData() {
     if (f.search && !smartSearch(`${o.customer} ${o.invoice} ${o.customerPhone || ''} ${o.driver || ''} ${o.notes || ''}`, f.search)) return false;
     return true;
   });
+  return sortLogResults(filtered, f.sort);
 }
+
+/* ✅ دالة ترتيب السجل */
+function sortLogResults(list, sortKey) {
+  const arr = list.slice();
+  const numFromInv = (inv) => {
+    const n = parseInt(String(inv || '').replace(/[^0-9]/g, ''), 10);
+    return isNaN(n) ? 0 : n;
+  };
+  const dateFromO = (o) => {
+    const d = parseDate(o.archivedAt) || parseDate(o.transferredAt) || parseDate(o.approvalDate);
+    return d ? d.getTime() : 0;
+  };
+  switch (sortKey) {
+    case 'invoice-asc':
+      arr.sort((a, b) => numFromInv(a.invoice) - numFromInv(b.invoice));
+      break;
+    case 'invoice-desc':
+      arr.sort((a, b) => numFromInv(b.invoice) - numFromInv(a.invoice));
+      break;
+    case 'date-asc':
+      arr.sort((a, b) => dateFromO(a) - dateFromO(b));
+      break;
+    case 'date-desc':
+    default:
+      arr.sort((a, b) => dateFromO(b) - dateFromO(a));
+      break;
+  }
+  return arr;
+}
+
 window.updateLogFilter = function(field, value) { pageFilters.log[field] = value; renderLog(); };
 window.resetLogFilters = function() {
-  pageFilters.log = { search:'', branch:'', receipt:'', receiptMethod:'', from:'', to:'' };
-  ['logSearch','logBranchFilter','logReceiptFilter','logMethodFilter','logFromDate','logToDate'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  pageFilters.log = { search:'', branch:'', receiptMethod:'', from:'', to:'', sort:'date-desc' };
+  ['logSearch','logBranchFilter','logMethodFilter','logFromDate','logToDate'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  const sf = document.getElementById('logSortFilter');
+  if (sf) sf.value = 'date-desc';
   renderLog();
 };
+
 function receiptStatusCellLog(o) {
   const status = o.receiptStatus || RECEIPT_NOT_RECEIVED;
   const isDone = status === RECEIPT_RECEIVED;
   const canRevert = hasPerm('revertReceiptStatus');
   const isOwner = currentUser?.role === ROLE_OWNER;
   if (!canRevert && !isOwner) return isDone ? `<span class="badge badge-received">${ico('check', 11)} تم</span>` : `<span class="badge badge-not-received">لا</span>`;
-  return `<select class="receipt-select ${isDone ? 'is-done owner-locked' : ''}" onclick="event.stopPropagation()" onchange="changeReceiptStatusWithTransfer('${o.id}', this.value)" ${!isDone ? 'disabled' : ''}><option value="${RECEIPT_NOT_RECEIVED}" ${!isDone ? 'selected' : ''}>لا</option><option value="${RECEIPT_RECEIVED}" ${isDone ? 'selected' : ''}>تم</option></select>`;
+  return `<select class="receipt-select ${isDone ? 'is-done owner-locked' : ''}" onclick="event.stopPropagation()" onchange="changeReceiptStatusWithTransfer('${o.id}', this.value)">
+    <option value="${RECEIPT_NOT_RECEIVED}" ${!isDone ? 'selected' : ''}>لا</option>
+    <option value="${RECEIPT_RECEIVED}" ${isDone ? 'selected' : ''}>تم</option>
+  </select>`;
 }
 function renderLog() {
   const data = getLogFilteredData();
@@ -3183,7 +3283,8 @@ function renderLog() {
   const canSendWA = hasPerm('sendWhatsApp');
   body.innerHTML = data.map((o, i) => {
     const waBtn = canSendWA ? `<button class="btn btn-whatsapp btn-sm" onclick="event.stopPropagation();openWhatsAppModal('${o.id}', 'log')" title="إرسال واتساب">${ico('whatsapp', 13)}</button>` : '';
-    const waCount = getWaCount(o.id);
+    /* ✅ عداد الواتساب من الطلب نفسه */
+    const waCount = getWaCount(o);
     return `<tr class="row-received">
       <td>${i+1}</td><td><b>${esc(o.invoice)}</b></td><td>${branchBadge(o.branch)}</td><td>${esc(o.customer)}</td>
       <td>${phoneBadge(o.customerPhone)}</td>
@@ -4201,7 +4302,6 @@ async function changeReceiptStatusWithTransfer(orderId, newStatus) {
 /* ══════════════════════════════════════════════════════════════
    ORDER MODAL
    ══════════════════════════════════════════════════════════════ */
-/* ✅ addOrder — async + syncPull قبل توليد رقم الفاتورة */
 window.addOrder = async function (skipSync = false) {
   if (!hasPerm('addOrder')) { toast(MSG.unauthorized, 'error'); return; }
   if (document.querySelector('.page.active')?.id !== 'page-entry') go('entry');
@@ -4218,7 +4318,6 @@ window.addOrder = async function (skipSync = false) {
   const branchSel = document.getElementById('orderBranch');
   if (branchSel && branchSel.options.length > 0) branchSel.selectedIndex = 0;
 
-  // ✅ مزامنة سريعة قبل توليد الرقم لضمان رؤية أحدث الفواتير
   if (!skipSync && currentUser) {
     try { await syncPull(true); } catch (_) {}
   }
@@ -4316,7 +4415,6 @@ function validateOrderForm() {
   if (!valid) { focusFirstError('orderModal'); toast('يرجى تعبئة الحقول المطلوبة', 'error'); }
   return valid;
 }
-/* ✅ saveOrder — إعادة حساب nextNumber من البيانات الفعلية */
 window.saveOrder = async function () {
   const now = Date.now();
   if (now - _orderSubmitLock < SUBMIT_LOCK_MS) { toast('جاري الحفظ، يرجى الانتظار...', 'warning'); return; }
@@ -4367,7 +4465,6 @@ window.saveOrder = async function () {
     cache.orders.push(data);
     logActivity('add-order', `طلب جديد: ${data.invoice}`, '', 'success');
   }
-  // ✅ إعادة حساب nextNumber من أعلى فاتورة فعلية (بعد إضافة الطلب الجديد)
   if (invoiceSettings.autoIncrement) {
     const prefix = invoiceSettings.prefix || '';
     let maxNum = 0;
@@ -4500,12 +4597,16 @@ window.returnReadyToEntry = async function (id) {
 };
 
 /* ══════════════════════════════════════════════════════════════
-   WHATSAPP
+   WHATSAPP — المنهجية الجديدة
    ══════════════════════════════════════════════════════════════ */
+
+/* ✅ يبني الرسالة حسب طريقة الاستلام (يحافظ على اختلاف القوالب) */
 function buildWhatsAppMessage(order, method) {
   const m = method || order.receiptMethod || 'المحل';
-  const tpl = whatsappTemplates[m] || DEFAULT_WHATSAPP_TEMPLATES[m] || DEFAULT_WHATSAPP_TEMPLATES['المحل'];
-  return String(tpl.message || '')
+  const tpl = (whatsappTemplates[m]?.message)
+           || (DEFAULT_WHATSAPP_TEMPLATES[m]?.message)
+           || DEFAULT_WHATSAPP_TEMPLATES['المحل'].message;
+  return String(tpl)
     .replace(/{customer}/g, order.customer || '')
     .replace(/{invoice}/g, order.invoice || '')
     .replace(/{driver}/g, order.driver || '—')
@@ -4514,24 +4615,73 @@ function buildWhatsAppMessage(order, method) {
     .replace(/{date}/g, fmtDate())
     .replace(/{method}/g, m);
 }
+
 function normalizePhoneForWhatsApp(phone) {
   if (!phone) return '';
-  let p = String(phone).trim(); p = p.replace(/[^0-9]/g, '');
+  let p = String(phone).trim();
+  p = p.replace(/[^0-9]/g, '');
   if (/^7\d{8}$/.test(p)) p = '967' + p;
   else if (/^0\d{9}$/.test(p)) p = '967' + p.substring(1);
   return p;
 }
+
+function openBackgroundTab(url, closeAfterMs = 5000) {
+  let win = null;
+  try { win = window.open(url, '_blank'); } catch (_) { win = null; }
+  if (!win) return null;
+  try { win.blur(); } catch (_) {}
+  try { window.focus(); } catch (_) {}
+  if (closeAfterMs > 0) {
+    setTimeout(() => { try { win.close(); } catch (_) {} }, closeAfterMs);
+  }
+  return win;
+}
+
 function openWhatsApp(phone, message) {
   phone = String(phone).replace(/[^\d]/g, '');
   const text = encodeURIComponent(message);
   const ua = navigator.userAgent;
-  if (/Android/i.test(ua)) { window.location.href = `intent://send?phone=${phone}&text=${text}#Intent;scheme=whatsapp;package=com.whatsapp;end`; setTimeout(() => { try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 5000); } catch(_){} }, 1800); return; }
-  if (/iPhone|iPad|iPod/i.test(ua)) { window.location.href = `whatsapp://send?phone=${phone}&text=${text}`; setTimeout(() => { try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 5000); } catch(_){} }, 1800); return; }
-  try { const w = window.open(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank'); if (w) setTimeout(() => { try { w.close(); } catch(_){} }, 6000); } catch(_){}
+  const isAndroid = /Android/i.test(ua);
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  const isWindows = /Windows/i.test(ua);
+
+  if (isAndroid) {
+    const appUrl = `intent://send?phone=${phone}&text=${text}#Intent;scheme=whatsapp;package=com.whatsapp;end`;
+    window.location.href = appUrl;
+    setTimeout(() => { openBackgroundTab(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`); }, 1800);
+    return;
+  }
+  if (isIOS) {
+    window.location.href = `whatsapp://send?phone=${phone}&text=${text}`;
+    setTimeout(() => { openBackgroundTab(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`); }, 1800);
+    return;
+  }
+  if (isWindows) {
+    window.location.href = `whatsapp://send?phone=${phone}&text=${text}`;
+    setTimeout(() => { openBackgroundTab(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`); }, 2000);
+    return;
+  }
+  openBackgroundTab(`https://web.whatsapp.com/send?phone=${phone}&text=${text}`);
 }
+
+/* ✅ دالة مساعدة لإرسال سريع من خارج المودال */
+function triggerWhatsAppNotification(order) {
+  const m = order.receiptMethod || 'المحل';
+  if (whatsappTemplates[m]?.enabled === false) return;
+  if (!hasPerm('sendWhatsApp')) return;
+  const phone = normalizePhoneForWhatsApp(order.customerPhone);
+  if (!phone) { toast('لا يوجد رقم هاتف للعميل لإرسال الإشعار', 'warning'); return; }
+  const message = buildWhatsAppMessage(order, m);
+  logActivity('whatsapp-sent', `إرسال واتساب: ${order.invoice}`, `إلى: ${order.customer} (${phone})`, 'success', order.id);
+  openWhatsApp(phone, message);
+}
+
 window.openWhatsAppModal = function(orderId, location = 'transferred') {
   if (!hasPerm('sendWhatsApp')) { toast(MSG.unauthorized, 'error'); return; }
-  const o = (location === 'transferred' ? cache.transferred : location === 'log' ? cache.log : [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log]).find(x => x.id === orderId);
+  const o = (location === 'transferred' ? cache.transferred
+           : location === 'log' ? cache.log
+           : [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log])
+           .find(x => x.id === orderId);
   if (!o) { toast('الطلب غير موجود', 'error'); return; }
   document.getElementById('waOrderId').value = orderId;
   document.getElementById('waReceiptMethod').value = o.receiptMethod || 'المحل';
@@ -4542,6 +4692,7 @@ window.openWhatsAppModal = function(orderId, location = 'transferred') {
   updateWhatsAppPreview();
   openModal('whatsappModal');
 };
+
 window.updateWhatsAppPreview = function() {
   const orderId = document.getElementById('waOrderId').value;
   const method = document.getElementById('waReceiptMethod').value;
@@ -4549,18 +4700,45 @@ window.updateWhatsAppPreview = function() {
   if (!o) return;
   document.getElementById('waMessagePreview').textContent = buildWhatsAppMessage(o, method);
 };
-window.confirmSendWhatsApp = function() {
+
+/* ✅ إرسال مع زيادة عداد waSentCount على الطلب + حفظ فوري */
+window.confirmSendWhatsApp = async function() {
   const orderId = document.getElementById('waOrderId').value;
   const method = document.getElementById('waReceiptMethod').value;
   const phone = document.getElementById('waCustomerPhone').value.trim();
   if (!phone) { toast('يرجى إدخال رقم الواتساب', 'error'); return; }
+
   const o = [...cache.orders, ...cache.ready, ...cache.transferred, ...cache.log].find(x => x.id === orderId);
   if (!o) { toast('الطلب غير موجود', 'error'); return; }
+
+  /* ✅ زيادة العداد على الطلب نفسه (يُزامن مع الجميع) */
+  o.waSentCount = (Number(o.waSentCount) || 0) + 1;
+  o.lastWaSentAt = fmtDate();
+  o.lastWaSentBy = currentUser.username;
+
+  const inTransferred = cache.transferred.some(x => x.id === orderId);
+  const inLog = cache.log.some(x => x.id === orderId);
+
+  logActivity('whatsapp-sent', `إرسال واتساب: ${o.invoice}`, `إلى: ${o.customer} (${method})`, 'success', orderId);
+
+  /* ✅ احفظ قبل فتح الواتساب (لأن المتصفح قد ينتقل) */
+  try {
+    const keys = ['activity'];
+    if (inTransferred) keys.push('transferred');
+    if (inLog) keys.push('log');
+    await persistKeys(keys);
+  } catch (e) {
+    console.warn('wa persist:', e);
+  }
+
   const normalized = normalizePhoneForWhatsApp(phone);
   const msg = buildWhatsAppMessage(o, method);
-  logActivity('whatsapp-sent', `إرسال واتساب: ${o.invoice}`, `إلى: ${o.customer} (${method})`, 'success', orderId);
+
   renderActive();
+
+  /* ✅ فتح الواتساب (المنهجية الجديدة) */
   openWhatsApp(normalized, msg);
+
   closeModal('whatsappModal');
   toast('تم تجهيز رسالة الواتساب', 'success');
 };
@@ -5170,7 +5348,13 @@ window.go = function (page) {
     if (page === 'groups') { populateAllSelects(); renderGroups(); }
     if (page === 'ready') { populateAllSelects(); renderReady(); }
     if (page === 'transferred') { populateAllSelects(); renderTransferred(); }
-    if (page === 'log') { populateAllSelects(); renderLog(); }
+    if (page === 'log') {
+      populateAllSelects(); renderLog();
+      if (_logNormalizationPending) {
+        _logNormalizationPending = false;
+        scheduleLogNormalizationSave();
+      }
+    }
     if (page === 'customers') renderCustomers();
     if (page === 'tasks') { populateAllSelects(); renderTasks(); }
     if (page === 'settings') { rebuildSettingsTabs(); renderSettings(); updateCurrentKeyInfo(); renderWhatsAppTemplates(); }
@@ -5246,6 +5430,10 @@ window.doLogin = async function () {
     loadEl.textContent = 'تم الدخول';
     hideLoading();
     startApp();
+    if (_logNormalizationPending) {
+      _logNormalizationPending = false;
+      scheduleLogNormalizationSave();
+    }
   } catch (e) { errEl.textContent = e.message || MSG.connFail; errEl.classList.add('show'); hideLoading(); }
   finally { btn.disabled = false; }
 };
@@ -5259,6 +5447,7 @@ window.logout = async function (silent = false) {
   currentUser = null; selectedOrderId = null; selectedReadyIds.clear();
   Storage.resetCache(); localMeta = null;
   currentSyncInterval = SYNC_INTERVAL; lastSyncTime = 0;
+  _logNormalizationPending = false;
   document.getElementById('app').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('loginPass').value = ''; document.getElementById('loginLoading').textContent = '';
@@ -5303,7 +5492,6 @@ function startApp() {
   toast(`أهلاً ${currentUser.username}`, 'success');
 }
 
-/* ✅ Visibility + Online handlers محسّنة */
 let _visHandlerAttached = false;
 function attachVisibilityHandler() {
   if (_visHandlerAttached) return;
@@ -5419,14 +5607,21 @@ function buildUI() {
     <button class="btn btn-primary perm-print" onclick="printTransferred()">${ico('printer', 15)}<span>طباعة</span></button>`;
   document.getElementById('transferredHead').innerHTML = ['#','رقم الفاتورة','الفرع','العميل','هاتف العميل','الموقع','حالة الطلب','تاريخ الاعتماد','طريقة الاستلام','الموصل','رقم الموصل','ملاحظات','تاريخ النقل','حالة الاستلام','إرسال واتساب'].map(h => `<th>${h}</th>`).join('');
   document.getElementById('logTitle').innerHTML = ico('archive', 20) + '<span>السجل</span>';
+  /* ✅ تم حذف فلتر حالة الاستلام + إضافة فلتر الترتيب */
   document.getElementById('logFilterBar').innerHTML = `
     <span style="color:var(--brand-700);font-weight:700;font-size:12.5px;display:inline-flex;align-items:center;gap:5px;">${ico('filter', 14)}<span>فلترة:</span></span>
     <input id="logSearch" type="text" placeholder="بحث..." oninput="updateLogFilter('search', this.value)" style="width:200px;">
     <label>من:</label><input id="logFromDate" type="date" onchange="updateLogFilter('from', this.value)">
     <label>إلى:</label><input id="logToDate" type="date" onchange="updateLogFilter('to', this.value)">
-    <select id="logReceiptFilter" onchange="updateLogFilter('receipt', this.value)" style="width:140px;"><option value="">كل حالات الاستلام</option><option value="لا">لا</option><option value="تم">تم</option></select>
     <select id="logMethodFilter" onchange="updateLogFilter('receiptMethod', this.value)" style="width:140px;"><option value="">كل الطرق</option><option value="المحل">المحل</option><option value="موصل">موصل</option><option value="مكتب">مكتب</option></select>
     <select id="logBranchFilter" onchange="updateLogFilter('branch', this.value)" style="width:160px;"></select>
+    <label style="display:inline-flex;align-items:center;gap:5px;">${ico('sortDesc', 14)}<span>ترتيب:</span></label>
+    <select id="logSortFilter" onchange="updateLogFilter('sort', this.value)" style="width:200px;">
+      <option value="date-desc">🕒 الأحدث ترحيلاً</option>
+      <option value="date-asc">🕒 الأقدم ترحيلاً</option>
+      <option value="invoice-asc">🔢 رقم الفاتورة (تصاعدي)</option>
+      <option value="invoice-desc">🔢 رقم الفاتورة (تنازلي)</option>
+    </select>
     <button class="btn btn-ghost btn-sm" onclick="resetLogFilters()">${ico('refresh', 13)}<span>مسح</span></button>`;
   document.getElementById('logToolbar').innerHTML = `
     <button class="btn btn-primary perm-print" onclick="printLog()">${ico('printer', 15)}<span>طباعة</span></button>
@@ -5701,7 +5896,7 @@ window.restoreDraft = function () {
   const raw = localStorage.getItem(DRAFT_KEY); if (!raw) return;
   try {
     const d = JSON.parse(raw);
-    addOrder(true);  // ✅ skipSync لتجنب مزامنة مزدوجة
+    addOrder(true);
     document.getElementById('orderInvoice').value = d.invoice || '';
     if (d.branch) document.getElementById('orderBranch').value = d.branch;
     document.getElementById('orderCustomer').value = d.customer || '';
